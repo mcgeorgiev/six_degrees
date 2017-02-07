@@ -13,6 +13,7 @@
 - Test your obscure knowledge
 
 ### 2. User Personas (2-3 slides)
+( give a sense of what the user wants)
 
 - Serial student procrastinator
 - Receptionists...?
@@ -34,7 +35,6 @@
 - Users can see the ideal "route" between articles
 
 
-
 ### 4. High Level System Architecture Diagram (1 slide)
 (include additional apis)
 
@@ -49,14 +49,13 @@
 - Winning
 
 
-
-
 ### 7. Walkthrough (1-2 slides)
 (site map/ urls)
 
 
 
-
+Michaels thoughts:
+- Once a users is playing a game we could 
 
 
 
