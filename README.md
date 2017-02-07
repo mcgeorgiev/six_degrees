@@ -14,8 +14,7 @@ ___
 ### 2. User Personas (2-3 slides)
 ( give a sense of what the user wants)
 
-- Serial student procrastinator
-- Receptionists...?
+- Serial procrastinator
 - Pub quizzers
 
 ___
