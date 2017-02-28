@@ -1,7 +1,7 @@
 import requests
 import json
 from itertools import count
-
+import sys
 # page id to get links currently all links from "broughty ferry" page
 def get_page_links(name):
     page_name = name
@@ -21,18 +21,20 @@ def get_page_links(name):
     data["edges"] = []
     counter = count(1)
     for links in resp["query"]["pages"]["{0}".format(page_id)]["links"]:
-        # print links['title']
+        # create json for this pages links
         node_id = counter.next()
         data["nodes"] += {"id":"n{0}".format(node_id),
                         "label":links['title'],
                         "size":1,
                         "x":node_id,
                         "y":node_id},
+        # and edges between nodes
         data["edges"] += {"id":"e{0}".format(node_id),
-                        "source":"n{0}".format((node_id-1)),
+                        "source":"n0",
                         "target":"n{0}".format(node_id)},
 
-    with open('sigma/data/test.json', 'w') as outfile:
-        json.dump(data, outfile, indent=2)
+    # with open('sigma/data/test.json', 'w') as outfile:
+    #     json.dump(data, outfile, indent=2)
+    print json.dumps(data, indent=2)
 if __name__ == '__main__':
-    get_page_links("Broughty Ferry")
+    get_page_links(sys.argv[1])
