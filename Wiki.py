@@ -24,7 +24,6 @@ def get_page_links(name):
     all_links = []
     for links in resp["query"]["pages"]["{0}".format(page_id)]["links"]:
         all_links.append(links)
-    print all_links
     return all_links
 
 
