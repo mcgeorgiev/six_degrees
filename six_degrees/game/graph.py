@@ -1,6 +1,8 @@
 from neo4j.v1 import GraphDatabase, basic_auth
 from Wiki import get_page_links
 import random
+from itertools import count
+
 
 def get_nodes_from_game(start, game, end):
     driver = driver_connection()
@@ -45,6 +47,7 @@ def add_node(node):
     session = driver.session()
     # need to escape the curly braces
     query = "CREATE (node:Article {{name:'{0}', id:{1}}})".format(node["name"], node["id"])
+    print query
     session.run(query)
     session.close()
 
@@ -80,8 +83,10 @@ def get_related_nodes(node):
 
     all_nodes = []
     for record in results:
+        print record
         all_nodes.append(record["related"].properties)
     distinct_nodes = {value['name']:value for value in all_nodes}.values()
+
     return distinct_nodes
 
 
@@ -132,18 +137,17 @@ def node_exists(node):
 
 def add_API_nodes(current_node):
     all_links = get_page_links(current_node["name"])
-
     # avoids stupid quotations breaking queries
     all_links = [link for link in all_links if not contains_quotes(link["title"])]
-
     # converts the links into nodes format
     for link in all_links:
         link["id"] = link.pop("ns")
         link["id"] = random.randint(0, 10000) # just for testing
         link["name"] = link.pop("title")
-
+    print all_links
     for link in all_links:
         if not node_exists(link):
+            print 'here'
             add_node(link)
         # otherwise always add relationship
         add_edge(current_node, link, "linksTo")

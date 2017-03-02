@@ -22,12 +22,14 @@ def index(request):
 
 def incoming_node(request, title):
     current_node = {"name": title, "id": 0}
-
     if has_enough_edges(current_node):
         db_nodes = get_related_nodes(current_node)
     else:
-        db_nodes = add_API_nodes(current_node)
+        add_API_nodes(current_node)
+        db_nodes = get_related_nodes(current_node)
 
+    print current_node
+    print db_nodes
     return HttpResponse(convert_for_sigma(current_node, db_nodes))
 
 
