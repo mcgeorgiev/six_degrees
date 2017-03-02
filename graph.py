@@ -2,13 +2,8 @@ from neo4j.v1 import GraphDatabase, basic_auth
 from Wiki import get_page_links
 import random
 
-def get_session():
-    driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
-    return driver.session()
-
-
 def get_nodes_from_game(start, game, end):
-    driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
+    driver = driver_connection()
     session = driver.session()
 
     query = "match ({0})-[l:{1}]->({2}) return {0}, type(l), {2}".format(start, game, end)
@@ -46,7 +41,7 @@ def get_nodes_from_game(start, game, end):
 
 
 def add_node(node):
-    driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
+    driver = driver_connection()
     session = driver.session()
     # need to escape the curly braces
     query = "CREATE (node:Article {{name:'{0}', id:{1}}})".format(node["name"], node["id"])
@@ -55,8 +50,8 @@ def add_node(node):
 
 
 def add_edge(nodeA, nodeB, relationship_name):
-    driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
-    session =  driver.session()
+    driver = driver_connection()
+    session = driver.session()
 
     query = """MATCH (a:Article),(b:Article) WHERE a.name = '{0}' AND b.name = '{1}'
                CREATE (a)-[r:{2}]->(b)""".format(nodeA["name"], nodeB["name"], relationship_name)
@@ -65,8 +60,8 @@ def add_edge(nodeA, nodeB, relationship_name):
 
 
 def get_node_from_name(name):
-    driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
-    session =  driver.session()
+    driver = driver_connection()
+    session = driver.session()
 
     query = "match (node:Article{{name: '{0}'}}) return node".format(name)
     results = session.run(query)
@@ -76,8 +71,8 @@ def get_node_from_name(name):
 
 
 def get_related_nodes(node):
-    driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
-    session =  driver.session()
+    driver = driver_connection()
+    session = driver.session()
 
     query = "MATCH (Article {{ name: '{0}' }})--(related) return related".format(node["name"])
     results = session.run(query)
@@ -92,9 +87,9 @@ def get_related_nodes(node):
 
 def has_enough_edges(current_node):
     # if the node has one relationship then that is it's source
-    min_relations = 10
-    driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
-    session =  driver.session()
+    min_relations = 5
+    driver = driver_connection()
+    session = driver.session()
 
     query = "MATCH (Article {{ name: '{0}' }})--(related) return related.name".format(current_node["name"])
     results = session.run(query)
@@ -108,25 +103,30 @@ def has_enough_edges(current_node):
     return True if len(distinct_relations) >= min_relations else False
 
 
-def player_selects_node():
-    current_node = {}
+# this would be a view in the views.py file
+def player_selects_node(current_node):
     if has_enough_edges(current_node):
-        print get_related_nodes(current_node)
+        get_related_nodes(current_node)
         # return the nodes to the front end
     else:
-        add_API_nodes()
+        add_API_nodes(current_node)
+        # return nodes to the frontends
+
+
+def driver_connection():
+    return GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
 
 
 def node_exists(node):
     # make sure duplicates are not added
-    driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
+    driver = driver_connection()
     session = driver.session()
-    print "Added" + str(node)
     query = "MATCH (Article {{ name: '{0}' }}) return Article".format(node["name"])
     results = session.run(query)
     session.close()
 
     return True if results.peek() is not None else False
+
 
 def add_API_nodes(current_node):
     all_links = get_page_links(current_node["name"])
@@ -150,6 +150,7 @@ def add_API_nodes(current_node):
 def contains_quotes(name):
     return True if "'" in name or '"' in name else False
 
+
 def format_string(string):
     string = string.replace(" ", "_")
     string = string.lower()
@@ -163,7 +164,7 @@ def format_string(string):
 
 if __name__ == "__main__":
     #print node_exists({"name": "Hong Kong"})
-    # add_API_nodes(get_node_from_name("Neolithic"))
+    add_API_nodes(get_node_from_name("Kangaroo"))
     #print has_enough_edges({"name": "Neolithic"})
     #add_edge({"name": "England"}, {"name": "Scotland"}, "game3")
     #add_node("England", 9)
