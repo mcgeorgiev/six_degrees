@@ -4,71 +4,71 @@ var data = {
     {
       "y": 0,
       "x": 0,
-      "size": 3,
+      "size": 8,
       "id": "n0",
       "label": "Dundee"
     },
     {
       "y": 1,
       "x": 1,
-      "size": 1,
+      "size": 4,
       "id": "n1",
       "label": "1906 Dundee fire"
     },
     {
       "y": -1,
       "x": -1,
-      "size": 1,
+      "size": 4,
       "id": "n2",
       "label": "4J Studios"
     },
     {
       "y": 0,
       "x": 1,
-      "size": 1,
+      "size": 4,
       "id": "n3",
       "label": "5th Scottish Parliament"
     },
     {
       "y": 1,
       "x": 0,
-      "size": 1,
+      "size": 4,
       "id": "n4",
       "label": "A.C. Milan"
     },
     {
       "y": -1,
       "x": 0,
-      "size": 1,
+      "size": 4,
       "id": "n5",
       "label": "A.S. Roma"
     }
   ],
   "edges": [
     {
-      "source": "n0",
+      "target": "n0",
       "id": "e1",
-      "target": "n1"
+      "source": "n1"
     },
     {
-      "source": "n0",
+      "target": "n0",
       "id": "e2",
-      "target": "n2"
+      "source": "n2"
     },
     {
-      "source": "n0",
+      "target": "n0",
       "id": "e3",
-      "target": "n3"
+      "source": "n3"
     },
     {
-      "source": "n0",
+      "target": "n0",
       "id": "e4",
-      "target": "n4"
+      "source": "n4"
     },
     {
-      "source": "n0",
+      "target": "n0",
       "id": "e5",
-      "target": "n5"
+      "source": "n5"
     }
   ]
 }
@@ -98,36 +98,42 @@ new sigma.classes.configurable(
       container: 'container',
       settings: {
           defaultNodeColor: '#666',
-          labelThreshold: 0
+          labelThreshold: 4
       }
   });
 
   var currentNode= s.graph.nodes("n0");
+  var nodeList = ["n0"];
 
   // user has clicked a node
   s.bind('clickNode', function(e) {
 
     var nodeId = e.data.node.id;
-
+    nodeList.push(nodeId);
+    console.log(nodeList);
     toKeep = s.graph.neighbors(nodeId);
     toKeep[nodeId] = e.data.node;
     var newNode = Math.random();
     // if (e.data.node.id == currentNode || currentNode == null) {
+    s.graph.nodes().forEach(function(n) {
+        n.color = '#ccc';
+        n.size = 1;
+    });
+    s.graph.edges().forEach(function(e) {
+        e.color = '#ccc';
+        var pos = nodeList.indexOf(e.source);
+        if(pos > 0) {
+            e.color = '#696';
+            s.graph.nodes(nodeList[pos]).color = '#696';
+            e.size = 8;
+        }
+    });
       // make the previous node and edge green to differentiate path
       e.data.node.color = '#696';
       e.data.node.size = 3;
 
       var next_node = e.data.node.label;
-      console.log(next_node);
-
-      s.graph.edges().forEach(function(e) {
-          if(e.source == nodeId) {
-              e.color = '#696';
-          }
-          else {
-            e.color = '#ccc';
-          }
-      });
+    //  console.log(next_node);
 
       // // add the new "main" node
       // s.graph.addNode({ id: newNode,
@@ -148,13 +154,13 @@ new sigma.classes.configurable(
         {
           x: n[s.camera.readPrefix + 'x'],
           y: n[s.camera.readPrefix + 'y'],
-          ratio: 1 // use 0.25 for best results on zoom
+          ratio: 0.7 // use 0.35 for best results on zoom
         },
         { duration: s.settings('animationsTime') }
       );
       s.refresh();
       var url_get = "http://127.0.0.1:8000/game/incomingnode/"+next_node;
-      console.log(url_get);
+    //  console.log(url_get);
       // use ajax to get the next set of nodes branching from this main node
       nextNodes(url_get, callback, n);
       currentNode = e.data.node.id;
@@ -188,13 +194,12 @@ function callback(data, sourceNode) {
 
 function addNewNode(obj, sourceNode) {
   newNode = Math.random();
-  console.log(sourceNode.id);
-  console.log(obj["title"]);
+
   s.graph.addNode({ id: newNode,
     "x": sourceNode.x + Math.random(),
     "y": sourceNode.y + Math.random(),
     "label": obj["title"],
-    "size": 5,
+    "size": 3,
     "color": "#666"});
   s.graph.addEdge({
     id: newNode,
