@@ -24,15 +24,7 @@ sigma.classes.graph.addMethod('neighbors', function(nodeId) {
 });
 
 sigma.parsers.json(
-    {
-      "nodes": [
-        {
-          "id": "n0",
-          "label": "scotland",
-          "x": 0,
-          "y": 0,
-          "size": 3
-      }]},
+    {data,
   {
     container: 'container',
     settings: {
