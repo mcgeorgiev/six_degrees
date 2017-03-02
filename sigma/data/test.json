@@ -5,41 +5,62 @@
       "x": 0, 
       "size": 2, 
       "id": "n0", 
+<<<<<<< HEAD
       "label": "Dundee"
+=======
+      "label": "Scotland"
+>>>>>>> f3d135e95e0c089f242fb551ffcd1f2af7528711
     }, 
     {
       "y": 1, 
       "x": 1, 
       "size": 1, 
       "id": "n1", 
+<<<<<<< HEAD
       "label": "1906 Dundee fire"
+=======
+      "label": "154 (Scottish) Regiment RLC"
+>>>>>>> f3d135e95e0c089f242fb551ffcd1f2af7528711
     }, 
     {
       "y": 2, 
       "x": 2, 
       "size": 1, 
       "id": "n2", 
+<<<<<<< HEAD
       "label": "4J Studios"
+=======
+      "label": "1970 British Commonwealth Games"
+>>>>>>> f3d135e95e0c089f242fb551ffcd1f2af7528711
     }, 
     {
       "y": 3, 
       "x": 3, 
       "size": 1, 
       "id": "n3", 
+<<<<<<< HEAD
       "label": "5th Scottish Parliament"
+=======
+      "label": "1986 Commonwealth Games"
+>>>>>>> f3d135e95e0c089f242fb551ffcd1f2af7528711
     }, 
     {
       "y": 4, 
       "x": 4, 
       "size": 1, 
       "id": "n4", 
+<<<<<<< HEAD
       "label": "A.C. Milan"
+=======
+      "label": "2014 Commonwealth Games"
+>>>>>>> f3d135e95e0c089f242fb551ffcd1f2af7528711
     }, 
     {
       "y": 5, 
       "x": 5, 
       "size": 1, 
       "id": "n5", 
+<<<<<<< HEAD
       "label": "A.S. Roma"
     }, 
     {
@@ -76,6 +97,9 @@
       "size": 1, 
       "id": "n10", 
       "label": "A929 road"
+=======
+      "label": "9th Legion"
+>>>>>>> f3d135e95e0c089f242fb551ffcd1f2af7528711
     }
   ], 
   "edges": [
@@ -103,6 +127,7 @@
       "source": "n0", 
       "id": "e5", 
       "target": "n5"
+<<<<<<< HEAD
     }, 
     {
       "source": "n0", 
@@ -128,6 +153,8 @@
       "source": "n0", 
       "id": "e10", 
       "target": "n10"
+=======
+>>>>>>> f3d135e95e0c089f242fb551ffcd1f2af7528711
     }
   ]
 }
