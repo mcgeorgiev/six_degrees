@@ -40,7 +40,7 @@ def get_page_links(name):
     # with open('sigma/data/test.json', 'w') as outfile:
     #     json.dump(data, outfile, indent=2)
     # print json.dumps(data, indent=2)
-    return all_links
+    return json.dumps(all_links)
 
     #     ### added this to check something
     #     node_id = counter.next()

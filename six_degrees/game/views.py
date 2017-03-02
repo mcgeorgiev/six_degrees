@@ -11,12 +11,9 @@ def index(request):
     return response
 
 # incoming
-@xframe_options_sameorigin
 def incoming_node(request, title):
     data_back = get_page_links(title)
-    print type(data_back)
-    data_back = json.dumps(data_back)
-    print type(data_back)
     print data_back
+    print type(data_back)
 
-    return data_back
+    return HttpResponse(data_back)
