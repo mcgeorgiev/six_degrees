@@ -108,14 +108,7 @@ def has_enough_edges(current_node):
     return True if len(distinct_relations) >= min_relations else False
 
 
-# this would be a view in the views.py file
-def player_selects_node(current_node):
-    if has_enough_edges(current_node):
-        get_related_nodes(current_node)
-        # return the nodes to the front end
-    else:
-        add_API_nodes(current_node)
-        # return nodes to the frontends
+
 
 
 def driver_connection():

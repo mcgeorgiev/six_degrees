@@ -40,7 +40,8 @@ def get_page_links(name):
         all_links.append(links)
 
 
-    return json.dumps(all_links)
+    # return json.dumps(all_links)
+    return all_links
     # with open('sigma/data/test.json', 'w') as outfile:
     #     json.dump(data, outfile, indent=2)
 
