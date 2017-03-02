@@ -75,6 +75,11 @@ var data = {
 
 /////////////////////// START SIGMA STUFF ///////////////////////////
 
+new sigma.classes.configurable(
+  {
+    autoRescale: false,
+    autoResize: false,
+  });
 
   sigma.classes.graph.addMethod('neighbors', function(nodeId) {
   var k,
@@ -88,7 +93,7 @@ var data = {
   });
 
   // Let's first initialize sigma:
-  s = new sigma({
+  var s = new sigma({
       graph: data,
       container: 'container',
       settings: {
@@ -97,16 +102,17 @@ var data = {
       }
   });
 
-  var currentNode=null;
+  var currentNode= s.graph.nodes("n0");
 
   // user has clicked a node
   s.bind('clickNode', function(e) {
 
     var nodeId = e.data.node.id;
+
     toKeep = s.graph.neighbors(nodeId);
     toKeep[nodeId] = e.data.node;
     var newNode = Math.random();
-    if (e.data.node.id == currentNode || currentNode == null) {
+    // if (e.data.node.id == currentNode || currentNode == null) {
       // make the previous node and edge green to differentiate path
       e.data.node.color = '#696';
       e.data.node.size = 3;
@@ -115,22 +121,26 @@ var data = {
       console.log(next_node);
 
       s.graph.edges().forEach(function(e) {
-          if(e.source == currentNode) {
+          if(e.source == nodeId) {
               e.color = '#696';
-      }});
-
-      // add the new "main" node
-      s.graph.addNode({ id: newNode,
-        "x": e.data.node.x + Math.random(),
-        "y": e.data.node.x + Math.random(),
-        "size": 5,
-        "color": "#f00"});
-      s.graph.addEdge({
-        id: newNode,
-        source: newNode,
-        target: e.data.node.id,
+          }
+          else {
+            e.color = '#ccc';
+          }
       });
-      var n = s.graph.nodes(newNode);
+
+      // // add the new "main" node
+      // s.graph.addNode({ id: newNode,
+      //   "x": e.data.node.x + Math.random(),
+      //   "y": e.data.node.x + Math.random(),
+      //   "size": 5,
+      //   "color": "#f00"});
+      // s.graph.addEdge({
+      //   id: newNode,
+      //   source: newNode,
+      //   target: e.data.node.id,
+      // });
+      var n = s.graph.nodes(e.data.node.id);
 
       // move camera to look at the new node
       sigma.misc.animation.camera(
@@ -138,38 +148,58 @@ var data = {
         {
           x: n[s.camera.readPrefix + 'x'],
           y: n[s.camera.readPrefix + 'y'],
-          ratio: 1
+          ratio: 1 // use 0.25 for best results on zoom
         },
         { duration: s.settings('animationsTime') }
       );
       s.refresh();
-      currentNode = newNode;
-
       var url_get = "http://127.0.0.1:8000/game/incomingnode/"+next_node;
       console.log(url_get);
       // use ajax to get the next set of nodes branching from this main node
-      next_nodes(url_get, callback);
-  }});
+      nextNodes(url_get, callback, n);
+      currentNode = e.data.node.id;
+  // }
+});
 
   // Finally, update sigma
   s.refresh();
 
 //////////////////// FUNCTIONS ///////////////////
-function next_nodes(url_get, callback) {
+function nextNodes(urlGet, callback, sourceNode) {
   $.ajax({
-      url: url_get,
+      url: urlGet,
       datatype: 'json',
       success: function(data) {
-          callback(data);
+          callback(data, sourceNode);
       },
       failure: function(data) {
           alert('Something went wrong! Please try again.');
       }
     });
-  }
-  function callback(data) {
-    var json = JSON.parse(data);
-    jQuery.each(json, function(i, val) {
-      alert(val["title"]);
-    });
-  }
+}
+function callback(data, sourceNode) {
+  // console.log(data);
+  var json = JSON.parse(data);
+  jQuery.each(json, function(i, val) {
+    // alert(val["title"]);
+    addNewNode(val, sourceNode);
+  });
+}
+
+function addNewNode(obj, sourceNode) {
+  newNode = Math.random();
+  console.log(sourceNode.id);
+  console.log(obj["title"]);
+  s.graph.addNode({ id: newNode,
+    "x": sourceNode.x + Math.random(),
+    "y": sourceNode.y + Math.random(),
+    "label": obj["title"],
+    "size": 5,
+    "color": "#666"});
+  s.graph.addEdge({
+    id: newNode,
+    source: newNode,
+    target: sourceNode.id,
+  });
+  s.refresh();
+}
