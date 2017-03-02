@@ -12,16 +12,16 @@ def index(request):
 
 
 # incoming
+# def incoming_node(request, title):
+#     data_back = get_page_links(title)
+#     # print data_back
+#     # print type(data_back)
+#
+#     return HttpResponse(data_back)
+
+
 def incoming_node(request, title):
-    data_back = get_page_links(title)
-    # print data_back
-    # print type(data_back)
-
-    return HttpResponse(data_back)
-
-
-def incoming_node(request, name):
-    current_node = {"name": name, "id": 0}
+    current_node = {"name": title, "id": 0}
 
     if has_enough_edges(current_node):
         db_nodes = get_related_nodes(current_node)
