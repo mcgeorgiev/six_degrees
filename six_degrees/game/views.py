@@ -17,12 +17,14 @@ def incoming_node(request, title):
     if has_enough_edges(current_node):
         db_nodes = get_related_nodes(current_node)
     else:
-        add_API_nodes(current_node)
+        if not add_API_nodes(current_node):
+            return HttpResponse(json.dumps({"code": 500, "status":"Failed"}))
+
         db_nodes = get_related_nodes(current_node)
 
-    print current_node
     print db_nodes
-    return HttpResponse(convert_for_sigma(current_node, db_nodes))
+
+    return HttpResponse(json.dumps(db_nodes))
     # data_back = get_page_links(title)
     # # print data_back
     # # print type(data_back)
@@ -51,4 +53,6 @@ def convert_for_sigma(current_node, all_nodes):
         data["edges"] += {"id":"e{0}".format(node_id),
                         "source":"n0",
                         "target":"n{0}".format(node_id)},
-    return data
+
+    out = json.dumps(data)
+    print out

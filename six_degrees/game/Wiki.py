@@ -11,10 +11,13 @@ def get_page_links(name):
 
     r = requests.get(api_url)
     resp = r.json()
-
+    print resp
     #page_id = resp['query']['pages']['360393']['pageid']
     for nested_json in resp["query"]["pages"]:
         page_id = nested_json
+
+    if page_id == "-1":
+        return None
 
     # build json response with all current nodes
     data = {}
@@ -24,6 +27,7 @@ def get_page_links(name):
     counter = count(1)
 
     all_links = []
+
     for links in resp["query"]["pages"]["{0}".format(page_id)]["links"]:
         # create json for this pages links
         # node_id = counter.next()

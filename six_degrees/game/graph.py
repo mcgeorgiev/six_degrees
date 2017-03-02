@@ -46,10 +46,14 @@ def add_node(node):
     driver = driver_connection()
     session = driver.session()
     # need to escape the curly braces
-    query = "CREATE (node:Article {{name:'{0}', id:{1}}})".format(node["name"], node["id"])
-    print query
-    session.run(query)
-    session.close()
+    try:
+        query = "CREATE (node:Article {{name:'{0}', id:{1}}})".format(node["name"], node["id"])
+        print query
+        session.run(query)
+        session.close()
+    except:
+        print "Unicode is not added."
+
 
 
 def add_edge(nodeA, nodeB, relationship_name):
@@ -121,15 +125,20 @@ def node_exists(node):
     # make sure duplicates are not added
     driver = driver_connection()
     session = driver.session()
-    query = "MATCH (Article {{ name: '{0}' }}) return Article".format(node["name"])
-    results = session.run(query)
-    session.close()
+    try:
+        query = "MATCH (Article {{ name: '{0}' }}) return Article".format(node["name"])
+        results = session.run(query)
+        session.close()
+        return True if results.peek() is not None else False
+    except:
+        return False
 
-    return True if results.peek() is not None else False
 
 
 def add_API_nodes(current_node):
     all_links = get_page_links(current_node["name"])
+    if all_links is None:
+        return None
     # avoids stupid quotations breaking queries
     all_links = [link for link in all_links if not contains_quotes(link["title"])]
     # converts the links into nodes format
@@ -144,6 +153,7 @@ def add_API_nodes(current_node):
             add_node(link)
         # otherwise always add relationship
         add_edge(current_node, link, "linksTo")
+    return True
 
 
 def contains_quotes(name):

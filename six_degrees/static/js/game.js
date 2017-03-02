@@ -176,6 +176,11 @@ function nextNodes(urlGet, callback, sourceNode) {
       url: urlGet,
       datatype: 'json',
       success: function(data) {
+          var jsonResp = JSON.parse(data);
+          if(jsonResp["code"] == 500) {
+              alert("FAIL");
+          }
+          alert(data)
           callback(data, sourceNode);
       },
       failure: function(data) {
@@ -198,7 +203,7 @@ function addNewNode(obj, sourceNode) {
   s.graph.addNode({ id: newNode,
     "x": sourceNode.x + Math.random(),
     "y": sourceNode.y + Math.random(),
-    "label": obj["title"],
+    "label": obj["name"],
     "size": 3,
     "color": "#666"});
   s.graph.addEdge({
