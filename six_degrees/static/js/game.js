@@ -91,11 +91,14 @@ function startSigma() {
       nodeList.push(nodeId);
 
       if(nodeId == endNode.id) {
+        // game is over, post nodeList to server and tell user they won
         $("#goal").text("You won the game! It took "+nodeList.length-1+" clicks!");
         $("#result").text("List: ");
         nodeList.forEach(function(n) {
           $("#result").append("<li>"+n+"</li>")
         });
+        $("#container").css("opacity", 0.1);
+        $.post("http://127.0.0.1:8000/game/gameover/", nodeList);
         return;
       }
 

@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from Wiki import get_page_links
 import json
 from graph import *
+from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     # Returns a starting node, related and end nodes
@@ -58,3 +59,9 @@ def convert_for_sigma(current_node, all_nodes):
 
     out = json.dumps(data)
     print out
+
+@csrf_exempt
+def game_over(request):
+    resp = request.POST.get('node')
+    print resp
+    return HttpResponse()
