@@ -90,6 +90,7 @@ function startSigma() {
 
       if(nodeId == endNode.id) {
         alert("YOU HAVE WON THE GAME");
+        alert("You took "+nodeList.length+" clicks!");
       }
 
 
