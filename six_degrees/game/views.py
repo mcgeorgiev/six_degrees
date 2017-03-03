@@ -13,6 +13,7 @@ def index(request):
 
 # incoming
 def incoming_node(request, title):
+    
     current_node = {"name": title, "id": 0}
     if has_enough_edges(current_node):
         db_nodes = get_related_nodes(current_node)
