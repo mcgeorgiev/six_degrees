@@ -88,7 +88,6 @@ def get_related_nodes(node):
     all_nodes = []
     for record in results:
         related_node = {}
-
         related_node["id"] = record["related"].id
         related_node["name"] = record["related"].properties["name"]
         all_nodes.append(related_node)
@@ -126,18 +125,39 @@ def execute(query):
 def nodes_with_num_relations(min_number):
 
     query = """
-            MATCH (a:Article)-[]->(b:Article)
-            WITH a,count(b) as relations, collect(b) as relatednodes
+            MATCH (start)-[]->(b)
+            WITH start, count(b) as relations, collect(b) as relatednodes
             WHERE relations > {}
-            RETURN a,relatednodes, relations
+            RETURN start, relatednodes, relations, rand() as r
+            ORDER BY r
             """.format(min_number)
 
     results = execute(query)
 
-    for record in results:
-        print record["a"]["id"]
-        #c record["a"]["propert"]
-        print "---------"
+    data = results.peek()
+    starting_node = {}
+    starting_node["name"] = data["start"].properties["name"]
+    starting_node["id"] = data["start"].id
+
+    related_nodes = []
+    for record in data["relatednodes"]:
+        related = {}
+        related["name"] = record.properties["name"]
+        related["id"] = record.id
+        related_nodes.append(related)
+
+    output_dict = {}
+    output_dict["start"] = starting_node
+    output_dict["related"] = {value['name']:value for value in related_nodes}.values()
+
+    try:
+        output_dict["related"].remove(starting_node)
+    except ValueError:
+        print "All good removing starting node from related node list"
+
+    return output_dict
+
+
 
 
 
@@ -198,8 +218,8 @@ def format_string(string):
 #     print property, ": ", value
 
 if __name__ == "__main__":
-    #nodes_with_num_relations(4)
-    get_related_nodes({"name": "Neolithic"})
+    print nodes_with_num_relations(5)
+    # get_related_nodes({"name": "Neolithic"})
     #add_API_nodes(get_node_from_name("Kangaroo"))
     #print has_enough_edges({"name": "Neolithic"})
     #add_edge({"name": "England"}, {"name": "Scotland"}, "game3")

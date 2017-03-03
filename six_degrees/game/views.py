@@ -6,9 +6,8 @@ from graph import *
 
 def index(request):
     # Returns a starting node, related and end nodes
-    context_dict = {"something": "else"}
-    response = render(request, 'game/index.html', context=context_dict)
-    return response
+    data = json.dumps(nodes_with_num_relations(4))
+    return render(request, 'game/index.html', context={"starting_data": data})
 
 
 # incoming
