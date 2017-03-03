@@ -60,10 +60,13 @@ def add_edge(nodeA, nodeB, relationship_name):
     driver = driver_connection()
     session = driver.session()
 
-    query = """MATCH (a:Article),(b:Article) WHERE a.name = '{0}' AND b.name = '{1}'
-               CREATE (a)-[r:{2}]->(b)""".format(nodeA["name"], nodeB["name"], relationship_name)
-    session.run(query)
-    session.close()
+    try:
+        query = """MATCH (a:Article),(b:Article) WHERE a.name = '{0}' AND b.name = '{1}'
+                   CREATE (a)-[r:{2}]->(b)""".format(nodeA["name"], nodeB["name"], relationship_name)
+        session.run(query)
+        session.close()
+    except:
+        print "Unicode is not added".
 
 
 def get_node_from_name(name):
