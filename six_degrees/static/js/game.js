@@ -18,7 +18,81 @@ $.ajax({
   }
 });
 
-
+///////////////// DATA DEFINITION FOR TESTING /////////////////////
+alert(starting_data);
+var data = {
+  "nodes": [
+    {
+      "y": 0,
+      "x": 0,
+      "size": 8,
+      "id": "n0",
+      "label": "Dundee"
+    },
+    {
+      "y": 1,
+      "x": 1,
+      "size": 4,
+      "id": "n1",
+      "label": "1906 Dundee fire"
+    },
+    {
+      "y": -1,
+      "x": -1,
+      "size": 4,
+      "id": "n2",
+      "label": "4J Studios"
+    },
+    {
+      "y": 0,
+      "x": 1,
+      "size": 4,
+      "id": "n3",
+      "label": "5th Scottish Parliament"
+    },
+    {
+      "y": 1,
+      "x": 0,
+      "size": 4,
+      "id": "n4",
+      "label": "A.C. Milan"
+    },
+    {
+      "y": -1,
+      "x": 0,
+      "size": 4,
+      "id": "n5",
+      "label": "A.S. Roma"
+    }
+  ],
+  "edges": [
+    {
+      "target": "n0",
+      "id": "e1",
+      "source": "n1"
+    },
+    {
+      "target": "n0",
+      "id": "e2",
+      "source": "n2"
+    },
+    {
+      "target": "n0",
+      "id": "e3",
+      "source": "n3"
+    },
+    {
+      "target": "n0",
+      "id": "e4",
+      "source": "n4"
+    },
+    {
+      "target": "n0",
+      "id": "e5",
+      "source": "n5"
+    }
+  ]
+}
 /////////////////////// START SIGMA STUFF ///////////////////////////
 var  NUMBER_OF_NODES = 5;
 

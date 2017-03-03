@@ -6,9 +6,11 @@ from graph import *
 
 def index(request):
     # Returns a starting node, related and end nodes
-    data = json.dumps(nodes_with_num_relations(4))
-    return render(request, 'game/index.html', context={"starting_data": data})
+    return render(request, 'game/index.html', context={"a": "B"})
 
+def get_start_node(request):
+    data = nodes_with_num_relations(4)
+    return HttpResponse(json.dumps(data))
 
 # incoming
 def incoming_node(request, title):
