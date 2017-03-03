@@ -5,7 +5,7 @@ import json
 from graph import *
 
 def index(request):
-    # Returns a rendered response to send to the client
+    # Returns a starting node, related and end nodes
     context_dict = {"something": "else"}
     response = render(request, 'game/index.html', context=context_dict)
     return response
@@ -13,7 +13,7 @@ def index(request):
 
 # incoming
 def incoming_node(request, title):
-    
+
     current_node = {"name": title, "id": 0}
     if has_enough_edges(current_node):
         db_nodes = get_related_nodes(current_node)

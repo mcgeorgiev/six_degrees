@@ -47,13 +47,13 @@ def add_node(node):
     session = driver.session()
     # need to escape the curly braces
     try:
-        query = "CREATE (node:Article {{name:'{0}', id:{1}}})".format(node["name"], node["id"])
+        query = "CREATE (node:Article {{name:'{0}'}})".format(node["name"])
+        print "ADDED"
         print query
         session.run(query)
         session.close()
     except:
         print "Unicode is not added."
-
 
 
 def add_edge(nodeA, nodeB, relationship_name):
@@ -87,10 +87,12 @@ def get_related_nodes(node):
 
     all_nodes = []
     for record in results:
-        print record
-        all_nodes.append(record["related"].properties)
-    distinct_nodes = {value['name']:value for value in all_nodes}.values()
+        related_node = {}
 
+        related_node["id"] = record["related"].id
+        related_node["name"] = record["related"].properties["name"]
+        all_nodes.append(related_node)
+    distinct_nodes = {value['name']:value for value in all_nodes}.values()
     return distinct_nodes
 
 
@@ -110,6 +112,32 @@ def has_enough_edges(current_node):
     distinct_relations = frozenset(all_relations)
 
     return True if len(distinct_relations) >= min_relations else False
+
+
+def execute(query):
+    driver = driver_connection()
+    session = driver.session()
+    results = session.run(query)
+    session.close()
+    return results
+
+
+
+def nodes_with_num_relations(min_number):
+
+    query = """
+            MATCH (a:Article)-[]->(b:Article)
+            WITH a,count(b) as relations, collect(b) as relatednodes
+            WHERE relations > {}
+            RETURN a,relatednodes, relations
+            """.format(min_number)
+
+    results = execute(query)
+
+    for record in results:
+        print record["a"]["id"]
+        #c record["a"]["propert"]
+        print "---------"
 
 
 
@@ -143,8 +171,6 @@ def add_API_nodes(current_node):
     all_links = [link for link in all_links if not contains_quotes(link["title"])]
     # converts the links into nodes format
     for link in all_links:
-        link["id"] = link.pop("ns")
-        link["id"] = random.randint(0, 10000) # just for testing
         link["name"] = link.pop("title")
     print all_links
     for link in all_links:
@@ -172,7 +198,8 @@ def format_string(string):
 #     print property, ": ", value
 
 if __name__ == "__main__":
-    print get_related_nodes({"name": "Neolithic"})
+    #nodes_with_num_relations(4)
+    get_related_nodes({"name": "Neolithic"})
     #add_API_nodes(get_node_from_name("Kangaroo"))
     #print has_enough_edges({"name": "Neolithic"})
     #add_edge({"name": "England"}, {"name": "Scotland"}, "game3")
