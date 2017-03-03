@@ -66,7 +66,7 @@ def add_edge(nodeA, nodeB, relationship_name):
         session.run(query)
         session.close()
     except:
-        print "Unicode is not added".
+        print "Unicode is not added"
 
 
 def get_node_from_name(name):
