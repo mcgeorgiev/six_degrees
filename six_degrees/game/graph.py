@@ -146,9 +146,13 @@ def nodes_with_num_relations(min_number):
         related["id"] = record.id
         related_nodes.append(related)
 
+    # get the end node, so it is not the start or related
+    end_node = get_end_node(starting_node["name"], [node["name"] for node in related_nodes])
+
     output_dict = {}
     output_dict["start"] = starting_node
     output_dict["related"] = {value['name']:value for value in related_nodes}.values()
+    output_dict["end"] = end_node
 
     try:
         output_dict["related"].remove(starting_node)
@@ -158,9 +162,22 @@ def nodes_with_num_relations(min_number):
     return output_dict
 
 
+def get_end_node(starting_name, related_names):
+    query = """
+            MATCH (end)-[]->(b)
+            RETURN end, rand() as r
+            ORDER BY r
+            """
+    results = execute(query)
+    node = results.peek()
+    end_node = {}
+    end_node["id"] = node["end"].id
+    end_node["name"] = node["end"].properties["name"]
 
-
-
+    if end_node["name"] == starting_name or end_node["name"] in related_names:
+        return get_end_node(starting_name, related_names)
+    else:
+        return end_node
 
 
 def driver_connection():
@@ -219,7 +236,7 @@ def format_string(string):
 
 if __name__ == "__main__":
     print nodes_with_num_relations(5)
-    # get_related_nodes({"name": "Neolithic"})
+    #get_related_nodes({"name": "Neolithic"})
     #add_API_nodes(get_node_from_name("Kangaroo"))
     #print has_enough_edges({"name": "Neolithic"})
     #add_edge({"name": "England"}, {"name": "Scotland"}, "game3")
