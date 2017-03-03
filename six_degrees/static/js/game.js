@@ -2,6 +2,7 @@ var startData;
 var urlStart = "http://127.0.0.1:8000/game/start";
 var s;
 var allNodes = [];
+var nodeList = [];
 
 /////////////////////// GET STARTING DATA ///////////////////////////
 function getStartData() {
@@ -68,10 +69,11 @@ function startSigma() {
       "label": startData.start.name,
       "x": 0,
       "y": 0,
-      "size": 8
+      "size": 8,
+      "color": "#ccc",
     });
     var currentNode= s.graph.nodes(startData.start.id);
-    var nodeList = [startData.start.id];
+    nodeList = [startData.start.id];
     allNodes.push(startData.start.id);
     var endNode = startData.end;
 
@@ -89,8 +91,12 @@ function startSigma() {
       nodeList.push(nodeId);
 
       if(nodeId == endNode.id) {
-        alert("YOU HAVE WON THE GAME");
-        alert("You took "+nodeList.length+" clicks!");
+        $("#goal").text("You won the game! It took "+nodeList.length-1+" clicks!");
+        $("#result").text("List: ");
+        nodeList.forEach(function(n) {
+          $("#result").append("<li>"+n+"</li>")
+        });
+        return;
       }
 
 
@@ -147,7 +153,7 @@ function nextNodes(urlGet, callback, sourceNode) {
       success: function(data) {
           var jsonResp = JSON.parse(data);
           if(jsonResp["code"] == 500) {
-              alert("FAIL");
+              gameOver();
           }
           callback(data, sourceNode);
       },
@@ -212,4 +218,12 @@ function newNodeXY(originNode, numNodes) {
   //   alert("x: "+e.x+", y: "+e.y);
   // });
   return nodeLocs;
+}
+
+function gameOver() {
+  $("#goal").text("You lost after "+nodeList.length-1+" clicks!");
+  $("#result").text("List: ");
+  nodeList.forEach(function(n) {
+    $("#result").append("<li>"+n+"</li>")
+  });
 }
