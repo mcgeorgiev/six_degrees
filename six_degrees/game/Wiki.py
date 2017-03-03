@@ -5,7 +5,7 @@ import sys
 # page id to get links currently all links from "broughty ferry" page
 def get_page_links(name):
     page_name = name
-    link_limit = 5
+    link_limit = 10
 
     api_url = "https://en.wikipedia.org/w/api.php?action=query&titles={0}&prop=links&pllimit={1}&format=json".format(page_name, link_limit)
 

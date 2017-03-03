@@ -17,15 +17,13 @@
 </head>
 <body>
   <div id="container"></div>
-  <script>
-    var starting_data= '{{ starting_data }}';
-  </script>
   <script src="{% static "js/sigma.min.js" %}"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="{% static "js/plugins/sigma.parsers.json.min.js" %}"></script>
   <script src="{% static "js/plugins/sigma.parsers.json.min.js" %}"></script>
   <script src="{% static "js/plugins/sigma.classes.graph.js" %}"></script>
   <script src="{% static "js/plugins/sigma.plugins.animate.min.js" %}"></script>
-  <script src="{% static "js/game.js" %}"></script>
+  <script src="{% static "js/game.js" %}" onload="getStartData()"></script>
+  <div id="goal"></div>
 </body>
 </html>
