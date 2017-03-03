@@ -1,4 +1,5 @@
 ///////////////// DATA DEFINITION FOR TESTING /////////////////////
+alert(starting_data);
 var data = {
   "nodes": [
     {
