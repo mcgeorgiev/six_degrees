@@ -74,7 +74,7 @@ var data = {
 }
 
 /////////////////////// START SIGMA STUFF ///////////////////////////
-
+var  NUMBER_OF_NODES = 5;
 new sigma.classes.configurable(
   {
     autoRescale: false,
@@ -191,18 +191,19 @@ function nextNodes(urlGet, callback, sourceNode) {
 function callback(data, sourceNode) {
   // console.log(data);
   var json = JSON.parse(data);
+  var nodeLocs = newNodeXY(sourceNode, NUMBER_OF_NODES);
   jQuery.each(json, function(i, val) {
     // alert(val["title"]);
-    addNewNode(val, sourceNode);
+    addNewNode(val, sourceNode, nodeLocs[i].x, nodeLocs[i].y);
   });
 }
 
-function addNewNode(obj, sourceNode) {
+function addNewNode(obj, sourceNode, x, y) {
   newNode = Math.random();
 
   s.graph.addNode({ id: newNode,
-    "x": sourceNode.x + Math.random(),
-    "y": sourceNode.y + Math.random(),
+    "x": x,
+    "y": y,
     "label": obj["name"],
     "size": 3,
     "color": "#666"});
@@ -212,4 +213,28 @@ function addNewNode(obj, sourceNode) {
     target: sourceNode.id,
   });
   s.refresh();
+}
+
+function newNodeXY(originNode, numNodes) {
+  var radius = 1 // radius to place around node
+  var x0 = originNode.x;
+  var y0 = originNode.y;
+  var alpha = (2*Math.PI)/numNodes;
+  console.log(alpha);
+  var firstX = x0 + (radius * Math.cos(alpha));
+  var firstY = y0 + (radius * Math.sin(alpha));
+  var nodeLocs = [{"x":firstX, "y":firstY}];
+
+  for(i=1; i<numNodes; i++) {
+    // increment alpha angle by adding 2pi/N
+    alpha = alpha + ((2*Math.PI)/numNodes);
+    console.log(alpha);
+    var newX = x0 + (radius * Math.cos(alpha));
+    var newY = y0 + (radius * Math.sin(alpha));
+    nodeLocs.push({"x":newX, "y":newY});
+  }
+  // nodeLocs.forEach(function(e) {
+  //   alert("x: "+e.x+", y: "+e.y);
+  // });
+  return nodeLocs;
 }
