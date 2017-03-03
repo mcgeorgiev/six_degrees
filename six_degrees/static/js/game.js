@@ -75,10 +75,14 @@ var data = {
 
 /////////////////////// START SIGMA STUFF ///////////////////////////
 var  NUMBER_OF_NODES = 5;
+
 new sigma.classes.configurable(
   {
     autoRescale: false,
     autoResize: false,
+    singleHover: true,
+    defaultLabelSize: 20,
+    fontStyle: "bold",
   });
 
   sigma.classes.graph.addMethod('neighbors', function(nodeId) {
@@ -98,9 +102,15 @@ new sigma.classes.configurable(
       container: 'container',
       settings: {
           defaultNodeColor: '#666',
-          labelThreshold: 4
+          labelThreshold: 4,
+          singleHover: true,
+          defaultLabelSize: 13,
+          fontStyle: "bold",
+          defaultNodeHoverColor: "#696",
       }
   });
+  cam = s.addCamera();
+
 
   var currentNode= s.graph.nodes("n0");
   var nodeList = ["n0"];
@@ -149,15 +159,12 @@ new sigma.classes.configurable(
       var n = s.graph.nodes(e.data.node.id);
 
       // move camera to look at the new node
-      sigma.misc.animation.camera(
-        s.camera,
-        {
-          x: n[s.camera.readPrefix + 'x'],
-          y: n[s.camera.readPrefix + 'y'],
-          ratio: 0.7 // use 0.35 for best results on zoom
-        },
-        { duration: s.settings('animationsTime') }
-      );
+      cam.goTo({
+        x: n.x,
+        y: n.y,
+        ratio: 0.77, //zoom ratio
+        angle: 0,
+      });
       s.refresh();
       var url_get = "http://127.0.0.1:8000/game/incomingnode/"+next_node;
     //  console.log(url_get);
@@ -194,6 +201,7 @@ function callback(data, sourceNode) {
   var nodeLocs = newNodeXY(sourceNode, NUMBER_OF_NODES);
   jQuery.each(json, function(i, val) {
     // alert(val["title"]);
+
     addNewNode(val, sourceNode, nodeLocs[i].x, nodeLocs[i].y);
   });
 }
@@ -216,10 +224,10 @@ function addNewNode(obj, sourceNode, x, y) {
 }
 
 function newNodeXY(originNode, numNodes) {
-  var radius = 1 // radius to place around node
+  var radius = 0.7 // radius to place around node
   var x0 = originNode.x;
   var y0 = originNode.y;
-  var alpha = (2*Math.PI)/numNodes;
+  var alpha = (1.8*Math.PI)/numNodes;
   console.log(alpha);
   var firstX = x0 + (radius * Math.cos(alpha));
   var firstY = y0 + (radius * Math.sin(alpha));
