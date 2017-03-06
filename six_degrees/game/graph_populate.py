@@ -8,7 +8,7 @@ def wipe_database():
     execute(query)
     print "Wiping database..."
 
-def create_nodes():
+def create_start_node():
     query = """
         create (:Article {name:"Scotland"})
         create (:Article {name:"William Wallace"})
@@ -21,6 +21,42 @@ def create_nodes():
     """
     execute(query)
     print "Creating new nodes..."
+
+def create_end_node():
+    query = """
+        create (:Article {name:"Australia"})
+        create (:Article {name:"Kangaroo"})
+        create (:Article {name:"Crocodile Dundee"})
+        create (:Article {name:"Mates"})
+        create (:Article {name:"Bondi Beach"})
+        create (:Article {name:"Bogan"})
+    """
+    execute(query)
+    print "Creating end node"
+
+def create_end_relationships():
+    queries = [
+        """
+        MATCH (a:Article),(b:Article) WHERE a.name = 'Australia' AND b.name = 'Kangaroo'
+        CREATE (a)-[r:linksTo]->(b)""",
+        """
+        MATCH (a:Article),(b:Article) WHERE a.name = 'Australia' AND b.name = 'Crocodile Dundee'
+        CREATE (a)-[r:linksTo]->(b)""",
+        """
+        MATCH (a:Article),(b:Article) WHERE a.name = 'Australia' AND b.name = 'Mates'
+        CREATE (a)-[r:linksTo]->(b)""",
+        """
+        MATCH (a:Article),(b:Article) WHERE a.name = 'Australia' AND b.name = 'Bondi Beach'
+        CREATE (a)-[r:linksTo]->(b)""",
+        """
+        MATCH (a:Article),(b:Article) WHERE a.name = 'Australia' AND b.name = 'Bogan'
+        CREATE (a)-[r:linksTo]->(b)"""
+        ]
+
+    for query in queries:
+        execute(query)
+    print "Creating end relationships between nodes"
+
 
 def create_relationships():
     queries = [
@@ -54,5 +90,7 @@ def create_relationships():
 
 if __name__ == "__main__":
     wipe_database()
-    create_nodes()
+    create_start_node()
+    create_end_node()
     create_relationships()
+    create_end_relationships()
