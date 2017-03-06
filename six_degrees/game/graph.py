@@ -205,7 +205,7 @@ def node_exists(node):
 
 def add_API_nodes(current_node):
     all_links = get_page_links(current_node["name"])
-    print len(all_links)
+    #print len(all_links)
     if all_links is None:
         return None
     # avoids stupid quotations breaking queries
