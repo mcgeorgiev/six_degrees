@@ -205,6 +205,7 @@ def node_exists(node):
 
 def add_API_nodes(current_node):
     all_links = get_page_links(current_node["name"])
+    print len(all_links)
     if all_links is None:
         return None
     # avoids stupid quotations breaking queries
@@ -215,7 +216,7 @@ def add_API_nodes(current_node):
     print all_links
     for link in all_links:
         if not node_exists(link):
-            print 'here'
+            print 'added'
             add_node(link)
         # otherwise always add relationship
         add_edge(current_node, link, "linksTo")
@@ -240,7 +241,7 @@ def format_string(string):
 if __name__ == "__main__":
     print nodes_with_num_relations(5)
     #get_related_nodes({"name": "Neolithic"})
-    #add_API_nodes(get_node_from_name("Kangaroo"))
+    add_API_nodes(get_node_from_name("Kangaroo"))
     #print has_enough_edges({"name": "Neolithic"})
     #add_edge({"name": "England"}, {"name": "Scotland"}, "game3")
     #add_node("England", 9)
