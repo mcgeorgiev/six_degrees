@@ -27,6 +27,8 @@ var  NUMBER_OF_NODES;
 function startSigma() {
   console.log(startData.start);
 
+  // alert(getCookie('csrftoken'));
+
   NUMBER_OF_NODES = Object.keys(startData.related).length;
   console.log(NUMBER_OF_NODES);
   new sigma.classes.configurable(
@@ -73,17 +75,17 @@ function startSigma() {
       "color": "#ccc",
     });
     var currentNode= s.graph.nodes(startData.start.id);
-    nodeList = [startData.start.id];
+    nodeList = [];
     allNodes.push(startData.start.id);
     var endNode = startData.end;
 
     $("#goal").text("Goal: "+endNode.name);
     // add the rest of the nodes
-    var nodeLocs = newNodeXY(currentNode, NUMBER_OF_NODES);
-    $.each(startData.related, function(i, val) {
-      addNewNode(val, currentNode, nodeLocs[i].x, nodeLocs[i].y);
-      allNodes.push(val.id);
-    });
+    // var nodeLocs = newNodeXY(currentNode, NUMBER_OF_NODES);
+    // $.each(startData.related, function(i, val) {
+    //   addNewNode(val, currentNode, nodeLocs[i].x, nodeLocs[i].y);
+    //   allNodes.push(val.id);
+    // });
     // user has clicked a node
     s.bind('clickNode', function(e) {
 
@@ -92,13 +94,14 @@ function startSigma() {
 
       if(nodeId == endNode.id) {
         // game is over, post nodeList to server and tell user they won
-        $("#goal").text("You won the game! It took "+nodeList.length-1+" clicks!");
+        var clicks = nodeList.length;
+        $("#goal").text("You won the game! It took "+(clicks-1)+" clicks!");
         $("#result").text("List: ");
         nodeList.forEach(function(n) {
           $("#result").append("<li>"+n+"</li>")
         });
         $("#container").css("opacity", 0.1);
-        $.post("http://127.0.0.1:8000/game/gameover/", nodeList);
+        $.post("http://127.0.0.1:8000/game/gameover/", {"node":"-------**********GAME OVER**********-------------", "csrfmiddlewaretoken":getCookie('csrftoken')});
         return;
       }
 
@@ -229,4 +232,10 @@ function gameOver() {
   nodeList.forEach(function(n) {
     $("#result").append("<li>"+n+"</li>")
   });
+}
+
+function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
 }
