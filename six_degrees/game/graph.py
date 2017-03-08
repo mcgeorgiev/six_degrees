@@ -3,96 +3,93 @@ from Wiki import get_page_links
 import random
 from itertools import count
 
+from neo4jrestclient.client import GraphDatabase
 
-def get_nodes_from_game(start, game, end):
-    driver = driver_connection()
-    session = driver.session()
-
-    query = "match ({0})-[l:{1}]->({2}) return {0}, type(l), {2}".format(start, game, end)
-    result = session.run(query)
-
-    output = {"game": game,
-              "nodes": []}
-
-    for record in result:
-        entry = {  "source" : {
-                    "name": record[start].properties['name'],
-                    "id": record[start].properties['id']
-                },
-                    "dest" : {
-                    "name": record[end].properties['name'],
-                    "id": record[end].properties['id']
-                }
-        }
-
-        # if the list is empty add the entry
-        if len(output["nodes"]) == 0:
-            output["nodes"].append(entry)
-        else:
-            # if the list is not empty determine whether to insert before or after the relevant entries
-            for i in range(len(output["nodes"])):
-                if entry["dest"]["name"] == output["nodes"][i]["source"]["name"]:
-                    output["nodes"].insert(i, entry)
-                    break
-                elif entry["source"]["name"] == output["nodes"][i]["dest"]["name"]:
-                    output["nodes"].insert(i+1, entry)
-                    break
-    session.close()
-    print output
-    return output
+def connection():
+    return GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
+    # return GraphDatabase("http://hobby-ekngppohojekgbkepjibeaol.dbs.graphenedb.com:24789/db/data/", username="testing-user", password = "b.SIxCtcPc51R5.aaW8WZa65LdsjGgZ")
 
 
+# def get_nodes_from_game(start, game, end):
+#     driver = driver_connection()
+#     session = driver.session()
+#
+#     query = "match ({0})-[l:{1}]->({2}) return {0}, type(l), {2}".format(start, game, end)
+#     result = session.run(query)
+#
+#     output = {"game": game,
+#               "nodes": []}
+#
+#     for record in result:
+#         entry = {  "source" : {
+#                     "name": record[start].properties['name'],
+#                     "id": record[start].properties['id']
+#                 },
+#                     "dest" : {
+#                     "name": record[end].properties['name'],
+#                     "id": record[end].properties['id']
+#                 }
+#         }
+#
+#         # if the list is empty add the entry
+#         if len(output["nodes"]) == 0:
+#             output["nodes"].append(entry)
+#         else:
+#             # if the list is not empty determine whether to insert before or after the relevant entries
+#             for i in range(len(output["nodes"])):
+#                 if entry["dest"]["name"] == output["nodes"][i]["source"]["name"]:
+#                     output["nodes"].insert(i, entry)
+#                     break
+#                 elif entry["source"]["name"] == output["nodes"][i]["dest"]["name"]:
+#                     output["nodes"].insert(i+1, entry)
+#                     break
+#     session.close()
+#     print output
+#     return output
+#
+#
 def add_node(node):
-    driver = driver_connection()
-    session = driver.session()
+    gdb = connection()
     # need to escape the curly braces
     try:
         query = "CREATE (node:Article {{name:'{0}'}})".format(node["name"])
-        print "ADDED"
         print query
-        session.run(query)
-        session.close()
+        gdb.query(query)
     except:
         print "Unicode is not added."
 
 
 def add_edge(nodeA, nodeB, relationship_name):
-    driver = driver_connection()
-    session = driver.session()
+    gdb = connection()
 
     try:
         query = """MATCH (a:Article),(b:Article) WHERE a.name = '{0}' AND b.name = '{1}'
                    CREATE (a)-[r:{2}]->(b)""".format(nodeA["name"], nodeB["name"], relationship_name)
-        session.run(query)
-        session.close()
+        gdb.query(query)
     except:
         print "Unicode is not added"
 
 
 def get_node_from_name(name):
-    driver = driver_connection()
-    session = driver.session()
+    gdb = connection()
 
     query = "match (node:Article{{name: '{0}'}}) return node".format(name)
-    results = session.run(query)
-    session.close()
+    results = gdb.query(query)
     for record in results:
-        return record['node'].properties
+        return record[0]['data']
 
 
 def get_related_nodes(node):
-    driver = driver_connection()
-    session = driver.session()
+    gdb = connection()
 
     query = "MATCH (Article {{ name: '{0}' }})--(related) return related".format(node["name"])
-    results = session.run(query)
-    session.close()
+    results = gdb.query(query)
 
     all_nodes = []
     for record in results:
         related_node = {}
-        related_node["id"] = record["related"].id
-        related_node["name"] = record["related"].properties["name"]
+        related_node["id"] = record[0]["metadata"]["id"]
+        related_node["name"] = record[0]['data']["name"]
         all_nodes.append(related_node)
     distinct_nodes = {value['name']:value for value in all_nodes}.values()
     return distinct_nodes
@@ -101,32 +98,21 @@ def get_related_nodes(node):
 def has_enough_edges(current_node):
     # if the node has one relationship then that is it's source
     min_relations = 5
-    driver = driver_connection()
-    session = driver.session()
+    gdb = connection()
 
     query = "MATCH (Article {{ name: '{0}' }})--(related) return related.name".format(current_node["name"])
-    results = session.run(query)
-    session.close()
+    results = gdb.query(query)
 
     all_relations = []
     for record in results:
-        all_relations.append(record["related.name"])
+        all_relations.append(record[0])
     distinct_relations = frozenset(all_relations)
 
     return True if len(distinct_relations) >= min_relations else False
 
 
-def execute(query):
-    driver = driver_connection()
-    session = driver.session()
-    results = session.run(query)
-    session.close()
-    return results
-
-
-
 def nodes_with_num_relations(min_number):
-
+    gdb = connection()
     query = """
             MATCH (start)-[]->(b)
             WITH start, count(b) as relations, collect(b) as relatednodes
@@ -135,26 +121,29 @@ def nodes_with_num_relations(min_number):
             ORDER BY r
             """.format(min_number)
 
-    results = execute(query)
+    results = gdb.query(query)[0]
 
-    data = results.peek()
+    # first element of returned list is the start node
+    start = results.pop(0)
     starting_node = {}
-    starting_node["name"] = data["start"].properties["name"]
-    starting_node["id"] = data["start"].id
+    starting_node["name"] = start['data']["name"]
+    starting_node["id"] = start["metadata"]["id"]
 
-    related_nodes = []
-    for record in data["relatednodes"]:
+    # next element are the related nodes
+    relatednodes = results[0]
+    related_nodes_list = []
+    for node in relatednodes:
         related = {}
-        related["name"] = record.properties["name"]
-        related["id"] = record.id
-        related_nodes.append(related)
+        related["name"] = node['data']["name"]
+        related["id"] = node["metadata"]["id"]
+        related_nodes_list.append(related)
 
     # get the end node, so it is not the start or related
-    end_node = get_end_node(starting_node["name"], [node["name"] for node in related_nodes])
+    end_node = get_end_node(starting_node["name"], [node["name"] for node in related_nodes_list])
 
     output_dict = {}
     output_dict["start"] = starting_node
-    output_dict["related"] = {value['name']:value for value in related_nodes}.values()
+    output_dict["related"] = {value['name']:value for value in related_nodes_list}.values()
     output_dict["end"] = end_node
 
     try:
@@ -166,16 +155,17 @@ def nodes_with_num_relations(min_number):
 
 
 def get_end_node(starting_name, related_names):
+    gdb = connection()
     query = """
             MATCH (end)-[]->(b)
             RETURN end, rand() as r
             ORDER BY r
             """
-    results = execute(query)
-    node = results.peek()
+    results = gdb.query(query)
+
     end_node = {}
-    end_node["id"] = node["end"].id
-    end_node["name"] = node["end"].properties["name"]
+    end_node["id"] = results[0][0]["metadata"]["id"]
+    end_node["name"] = results[0][0]['data']["name"]
 
     if end_node["name"] == starting_name or end_node["name"] in related_names:
         return get_end_node(starting_name, related_names)
@@ -183,41 +173,35 @@ def get_end_node(starting_name, related_names):
         return end_node
 
 
-def driver_connection():
-    #return GraphDatabase.driver("bolt://hobby-nlhlodhmoeaggbkehnjmnbol.dbs.graphenedb.com:24786", auth=basic_auth("testing", "b.g3C3SxcDglNv.anE0GtQ64r8M7WkS"))
-
-    return GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
-
-
 def node_exists(node):
     # make sure duplicates are not added
-    driver = driver_connection()
-    session = driver.session()
+    gdb = connection()
+    query = "MATCH (Article {{ name: '{0}' }}) return Article".format(node["name"])
+    results = gdb.query(query)
     try:
-        query = "MATCH (Article {{ name: '{0}' }}) return Article".format(node["name"])
-        results = session.run(query)
-        session.close()
-        return True if results.peek() is not None else False
-    except:
+        existing_node = results[0]
+        return True
+    except IndexError:
         return False
-
 
 
 def add_API_nodes(current_node):
     all_links = get_page_links(current_node["name"])
-    #print len(all_links)
     if all_links is None:
         return None
+
     # avoids stupid quotations breaking queries
     all_links = [link for link in all_links if not contains_quotes(link["title"])]
+
     # converts the links into nodes format
     for link in all_links:
         link["name"] = link.pop("title")
-    print all_links
-    for link in all_links:
+        link.pop("ns")
+
         if not node_exists(link):
-            print 'added'
+            print 'node does not exist - added'
             add_node(link)
+
         # otherwise always add relationship
         add_edge(current_node, link, "linksTo")
     return True
@@ -227,11 +211,11 @@ def contains_quotes(name):
     return True if "'" in name or '"' in name else False
 
 
-def format_string(string):
-    string = string.replace(" ", "_")
-    string = string.lower()
-    return string
-
+# def format_string(string):
+#     string = string.replace(" ", "_")
+#     string = string.lower()
+#     return string
+#
 
 
 # * Useful code to find an objects properties names
@@ -239,10 +223,13 @@ def format_string(string):
 #     print property, ": ", value
 
 if __name__ == "__main__":
-    print nodes_with_num_relations(5)
-    #get_related_nodes({"name": "Neolithic"})
-    add_API_nodes(get_node_from_name("Kangaroo"))
-    #print has_enough_edges({"name": "Neolithic"})
+    print node_exists({"name": "Bogan"})
+    # print nodes_with_num_relations(4)
+    # print get_related_nodes({"name": "Scotland"})
+    # add_API_nodes(get_node_from_name("Kangaroo"))
+    # print get_node_from_name("Australia")
+    # print get_end_node("Scotland", ["Isle of Arran", "Scottish Parliament", "Thistle", "England", "Glasgow", "Rob Roy", "William Wallace"])
+    # print has_enough_edges({"name": "Bogan"})
     #add_edge({"name": "England"}, {"name": "Scotland"}, "game3")
     #add_node("England", 9)
     #add_node("Anglican Communion", 8)

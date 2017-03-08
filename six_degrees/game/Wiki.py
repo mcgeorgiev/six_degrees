@@ -11,7 +11,7 @@ def get_page_links(name):
 
     r = requests.get(api_url)
     resp = r.json()
-    print resp
+    # print resp
     #page_id = resp['query']['pages']['360393']['pageid']
     for nested_json in resp["query"]["pages"]:
         page_id = nested_json
