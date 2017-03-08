@@ -1,5 +1,7 @@
 beautifulsoup4==4.5.3
 Django==1.10.6
 neo4j-driver==1.1.2
+neo4jrestclient==2.1.1
+py2neo==3.1.2
 requests==2.4.3
 wheel==0.24.0
