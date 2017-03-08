@@ -6,7 +6,8 @@ from itertools import count
 from neo4jrestclient.client import GraphDatabase
 
 def connection():
-    return GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
+    return GraphDatabase("http://localhost:7474/db/data/", username="neo4j", password="password")
+    # return GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
     # return GraphDatabase("http://hobby-ekngppohojekgbkepjibeaol.dbs.graphenedb.com:24789/db/data/", username="testing-user", password = "b.SIxCtcPc51R5.aaW8WZa65LdsjGgZ")
 
 
