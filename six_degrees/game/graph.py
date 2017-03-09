@@ -1,5 +1,5 @@
 from neo4j.v1 import GraphDatabase, basic_auth
-from Wiki import get_page_links
+from Wiki import get_links_for
 import random
 from itertools import count
 
@@ -177,7 +177,7 @@ def get_end_node(starting_name, related_names):
 def node_exists(node):
     # make sure duplicates are not added
     gdb = connection()
-    query = "MATCH (Article {{ name: '{0}' }}) return Article".format(node["name"])
+    query = "MATCH (Article {{ name: '{0}' }}) return Article".format(node["name"].encode('utf-8'))
     results = gdb.query(query)
     try:
         existing_node = results[0]
@@ -187,7 +187,7 @@ def node_exists(node):
 
 
 def add_API_nodes(current_node):
-    all_links = get_page_links(current_node["name"])
+    all_links = get_links_for(current_node["name"])
     if all_links is None:
         return None
 
@@ -224,7 +224,10 @@ def contains_quotes(name):
 #     print property, ": ", value
 
 if __name__ == "__main__":
-    print node_exists({"name": "Bogan"})
+    node = {"name": "Bogan\2013"}
+    unicode(node["name"])
+    print node
+    # print node_exists(node)
     # print nodes_with_num_relations(4)
     # print get_related_nodes({"name": "Scotland"})
     # add_API_nodes(get_node_from_name("Kangaroo"))

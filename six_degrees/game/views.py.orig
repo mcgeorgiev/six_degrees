@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+<<<<<<< HEAD
 from Wiki import get_page_links
 from game.models import Game
 from game.models import UserProfile
 
+=======
+>>>>>>> 7319731e19c16cf42cc40c39edadeb906568f320
 import json
 from graph import *
 from django.views.decorators.csrf import csrf_exempt
