@@ -18,8 +18,11 @@ from django.contrib import admin
 from game import views
 
 urlpatterns = [
+    url(r'^$', views.home, name='home'),
     url(r'^game/', include('game.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^scores/', views.scores, name='scores'),
+    url(r'^rules/', views.rules, name='rules'),
+
 
 ]

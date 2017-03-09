@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from Wiki import get_page_links
+#from Wiki import get_page_links
 from game.models import Game
 from game.models import UserProfile
 
@@ -16,6 +16,14 @@ def scores(request):
     score_list = UserProfile.objects.order_by('score')[:5]
     context_dict = {'userprofiles': score_list}
     return render(request, 'game/scores.html', context_dict)
+
+def rules(request):
+    return HttpResponse("Rules Page")
+
+def home(request):
+    return render(request, 'game/home.html')
+
+
 
 
 def get_start_node(request):
@@ -41,10 +49,6 @@ def incoming_node(request, title):
     # # print type(data_back)
 
     # return HttpResponse(data_back)
-
-
-
-
 
 def convert_for_sigma(current_node, all_nodes):
     # build json response with all current nodes

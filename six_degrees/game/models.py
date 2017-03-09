@@ -14,7 +14,8 @@ class Game(models.Model):
         verbose_name_plural = 'games'
 
     def __unicode__(self):
-        return self.source
+        gamename = self.source + self.destination
+        return self.gamename
 
 class UserProfile(models.Model):
     username = models.CharField(max_length=128)
