@@ -1,5 +1,5 @@
 from neo4j.v1 import GraphDatabase, basic_auth
-from Wiki import get_page_links
+from Wiki import get_links_for
 import random
 from itertools import count
 
@@ -187,7 +187,7 @@ def node_exists(node):
 
 
 def add_API_nodes(current_node):
-    all_links = get_page_links(current_node["name"])
+    all_links = get_links_for(current_node["name"])
     if all_links is None:
         return None
 
