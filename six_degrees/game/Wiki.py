@@ -13,7 +13,7 @@ def get_links_for(name):
     try:
         random_indexes = random.sample(range(0, len(filtered_links)), 10)
     except ValueError:
-        random_indexes = random.sample(range(0, len(filtered_links)), len(filtered_links))
+        random_indexes = random.sample(range(0, len(filtered_links)), len(filtered_links)-1)
 
     chosen_links = []
     for i in random_indexes:
