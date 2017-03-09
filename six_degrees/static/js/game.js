@@ -1,5 +1,5 @@
 var startData;
-var urlStart = "http://127.0.0.1:8000/game/start";
+var baseUrl = "http://127.0.0.1:8000/game/"
 var s;
 var allNodes = [];
 var nodeList = [];
@@ -7,7 +7,7 @@ var nodeList = [];
 /////////////////////// GET STARTING DATA ///////////////////////////
 function getStartData() {
     $.ajax({
-    url: urlStart,
+    url: baseUrl + "start/",
     datatype: 'json',
     success: function(data) {
         var jsonResp = JSON.parse(data);
@@ -22,7 +22,7 @@ function getStartData() {
     }
   });
 }
-/////////////////////// START SIGMA STUFF ///////////////////////////
+/////////////////////// START SIGMA ///////////////////////////
 var  NUMBER_OF_NODES;
 function startSigma() {
   console.log(startData.start);
@@ -101,7 +101,7 @@ function startSigma() {
           $("#result").append("<li>"+n+"</li>")
         });
         $("#container").css("opacity", 0.1);
-        $.post("http://127.0.0.1:8000/game/gameover/", {"node":"-------**********GAME OVER**********-------------", "csrfmiddlewaretoken":getCookie('csrftoken')});
+        $.post(baseUrl + "gameover/", {"node":"-------**********GAME OVER**********-------------", "csrfmiddlewaretoken":getCookie('csrftoken')});
         return;
       }
 
@@ -141,7 +141,7 @@ function startSigma() {
 
       s.refresh();
 
-      var url_get = "http://127.0.0.1:8000/game/incomingnode/"+next_node;
+      var url_get = baseUrl+"incomingnode/"+next_node;
 
       // use ajax to get the next set of nodes branching from this main node
       nextNodes(url_get, callback, n);
