@@ -75,6 +75,7 @@ function startSigma() {
       "size": 8,
       "color": "#ccc",
     });
+
     var currentNode= s.graph.nodes(startData.start.id);
 
     allNodes.push(startData.start.id);
