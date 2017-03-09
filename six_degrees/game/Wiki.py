@@ -10,11 +10,11 @@ def get_links_for(name):
     get_page(name)
 
     filtered_links = remove_meta_links(all_links)
+    print len(filtered_links)
     try:
         random_indexes = random.sample(range(0, len(filtered_links)), 10)
     except ValueError:
         random_indexes = random.sample(range(0, len(filtered_links)), len(filtered_links)-1)
-
     chosen_links = []
     for i in random_indexes:
         filtered_links[i]["title"].encode('utf-8')
@@ -35,7 +35,8 @@ def get_page(name, cont=""):
     if cont != "":
         cont = "&plcontinue=" + cont
 
-    api_url = "https://en.wikipedia.org/w/api.php?action=query&titles={0}&prop=links&pllimit={1}&format=json{2}".format(page_name, link_limit, cont)
+    api_url = "https://en.wikipedia.org/w/api.php?action=query&titles={0}&prop=links&pllimit={1}&format=json&redirects=1{2}".format(page_name, link_limit, cont)
+
     r = requests.get(api_url)
     resp = r.json()
 
@@ -57,6 +58,6 @@ def get_page(name, cont=""):
 
 
 if __name__ == '__main__':
-    print get_links_for("Australia")
+    get_links_for("Glasgow")
     # wiki = Wikipedia()
     # print len(wiki.get_links("Australia"))
