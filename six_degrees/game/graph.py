@@ -177,7 +177,7 @@ def get_end_node(starting_name, related_names):
 def node_exists(node):
     # make sure duplicates are not added
     gdb = connection()
-    query = "MATCH (Article {{ name: '{0}' }}) return Article".format(node["name"])
+    query = "MATCH (Article {{ name: '{0}' }}) return Article".format(node["name"].encode('utf-8'))
     results = gdb.query(query)
     try:
         existing_node = results[0]

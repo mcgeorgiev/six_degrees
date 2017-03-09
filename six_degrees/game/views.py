@@ -60,6 +60,7 @@ def convert_for_sigma(current_node, all_nodes):
 
 def game_over(request):
     resp = request.POST
+    resp = resp.json()
     print resp
     # for x in resp:
     #     print x["nodes"]["label"]
