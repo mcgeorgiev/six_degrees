@@ -10,17 +10,23 @@ class Game(models.Model):
     destination = models.CharField(max_length=128)
     numLinks = models.IntegerField()
 
+    class Meta:
+        verbose_name_plural = 'games'
+
     def __unicode__(self):
         return self.source
 
 class UserProfile(models.Model):
-    userName = models.CharField(max_length=128)
+    username = models.CharField(max_length=128)
     userID = models.IntegerField(unique=True)
     password = models.CharField(max_length=128)
     score = models.IntegerField()
 
+    class Meta:
+        verbose_name_plural = 'userprofiles'
+
     def __unicode__(self):
-        return self.userName
+        return self.username
 
 
 # class UserProfile(models.Model):
