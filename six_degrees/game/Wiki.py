@@ -2,6 +2,7 @@ import requests
 import json
 from itertools import count
 import sys
+
 # page id to get links currently all links from "broughty ferry" page
 def get_page_links(name):
     page_name = name
