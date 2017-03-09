@@ -1,4 +1,7 @@
 import requests
+import json
+from itertools import count
+import sys
 import random
 
 def get_links_for(name):
@@ -20,7 +23,6 @@ def remove_meta_links(links):
         if item["ns"] != 0:
             links.remove(item)
     return links
-
 
 # page id to get links currently all links from "broughty ferry" page
 def get_page(name, cont=""):

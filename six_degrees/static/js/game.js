@@ -1,8 +1,9 @@
 var startData;
-var baseUrl = "http://127.0.0.1:8000/game/"
+var baseUrl = "";//"http://127.0.0.1:8000/game/"
 var s;
 var allNodes = [];
-var nodeList = [];
+var visitedNodes = {};
+visitedNodes['nodes'] = [];
 
 /////////////////////// GET STARTING DATA ///////////////////////////
 function getStartData() {
@@ -75,81 +76,86 @@ function startSigma() {
       "color": "#ccc",
     });
     var currentNode= s.graph.nodes(startData.start.id);
-    nodeList = [];
+
     allNodes.push(startData.start.id);
     var endNode = startData.end;
 
     $("#goal").text("Goal: "+endNode.name);
-    // add the rest of the nodes
-    // var nodeLocs = newNodeXY(currentNode, NUMBER_OF_NODES);
-    // $.each(startData.related, function(i, val) {
-    //   addNewNode(val, currentNode, nodeLocs[i].x, nodeLocs[i].y);
-    //   allNodes.push(val.id);
-    // });
+
+    var isClickable = true;
     // user has clicked a node
     s.bind('clickNode', function(e) {
 
-      var nodeId = e.data.node.id;
-      nodeList.push(nodeId);
-
-      if(nodeId == endNode.id) {
-        // game is over, post nodeList to server and tell user they won
-        var clicks = nodeList.length;
-        $("#goal").text("You won the game! It took "+(clicks-1)+" clicks!");
-        $("#result").text("List: ");
-        nodeList.forEach(function(n) {
-          $("#result").append("<li>"+n+"</li>")
-        });
-        $("#container").css("opacity", 0.1);
-        $.post(baseUrl + "gameover/", {"node":"-------**********GAME OVER**********-------------", "csrfmiddlewaretoken":getCookie('csrftoken')});
-        return;
-      }
-
-
-      toKeep = s.graph.neighbors(nodeId);
-      toKeep[nodeId] = e.data.node;
-      var newNode = Math.random();
-      // if (e.data.node.id == currentNode || currentNode == null) {
-      s.graph.nodes().forEach(function(n) {
-          n.color = '#ccc';
-          n.size = 1;
-      });
-      s.graph.edges().forEach(function(e) {
-          e.color = '#ccc';
-          var pos = nodeList.indexOf(e.source);
-          if(pos > 0) {
-              e.color = '#696';
-              s.graph.nodes(nodeList[pos]).color = '#696';
-              e.size = 8;
+      if(isClickable) {
+          var nodeId = e.data.node.id;
+          visitedNodes.nodes.push({
+                        "id": e.data.node.id,
+                        "label": e.data.node.label
+                    });
+          if(nodeId == endNode.id) {
+            gameOverNodeList = JSON.stringify(visitedNodes["nodes"], null, 2); // Indented 4 spaces
+            $.post(baseUrl + "gameover/", {"nodes":gameOverNodeList, "csrfmiddlewaretoken":getCookie('csrftoken')});
+            console.log(gameOverNodeList);
+            // cannot click graph anymore
+            isClickable = false;
+            // game is over, post visitedNodes to server and tell user they won
+            var clicks = Object.keys(visitedNodes).length;
+            clickTxt = (clicks > 1) ? "clicks":"click";
+            $("#goal").text("You won the game! It took "+clicks+" "+clickTxt);
+            $("#result").text("List: ");
+            jQuery.each(visitedNodes, function(i, val) {
+              $("#result").append("<li>"+val["label"]+"</li>")
+            });
+            $("#container").css("opacity", 0.3);
+            return;
           }
-      });
-      // make the previous node and edge green to differentiate path
-      e.data.node.color = '#696';
-      e.data.node.size = 3;
 
-      var next_node = e.data.node.label;
 
-      var n = s.graph.nodes(e.data.node.id);
+          toKeep = s.graph.neighbors(nodeId);
+          toKeep[nodeId] = e.data.node;
+          var newNode = Math.random();
+          // if (e.data.node.id == currentNode || currentNode == null) {
+          s.graph.nodes().forEach(function(n) {
+              n.color = '#ccc';
+              n.size = 1;
+          });
+          s.graph.edges().forEach(function(e) {
+              e.color = '#ccc';
+            //   var pos = visitedNodes.indexOf(e.source);
+            //   if(pos > 0) {
+            //       e.color = '#696';
+            //     //   s.graph.nodes(visitedNodes[pos]).color = '#696';
+            //       e.size = 8;
+            //   }
+          });
+          // make the previous node and edge green to differentiate path
+          e.data.node.color = '#696';
+          e.data.node.size = 3;
 
-      // move camera to look at the new node
-      cam.goTo({
-        x: n.x,
-        y: n.y,
-        ratio: 0.77, //zoom ratio
-        angle: 0,
-      });
+          var next_node = e.data.node.label;
 
-      s.refresh();
+          var n = s.graph.nodes(e.data.node.id);
 
-      var url_get = baseUrl+"incomingnode/"+next_node;
+          // move camera to look at the new node
+          cam.goTo({
+            x: n.x,
+            y: n.y,
+            ratio: 0.77, //zoom ratio
+            angle: 0,
+          });
 
-      // use ajax to get the next set of nodes branching from this main node
-      nextNodes(url_get, callback, n);
-      currentNode = e.data.node.id;
-  });
+          s.refresh();
 
-    // Finally, update sigma
-    s.refresh();
+          var url_get = baseUrl+"incomingnode/"+next_node;
+
+          // use ajax to get the next set of nodes branching from this main node
+          nextNodes(url_get, callback, n);
+          currentNode = e.data.node.id;
+        }
+    });
+
+        // Finally, update sigma
+        s.refresh();
 }
 //////////////////// FUNCTIONS ///////////////////
 function nextNodes(urlGet, callback, sourceNode) {
@@ -227,9 +233,9 @@ function newNodeXY(originNode, numNodes) {
 }
 
 function gameOver() {
-  $("#goal").text("You lost after "+nodeList.length-1+" clicks!");
+  $("#goal").text("You lost after "+visitedNodes.length-1+" clicks!");
   $("#result").text("List: ");
-  nodeList.forEach(function(n) {
+  visitedNodes.forEach(function(n) {
     $("#result").append("<li>"+n+"</li>")
   });
 }

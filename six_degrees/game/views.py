@@ -59,7 +59,9 @@ def convert_for_sigma(current_node, all_nodes):
     print out
 
 def game_over(request):
-    resp = request.POST.get('node')
+    resp = request.POST
     print resp
+    # for x in resp:
+    #     print x["nodes"]["label"]
     print request.POST.get('csrfmiddlewaretoken')
     return HttpResponse()
