@@ -224,7 +224,10 @@ def contains_quotes(name):
 #     print property, ": ", value
 
 if __name__ == "__main__":
-    print node_exists({"name": "Bogan"})
+    node = {"name": "Bogan\2013"}
+    unicode(node["name"])
+    print node
+    # print node_exists(node)
     # print nodes_with_num_relations(4)
     # print get_related_nodes({"name": "Scotland"})
     # add_API_nodes(get_node_from_name("Kangaroo"))

@@ -1,14 +1,13 @@
-from graph import execute
-
-
-
+from graph import connection
 
 def wipe_database():
+    gdb = connection()
     query = "MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r"
-    execute(query)
+    gdb.query(query)
     print "Wiping database..."
 
 def create_start_node():
+    gdb = connection()
     query = """
         create (:Article {name:"Scotland"})
         create (:Article {name:"William Wallace"})
@@ -19,10 +18,11 @@ def create_start_node():
         create (:Article {name:"Scottish Parliament"})
         create (:Article {name:"Isle of Arran"})
     """
-    execute(query)
+    gdb.query(query)
     print "Creating new nodes..."
 
 def create_end_node():
+    gdb = connection()
     query = """
         create (:Article {name:"Australia"})
         create (:Article {name:"Kangaroo"})
@@ -31,10 +31,11 @@ def create_end_node():
         create (:Article {name:"Bondi Beach"})
         create (:Article {name:"Bogan"})
     """
-    execute(query)
+    gdb.query(query)
     print "Creating end node"
 
 def create_end_relationships():
+    gdb = connection()
     queries = [
         """
         MATCH (a:Article),(b:Article) WHERE a.name = 'Australia' AND b.name = 'Kangaroo'
@@ -54,11 +55,12 @@ def create_end_relationships():
         ]
 
     for query in queries:
-        execute(query)
+        gdb.query(query)
     print "Creating end relationships between nodes"
 
 
 def create_relationships():
+    gdb = connection()
     queries = [
         """
         MATCH (a:Article),(b:Article) WHERE a.name = 'Scotland' AND b.name = 'William Wallace'
@@ -84,7 +86,7 @@ def create_relationships():
         ]
 
     for query in queries:
-        execute(query)
+        gdb.query(query)
     print "Creating relationships between nodes"
 
 
