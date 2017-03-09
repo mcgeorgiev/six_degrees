@@ -1,142 +1,55 @@
 import requests
-import json
-from itertools import count
-import sys
+import random
+
+def get_links_for(name):
+    global all_links
+    all_links = []
+    get_page(name)
+
+    filtered_links = remove_meta_links(all_links)
+    random_indexes = random.sample(range(0, len(filtered_links)), 10)
+    chosen_links = []
+    for i in random_indexes:
+        chosen_links.append(filtered_links[i])
+    return chosen_links
+
+
+def remove_meta_links(links):
+    for item in list(links):
+        if item["ns"] != 0:
+            links.remove(item)
+    return links
+
+
 # page id to get links currently all links from "broughty ferry" page
-def get_page_links(name):
+def get_page(name, cont=""):
     page_name = name
-    link_limit = 10
+    link_limit = 500
+    if cont != "":
+        cont = "&plcontinue=" + cont
 
-    api_url = "https://en.wikipedia.org/w/api.php?action=query&titles={0}&prop=links&pllimit={1}&format=json".format(page_name, link_limit)
-
+    api_url = "https://en.wikipedia.org/w/api.php?action=query&titles={0}&prop=links&pllimit={1}&format=json{2}".format(page_name, link_limit, cont)
     r = requests.get(api_url)
     resp = r.json()
-    # print resp
-    #page_id = resp['query']['pages']['360393']['pageid']
+
     for nested_json in resp["query"]["pages"]:
         page_id = nested_json
 
     if page_id == "-1":
         return None
 
-    # build json response with all current nodes
-    data = {}
-    data["nodes"] = [{"id":"n0", "label":resp["query"]["pages"]["{0}".format(page_id)]["title"], "x":0, "y":0, "size":2}]
-    data["edges"] = []
+    raw_links = resp["query"]["pages"]["{0}".format(page_id)]["links"]
 
-    counter = count(1)
+    for item in raw_links:
+        all_links.append(item)
 
-    all_links = []
-
-    for links in resp["query"]["pages"]["{0}".format(page_id)]["links"]:
-        # create json for this pages links
-        # node_id = counter.next()
-        # data["nodes"] += {"id":"n{0}".format(node_id),
-        #                 "label":links['title'],
-        #                 "size":1,
-        #                 "x":node_id,
-        #                 "y":node_id},
-        # # and edges between nodes
-        # data["edges"] += {"id":"e{0}".format(node_id),
-        #                 "source":"n0",
-        #                 "target":"n{0}".format(node_id)},
-
-        all_links.append(links)
-
-
-    # return json.dumps(all_links)
-    return all_links
-    # with open('sigma/data/test.json', 'w') as outfile:
-    #     json.dump(data, outfile, indent=2)
-
-# import requests
-# import json
-# from itertools import count
-# import sys
-# import random
-#
-# # page id to get links currently all links from "broughty ferry" page
-# def get_page_links(name):
-#     page_name = name
-#     link_limit = 500
-#     api_url = "https://en.wikipedia.org/w/api.php?action=query&titles={0}&prop=links&pllimit={1}&format=json".format(page_name, link_limit)
-#
-#     r = requests.get(api_url)
-#     resp = r.json()
-#     print resp["continue"]["plcontinue"]
-#     #page_id = resp['query']['pages']['360393']['pageid']
-#     for nested_json in resp["query"]["pages"]:
-#         page_id = nested_json
-#
-#     if page_id == "-1":
-#         return None
-#
-#     counter = count(1)
-#
-#
-#     all_links = []
-#     raw_links = resp["query"]["pages"]["{0}".format(page_id)]["links"]
-#     # random_indexes = random.sample(range(0, len(raw_links)), 10)
-#     # for i in random_indexes:
-#     #     all_links.append(raw_links[i])
-#     for item in raw_links:
-#         all_links.append(item)
-#
-#     #print all_links
-#     # return json.dumps(all_links)
-#     return all_links
-#     # with open('sigma/data/test.json', 'w') as outfile:
-#     #     json.dump(data, outfile, indent=2)
-#
-#
-# class Wikipedia:
-#
-#     def __init__(self):
-#         self.all_links = []
-#         self.chosen_links = []
-#
-#
-#     def get_chosen_links(self):
-#         pass
-#
-#
-#     def get_links(self, name, cont = ""):
-#         page_name = name
-#         link_limit = "max"
-#         api_url = "https://en.wikipedia.org/w/api.php?action=query&titles={0}&prop=links&pllimit={1}&format=json{2}".format(page_name, link_limit, cont)
-#
-#         r = requests.get(api_url)
-#         resp = r.json()
-#         for nested_json in resp["query"]["pages"]:
-#             page_id = nested_json
-#
-#         if page_id == "-1":
-#             return None
-#         # remove ns > 0 links
-#         self.all_links += resp["query"]["pages"]["{0}".format(page_id)]["links"]
-#         print self.all_links
-#         try:
-#             cont_data = resp["continue"]["plcontinue"]
-#             cont_string = "&plcontinue=" + cont_data
-#             return self.get_links(name, cont_string)
-#         except:
-#             return self.all_links
-#
-#
-#
-#         # random_indexes = random.sample(range(0, len(raw_links)), 10)
-#         # for i in random_indexes:
-#         #     all_links.append(raw_links[i])
-#         #
-#         # print all_links
-#         # return all_links
-#
-# if __name__ == '__main__':
-#     #get_page_links("Australia")
-#     wiki = Wikipedia()
-#     print len(wiki.get_links("Australia"))
-
+    if "batchcomplete" in resp:
+        return
+    else:
+        return get_page(name, resp["continue"]["plcontinue"])
 
 
 if __name__ == '__main__':
-    get_page_links("Scotland")
+    print get_links_for("Australia")
+    # wiki = Wikipedia()
+    # print len(wiki.get_links("Australia"))

@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from Wiki import get_page_links
 import json
 from graph import *
 from django.views.decorators.csrf import csrf_exempt
@@ -28,7 +27,6 @@ def incoming_node(request, title):
     print db_nodes
 
     return HttpResponse(json.dumps(db_nodes))
-    # data_back = get_page_links(title)
     # # print data_back
     # # print type(data_back)
 
