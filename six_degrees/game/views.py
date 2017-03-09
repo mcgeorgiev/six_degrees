@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from Wiki import get_page_links
+from game.models import Game
+from game.models import UserProfile
+
 import json
 from graph import *
 from django.views.decorators.csrf import csrf_exempt
@@ -8,6 +11,12 @@ from django.views.decorators.csrf import csrf_exempt
 def index(request):
     # Returns a starting node, related and end nodes
     return render(request, 'game/index.html', context={"a": "B"})
+
+def scores(request):
+    score_list = UserProfile.objects.order_by('score')[:5]
+    context_dict = {'userprofiles': score_list}
+    return render(request, 'game/scores.html', context_dict)
+
 
 def get_start_node(request):
     data = nodes_with_num_relations(4)
@@ -33,6 +42,8 @@ def incoming_node(request, title):
     # # print type(data_back)
 
     # return HttpResponse(data_back)
+
+
 
 
 
