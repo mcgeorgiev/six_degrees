@@ -10,7 +10,11 @@ def get_links_for(name):
     get_page(name)
 
     filtered_links = remove_meta_links(all_links)
-    random_indexes = random.sample(range(0, len(filtered_links)), 10)
+    try:
+        random_indexes = random.sample(range(0, len(filtered_links)), 10)
+    except ValueError:
+        random_indexes = random.sample(range(0, len(filtered_links)), len(filtered_links))
+
     chosen_links = []
     for i in random_indexes:
         filtered_links[i]["title"].encode('utf-8')
