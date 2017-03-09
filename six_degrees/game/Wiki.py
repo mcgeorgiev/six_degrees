@@ -10,6 +10,7 @@ def get_links_for(name):
     random_indexes = random.sample(range(0, len(filtered_links)), 10)
     chosen_links = []
     for i in random_indexes:
+        filtered_links[i]["title"].encode('utf-8')
         chosen_links.append(filtered_links[i])
     return chosen_links
 
