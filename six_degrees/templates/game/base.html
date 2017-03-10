@@ -25,35 +25,27 @@
             <div id="navbar" class="navbar-collapse collapse navbar-right">
           <ul class="nav navbar-nav ">
               {% url 'home' as home_url %}
-            <li {% if request.get_full_path == home_url %}class="active"{% endif %}><a href="/">Home</a><li>
+            <li {% if request.get_full_path == home_url %}class="active"{% endif %}><a href="/">Home</a></li>
             {% url 'index' as game_url %}
-            <li {% if request.get_full_path == game_url %}class="active"{% endif %}><a href="{% url 'index' %}">New Game</a><li>
+            <li {% if request.get_full_path == game_url %}class="active"{% endif %}><a href="{% url 'index' %}">New Game</a></li>
             {% url 'rules' as rules_url %}
-            <li {% if request.get_full_path == rules_url %}class="active"{% endif %}><a href="{% url 'rules' %}">Rules</a><li>
+            <li {% if request.get_full_path == rules_url %}class="active"{% endif %}><a href="{% url 'rules' %}">Rules</a></li>
             {% url 'scores' as scores_url %}
-            <li {% if request.get_full_path == scores_url %}class="active"{% endif %}><a href="{% url 'scores' %}">Scores</a><li>
-              {% url 'registration_register' as registration_register_url %}
-              <li {% if request.get_full_path == registration_register_url %}class="active"{% endif %}><a href="{% url 'registration_register' %}">Registration</a><li>
-              {% url 'auth_login' as auth_login_url %}
-              <li {% if request.get_full_path == auth_login_url %}class="active"{% endif %}><a href="{% url 'auth_login' %}">Login</a><li>
-              {% url 'auth_logout' as aut_logout_url %}
-              <li {% if request.get_full_path == auth_logout_url %}class="active"{% endif %}><a href="{% url 'auth_logout' %}"?next="/">Logout</a><li>
-
-
+            <li {% if request.get_full_path == scores_url %}class="active"{% endif %}><a href="{% url 'scores' %}">Scores</a></li>
           <li class="dropdown">
               {% if user.is_authenticated %}
               <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }} <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="#">My Profile</a></li>
-                <li><a href="{% url 'auth_logout' %}"?next="/">Logout</a><li>
+                <li {% if request.get_full_path == auth_logout_url %}class="active"{% endif %}><a href="{% url 'auth_logout' %}"?next="/">Logout</a></li>
               </ul>
               </li>
               {% else %}
               {% url 'registration_register' as registration_register_url %}
-              <li {% if request.get_full_path == registration_register_url %}class="active"{% endif %}><a href="{% url 'registration_register' %}">Registration</a><li>
+              <li {% if request.get_full_path == registration_register_url %}class="active"{% endif %}><a href="{% url 'registration_register' %}">Registration</a></li>
               {% url 'auth_login' as auth_login_url %}
-              <li {% if request.get_full_path == auth_login_url %}class="active"{% endif %}><a href="{% url 'auth_login' %}">Login</a><li>
+              <li {% if request.get_full_path == auth_login_url %}class="active"{% endif %}><a href="{% url 'auth_login' %}">Login</a></li>
               {% endif %}
         </ul>
         </div><!--/.nav-collapse -->
