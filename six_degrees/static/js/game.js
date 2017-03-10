@@ -115,24 +115,23 @@ function startSigma() {
             // game is over, post visitedNodes to server and tell user they won
             var clicks = Object.keys(visitedNodes["nodes"]).length - 1 ;
             clickTxt = (clicks > 1) ? "clicks":"click";
-            $("#gameoverlay").html("<h1>You won the game! It took "+clicks+" "+clickTxt+"</h1>");
+            $("#gameoverlay").html("<h1>You won the game!</h1><h2>"+clicks+" "+clickTxt+"</h2>");
             jQuery.each(visitedNodes["nodes"], function(i, val) {
               if(i < clicks) {
                   $("#gameoverlay").append(val.label+' <span class="glyphicon glyphicon-triangle-right"></span> ')
               } else {
-                  $("#gameoverlay").append(val.label)
+                  $("#gameoverlay").append('<strong>'+val.label+'</strong>');
               }
             })
             $("#gameoverlay").append(
-                '<ul><li><a class="btn btn-primary btn-lg" href="#" role="button">View Graph</a></li>'+
-                '<li><a class="btn btn-primary btn-lg" href="#" role="button">Play Again</a></li>'+
-                '<li><a class="btn btn-primary btn-lg" href="#" role="button">Exit</a></li></ul>'
+                '<div class="text-center"><div class="btn-group">'+
+                '<a class="btn btn-info btn-lg" href="#">View Graph</a>'+
+                '<a class="btn btn-info btn-lg" href="../game/">Play Again</a>'+
+                '<a class="btn btn-info btn-lg" href="../">Exit</a>'+
+                '</div></div>'
             );
             $("#gameoverlay").fadeIn(400);
-            $("#result").text("List: ");
-            jQuery.each(visitedNodes["nodes"], function(i, val) {
-              $("#result").append("<li>"+val.label+"</li>")
-            });
+
             return;
           }
 
