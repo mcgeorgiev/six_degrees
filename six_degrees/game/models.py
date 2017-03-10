@@ -5,6 +5,7 @@ from django.db import models
 # Create your models here.
 class Game(models.Model):
     gameID = models.IntegerField(unique=True)
+    username = models.CharField(max_length=128)
     userID = models.IntegerField(unique=True)
     source = models.CharField(max_length=128)
     destination = models.CharField(max_length=128)
@@ -14,8 +15,7 @@ class Game(models.Model):
         verbose_name_plural = 'games'
 
     def __unicode__(self):
-        gamename = self.source + self.destination
-        return self.gamename
+        return self.username
 
 class UserProfile(models.Model):
     username = models.CharField(max_length=128)

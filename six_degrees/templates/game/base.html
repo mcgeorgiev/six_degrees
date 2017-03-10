@@ -25,7 +25,7 @@
             <div id="navbar" class="navbar-collapse collapse navbar-right">
           <ul class="nav navbar-nav ">
               {% url 'home' as home_url %}
-            <li {% if request.get_full_path == home_url %}class="active"{% endif %}><a href="/">Home</a><li>
+            <li {% if request.get_full_path == home_url %}class="active"{% endif %}><a href="{% url 'home' %}">Home</a><li>
             {% url 'index' as game_url %}
             <li {% if request.get_full_path == game_url %}class="active"{% endif %}><a href="{% url 'index' %}">New Game</a><li>
             {% url 'rules' as rules_url %}
@@ -35,7 +35,7 @@
 
               {% if user.is_authenticated %}
               {% url 'auth_logout' as aut_logout_url %}
-              <li {% if request.get_full_path == auth_logout_url %}class="active"{% endif %}><a href="{% url 'auth_logout' %}"?next="/">Logout</a><li>
+              <li {% if request.get_full_path == auth_logout_url %}class="active"{% endif %}><a href="{% url 'auth_logout' %}"?next="{% url 'home' %}">Logout</a><li>
               {% else %}
               {% url 'auth_login' as auth_login_url %}
               <li {% if request.get_full_path == auth_login_url %}class="active"{% endif %}><a href="{% url 'auth_login' %}">Login</a><li>
