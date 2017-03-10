@@ -4,17 +4,13 @@
 Game
 {% endblock %}
 {% block body_block %}
-  <style type="text/css">
-    body {
-    }
-    #container {
-      position: absolute;
-      width: 80%;
-      height: 80%;
-      margin: 0 auto;
-    }
-  </style>
-  <div id="container"></div>
+  <div class="container">
+      <div class="starter-template gamecontainer" id="container">
+          <div class="goaloverlay" id="goal"></div>
+          <div class="overlay" id="gameoverlay">
+          </div>
+      </div>
+  </div>
   <script src="{% static "js/sigma.min.js" %}"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="{% static "js/plugins/sigma.parsers.json.min.js" %}"></script>
@@ -22,6 +18,5 @@ Game
   <script src="{% static "js/plugins/sigma.classes.graph.js" %}"></script>
   <script src="{% static "js/plugins/sigma.plugins.animate.min.js" %}"></script>
   <script src="{% static "js/game.js" %}" onload="getStartData()"></script>
-  <div id="goal"></div>
   <div id="result"></div>
 {% endblock %}

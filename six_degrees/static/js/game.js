@@ -81,7 +81,9 @@ function startSigma() {
     allNodes.push(startData.start.id);
     var endNode = startData.end;
 
-    $("#goal").text("Goal: "+endNode.name);
+    $("#gameoverlay").html("<h3>Your goal is to link</h3><h1><strong>"+startData.start.name+"</strong></h1> and <h1><strong>"+endNode.name+"</strong>");
+    $("#gameoverlay").delay( 5000 ).fadeOut( 400 );
+    $("#goal").html("Goal: <strong>"+endNode.name+"</strong>").fadeIn(200);
 
     var isClickable = true;
     // user has clicked a node
@@ -102,7 +104,8 @@ function startSigma() {
             // game is over, post visitedNodes to server and tell user they won
             var clicks = Object.keys(visitedNodes).length;
             clickTxt = (clicks > 1) ? "clicks":"click";
-            $("#goal").text("You won the game! It took "+clicks+" "+clickTxt);
+            $("#gameoverlay").html("<h1>You won the game! It took "+clicks+" "+clickTxt+"</h1>");
+            $("#gameoverlay").css("opacity", 0.8);
             $("#result").text("List: ");
             jQuery.each(visitedNodes, function(i, val) {
               $("#result").append("<li>"+val["label"]+"</li>")
@@ -209,7 +212,7 @@ function addNewNode(obj, sourceNode, x, y) {
 }
 
 function newNodeXY(originNode, numNodes) {
-  var radius = [0.7, 1, 0.55, 0.82, 0.52] // radius to place around node
+  var radius = [0.7, 0.6, 0.63, 0.82, 0.52] // radius to place around node
   var x0 = originNode.x;
   var y0 = originNode.y;
   var alpha = (1.8*Math.PI)/(numNodes+1);
