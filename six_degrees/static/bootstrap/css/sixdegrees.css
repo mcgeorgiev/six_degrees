@@ -27,16 +27,28 @@ body {
 
 .overlay {
   position: absolute;
-  top: 30px;
-  bottom: 30px;
-  left: 30px;
-  right: 30px;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
   text-align: center;
-  pointer-events: none;
   background: #fff;
-  border: 2px solid #f00;
+  border: 2px solid #666;
+  box-shadow: 5px 5px 5px rgba(0,0,0,0.1);
+  border-radius: 15px;
+  padding: 20px;
   opacity: 1;
   z-index: 2;
+}
+
+/* overlay buttons list */
+.overlay ul {
+    margin: 0;
+    padding: 0;
+    padding-top: 15px;
+}
+.overlay li {
+    margin-right: 15px;
+    list-style: none;
+    float: left;
 }
 
 .goaloverlay {
@@ -47,4 +59,32 @@ body {
     color: #fff;
     padding: 4px;
     font-size: 16px;
+    opacity: 0;
+}
+
+.clicksoverlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #666;
+    color: #fff;
+    padding: 4px;
+    font-size: 24px;
+    opacity: 0;
+}
+
+/* loading animation */
+.glyphicon.spinning {
+    animation: spin 1s infinite linear;
+    -webkit-animation: spin2 1s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg); }
+    to { transform: scale(1) rotate(360deg); }
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
 }
