@@ -17,6 +17,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from game import views
 
+from registration.backends.simple.views import RegistrationView
+
+class MyRegistrationView(RegistrationView):
+    def get_success_url(self, user):
+        return '/'
+
 urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^game/', include('game.urls')),
@@ -24,4 +30,8 @@ urlpatterns = [
     url(r'^scores/', views.scores, name='scores'),
     url(r'^rules/', views.rules, name='rules'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
+    url(r'^accounts/register/$',
+        MyRegistrationView.as_view(),
+            name='registration_register'),
 ]
+
