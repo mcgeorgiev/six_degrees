@@ -18,7 +18,7 @@ def scores(request):
     return render(request, 'game/scores.html', context_dict)
 
 def rules(request):
-    return HttpResponse("Rules Page")
+    return render(request, 'game/rules.html')
 
 def home(request):
     return render(request, 'game/home.html')
