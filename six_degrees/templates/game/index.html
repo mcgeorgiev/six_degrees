@@ -8,7 +8,11 @@ Game
       <div class="starter-template gamecontainer" id="container">
           <div class="goaloverlay" id="goal"></div>
           <div class="clicksoverlay" id="clicks"><small>clicks: </small>0</div>
-          <div class="overlay" id="gameoverlay"></div>
+          <div class="overlay" id="gameoverlay">
+              <button class="btn btn-lg btn-info">
+                  <span class="glyphicon glyphicon-refresh spinning"></span>
+              </button>
+          </div>
       </div>
   </div>
   <script src="{% static "js/sigma.min.js" %}"></script>
