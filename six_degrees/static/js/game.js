@@ -81,15 +81,27 @@ function startSigma() {
     allNodes.push(startData.start.id);
     var endNode = startData.end;
 
-    $("#gameoverlay").html("<h3>Your goal is to link</h3><h1><strong>"+startData.start.name+"</strong></h1> and <h1><strong>"+endNode.name+"</strong>");
-    $("#gameoverlay").delay( 5000 ).fadeOut( 400 );
-    $("#goal").html("Goal: <strong>"+endNode.name+"</strong>").fadeIn(200);
-
+    // show some game details on screen
+    $("#gameoverlay").html(
+        "<h3>Your goal is to link</h3><h1><strong>"+startData.start.name+"</strong></h1>"+
+        " and <h1><strong>"+endNode.name+"</strong></h1>"+
+        "<h3> Click the first node when it appears to begin.</h3>");
+    $("#gameoverlay").delay( 5000 ).fadeOut(400);
+    $("#gameoverlay").promise().done(function() {
+        $("#goal").html("Goal: <strong>"+endNode.name+"</strong>");
+        $("#goal").css("opacity", 1);
+        $("#clicks").css("opacity", 1);
+    });
     var isClickable = true;
     // user has clicked a node
     s.bind('clickNode', function(e) {
 
       if(isClickable) {
+
+          var clicks = Object.keys(visitedNodes["nodes"]).length;
+          // update click counter in UI
+          $("#clicks").html("<small>clicks: </small>"+clicks);
+
           var nodeId = e.data.node.id;
           visitedNodes.nodes.push({
                         "id": e.data.node.id,
@@ -102,15 +114,21 @@ function startSigma() {
             // cannot click graph anymore
             isClickable = false;
             // game is over, post visitedNodes to server and tell user they won
-            var clicks = Object.keys(visitedNodes).length;
+            var clicks = Object.keys(visitedNodes["nodes"]).length - 1 ;
             clickTxt = (clicks > 1) ? "clicks":"click";
             $("#gameoverlay").html("<h1>You won the game! It took "+clicks+" "+clickTxt+"</h1>");
-            $("#gameoverlay").css("opacity", 0.8);
+            jQuery.each(visitedNodes["nodes"], function(i, val) {
+              if(i < clicks) {
+                  $("#gameoverlay").append(val.label+" --> ")
+              } else {
+                  $("#gameoverlay").append(val.label)
+              }
+            })
+            $("#gameoverlay").fadeIn(400);
             $("#result").text("List: ");
-            jQuery.each(visitedNodes, function(i, val) {
-              $("#result").append("<li>"+val["label"]+"</li>")
+            jQuery.each(visitedNodes["nodes"], function(i, val) {
+              $("#result").append("<li>"+val.label+"</li>")
             });
-            $("#container").css("opacity", 0.3);
             return;
           }
 
@@ -189,7 +207,9 @@ function callback(data, sourceNode) {
     console.log(pos);
     if(pos == -1) {
       addNewNode(val, sourceNode, nodeLocs[i].x, nodeLocs[i].y);
-    }
+  } else {
+      addNewEdge(val, sourceNode);
+  }
   });
 }
 
@@ -202,13 +222,17 @@ function addNewNode(obj, sourceNode, x, y) {
     "label": obj.name,
     "size": 5,
     "color": "#666"});
-  s.graph.addEdge({
-    id: newNode,
-    source: newNode,
-    target: sourceNode.id,
-  });
+  addNewEdge(newNode, sourceNode);
   s.refresh();
   allNodes.push(newNode);
+}
+
+function addNewEdge(newNode, existNode) {
+    s.graph.addEdge({
+      id: newNode+existNode.id,
+      source: existNode.id,
+      target: newNode,
+    });
 }
 
 function newNodeXY(originNode, numNodes) {
