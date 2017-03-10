@@ -215,6 +215,7 @@ function callback(data, sourceNode) {
       s.graph.nodes(val.id).size = 5;
       s.graph.nodes(val.id).color = "#666";
   }
+  s.refresh();
   });
 }
 
