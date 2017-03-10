@@ -2,20 +2,14 @@
 {% load staticfiles %}
 <html>
     <head>
-        <title>
-          Six Degrees -
+        <title>Six Degrees -
             {% block title_block %}
                 Welcome to Six Degrees of Wikipedia
-            {% endblock %}
-        </title>
+            {% endblock %}</title>
     </head>
     <body>
-        <hr/>
-            <div>
-                {% block body_block %}
-                {% endblock %}
-            </div>
-        <hr/>
+        {% block body_block %}
+        {% endblock %}
         <div>
             <ul>
                 <a href="/">Home</a><li>

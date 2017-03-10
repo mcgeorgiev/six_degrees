@@ -1,6 +1,8 @@
-{% extends 'game/base.html' %}
+{% extends "game/base.html" %}
 {% load staticfiles %}
-{% block title_block %}{% endblock %}
+{% block title_block %}
+Game
+{% endblock %}
 {% block body_block %}
   <style type="text/css">
     body {
@@ -12,8 +14,6 @@
       margin: 0 auto;
     }
   </style>
-</head>
-<body>
   <div id="container"></div>
   <script src="{% static "js/sigma.min.js" %}"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>

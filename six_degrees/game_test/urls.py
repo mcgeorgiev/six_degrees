@@ -23,6 +23,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^scores/', views.scores, name='scores'),
     url(r'^rules/', views.rules, name='rules'),
-
-
+    url(r'^accounts/', include('registration.backends.simple.urls')),
 ]
