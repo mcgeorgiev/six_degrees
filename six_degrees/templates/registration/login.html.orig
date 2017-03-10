@@ -1,6 +1,10 @@
 {% extends "game/base.html" %}
+<<<<<<< HEAD
 {% block title_block %}
 {% endblock %}
+=======
+{% block title_block %}{% endblock %}
+>>>>>>> 40f52c8d8bc3c935466ee2f60c87e98ab4257dee
 {% block body_block %}
 <h1>Login</h1>
 <form method="post" action=".">
