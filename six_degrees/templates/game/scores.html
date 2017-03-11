@@ -1,0 +1,107 @@
+{% extends 'game/base.html' %}
+{% load staticfiles %}
+{% block title_block %}
+
+{% endblock %}
+    {% block body_block %}
+    <div>
+
+
+        <style>
+            table, th, td
+            {
+                border: 2px solid black;
+                border-collapse: collapse;
+
+            }
+
+            th, td
+            {
+                padding: 10px;
+                text-align: center;
+            }
+
+            th
+            {
+                background-color: black;
+                color: #e8e8e8;
+            }
+
+            tr:nth-child(even)
+            {
+                background-color: #e8e8e8;
+            }
+            tr:nth-child(odd)
+            {
+                background-color: white;
+            }
+
+            table
+            {
+                width: 80%;
+            }
+
+            #header
+            {
+                background-color: #e8e8e8;
+            }
+
+        </style>
+        <table align="center" >
+            <tr>
+                <td id="header" colspan="5"> <h1> Global High Scores </h1></td>
+            </tr>
+            <tr class="success">
+                <th>
+                    User
+                </th>
+                <th>
+                    Score
+                </th>
+                <th>
+                    Links
+
+                <th>
+                    Source
+                </th>
+                <th>
+                    Destination
+                </th>
+            </tr>
+           <tr>
+                <td>
+                    stuff in col 1
+                </td>
+                <td>
+                    stuff in col 2
+                </td>
+                <td>
+                    stuff in col 3
+                </td>
+                <td>
+                    stuff in col 4
+                </td>
+                <td>
+                    stuff in col 5
+                </td>
+            </tr>
+                       <tr>
+                <td>
+                    more stuff in col 1
+                </td>
+                <td>
+                   more stuff in col 2
+                </td>
+                <td>
+                    more stuff in col 3
+                </td>
+                <td>
+                    more stuff in col 4
+                </td>
+                <td>
+                    more stuff in col 5
+                </td>
+            </tr>
+        </table>
+</div>
+{% endblock %}

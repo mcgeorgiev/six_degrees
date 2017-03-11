@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-#from Wiki import get_page_links
+<<<<<<< HEAD
+from Wiki import get_page_links
 from game.models import Game
 from game.models import UserProfile
 
+=======
+>>>>>>> 7319731e19c16cf42cc40c39edadeb906568f320
 import json
 from graph import *
 from django.views.decorators.csrf import csrf_exempt
@@ -13,17 +16,9 @@ def index(request):
     return render(request, 'game/index.html', context={"a": "B"})
 
 def scores(request):
-    score_list = UserProfile.objects.order_by('score')[:100]
+    score_list = UserProfile.objects.order_by('score')[:5]
     context_dict = {'userprofiles': score_list}
     return render(request, 'game/scores.html', context_dict)
-
-def rules(request):
-    return render(request, 'game/rules.html')
-
-def home(request):
-    return render(request, 'game/home.html')
-
-
 
 
 def get_start_node(request):
@@ -50,6 +45,10 @@ def incoming_node(request, title):
 
     # return HttpResponse(data_back)
 
+
+
+
+
 def convert_for_sigma(current_node, all_nodes):
     # build json response with all current nodes
     data = {}
@@ -74,12 +73,10 @@ def convert_for_sigma(current_node, all_nodes):
     out = json.dumps(data)
     print out
 
-#@csrf_exempt
 def game_over(request):
     resp = request.POST
-    #resp = resp.json()
-    print "RESPONSE"
-    print resp["nodes"]
+    resp = resp.json()
+    print resp
     # for x in resp:
     #     print x["nodes"]["label"]
     print request.POST.get('csrfmiddlewaretoken')

@@ -81,13 +81,27 @@ function startSigma() {
     allNodes.push(startData.start.id);
     var endNode = startData.end;
 
-    $("#goal").text("Goal: "+endNode.name);
-
+    // show some game details on screen
+    $("#gameoverlay").html(
+        "<h3>Your goal is to link</h3><h1><strong>"+startData.start.name+"</strong></h1>"+
+        " and <h1><strong>"+endNode.name+"</strong></h1>"+
+        "<h3> Click the first node when it appears to begin.</h3>");
+    $("#gameoverlay").delay( 2500 ).fadeOut(400);
+    $("#gameoverlay").promise().done(function() {
+        $("#goal").html("Goal: <strong>"+endNode.name+"</strong>");
+        $("#goal").css("opacity", 1);
+        $("#clicks").css("opacity", 1);
+    });
     var isClickable = true;
     // user has clicked a node
     s.bind('clickNode', function(e) {
 
       if(isClickable) {
+
+          var clicks = Object.keys(visitedNodes["nodes"]).length;
+          // update click counter in UI
+          $("#clicks").html("<small>clicks: </small>"+clicks);
+
           var nodeId = e.data.node.id;
           visitedNodes.nodes.push({
                         "id": e.data.node.id,
@@ -96,18 +110,28 @@ function startSigma() {
           if(nodeId == endNode.id) {
             gameOverNodeList = JSON.stringify(visitedNodes["nodes"], null, 2); // Indented 4 spaces
             $.post(baseUrl + "gameover/", {"nodes":gameOverNodeList, "csrfmiddlewaretoken":getCookie('csrftoken')});
-            console.log(gameOverNodeList);
             // cannot click graph anymore
             isClickable = false;
             // game is over, post visitedNodes to server and tell user they won
-            var clicks = Object.keys(visitedNodes).length;
+            var clicks = Object.keys(visitedNodes["nodes"]).length - 1 ;
             clickTxt = (clicks > 1) ? "clicks":"click";
-            $("#goal").text("You won the game! It took "+clicks+" "+clickTxt);
-            $("#result").text("List: ");
-            jQuery.each(visitedNodes, function(i, val) {
-              $("#result").append("<li>"+val["label"]+"</li>")
-            });
-            $("#container").css("opacity", 0.3);
+            $("#gameoverlay").html("<h1>You won the game!</h1><h2>"+clicks+" "+clickTxt+"</h2>");
+            jQuery.each(visitedNodes["nodes"], function(i, val) {
+              if(i < clicks) {
+                  $("#gameoverlay").append(val.label+' <span class="glyphicon glyphicon-triangle-right"></span> ')
+              } else {
+                  $("#gameoverlay").append('<strong>'+val.label+'</strong>');
+              }
+            })
+            $("#gameoverlay").append(
+                '<div class="text-center"><div class="btn-group">'+
+                '<a class="btn btn-info btn-lg" href="#">View Graph</a>'+
+                '<a class="btn btn-info btn-lg" href="../game/">Play Again</a>'+
+                '<a class="btn btn-info btn-lg" href="../">Exit</a>'+
+                '</div></div>'
+            );
+            $("#gameoverlay").fadeIn(400);
+
             return;
           }
 
@@ -182,16 +206,20 @@ function callback(data, sourceNode) {
   jQuery.each(json, function(i, val) {
     // alert(val["title"]);
     var pos = allNodes.indexOf(val.id);
-    console.log(allNodes);
-    console.log(pos);
     if(pos == -1) {
       addNewNode(val, sourceNode, nodeLocs[i].x, nodeLocs[i].y);
-    }
+  } else {
+      // node already exists, create a link back to it
+      addNewEdge(val, sourceNode);
+      // and make the node big again
+      s.graph.nodes(val.id).size = 5;
+      s.graph.nodes(val.id).color = "#666";
+  }
+  s.refresh();
   });
 }
 
 function addNewNode(obj, sourceNode, x, y) {
-  newNode = obj.id;
 
   s.graph.addNode({ id: obj.id,
     "x": x,
@@ -199,21 +227,28 @@ function addNewNode(obj, sourceNode, x, y) {
     "label": obj.name,
     "size": 5,
     "color": "#666"});
-  s.graph.addEdge({
-    id: newNode,
-    source: newNode,
-    target: sourceNode.id,
-  });
+  addNewEdge(obj, sourceNode);
   s.refresh();
-  allNodes.push(newNode);
+  allNodes.push(obj.id);
+}
+
+function addNewEdge(newNode, existNode) {
+    console.log(newNode.id);
+    console.log(existNode.id);
+    // random edge ID
+    s.graph.addEdge({
+      id: Math.floor(Math.random()*1e10),
+      source: existNode.id,
+      target: newNode.id,
+    });
 }
 
 function newNodeXY(originNode, numNodes) {
-  var radius = [0.7, 1, 0.55, 0.82, 0.52] // radius to place around node
+  var radius = [0.7, 0.6, 0.63, 0.82, 0.52] // radius to place around node
   var x0 = originNode.x;
   var y0 = originNode.y;
   var alpha = (1.8*Math.PI)/(numNodes+1);
-  console.log(alpha);
+
   var firstX = x0 + (1 * Math.cos(alpha));
   var firstY = y0 + (1 * Math.sin(alpha));
   var nodeLocs = [{"x":firstX, "y":firstY}];
@@ -222,7 +257,7 @@ function newNodeXY(originNode, numNodes) {
     // increment alpha angle by adding 2pi/N
     var rad = Math.floor(Math.random()*radius.length);
     alpha = alpha + ((2*Math.PI)/(numNodes+1));
-    console.log(alpha);
+
     var newX = x0 + (radius[rad] * Math.cos(alpha));
     var newY = y0 + (radius[rad] * Math.sin(alpha));
     nodeLocs.push({"x":newX, "y":newY});
