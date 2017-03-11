@@ -212,11 +212,16 @@ def contains_quotes(name):
     return True if "'" in name or '"' in name else False
 
 
-# def format_string(string):
-#     string = string.replace(" ", "_")
-#     string = string.lower()
-#     return string
-#
+def add_game_relationship(nodes):
+    query_string = ""
+    gdb = connection()
+
+    for i in range(1,len(nodes)):
+        source = nodes[i-1]["label"]
+        dest = nodes[i]["label"]
+        gameid = "game11"
+        query = "MATCH (a:Article {{name:'{0}'}}), (b:Article {{name:'{1}'}}) CREATE (a)-[:{2}]->(b)".format(source, dest, gameid)
+        gdb.query(query)
 
 
 # * Useful code to find an objects properties names
@@ -224,9 +229,25 @@ def contains_quotes(name):
 #     print property, ": ", value
 
 if __name__ == "__main__":
-    node = {"name": "Bogan\2013"}
-    unicode(node["name"])
-    print node
+    nodes = [
+      {
+        "id": 101,
+        "label": "Sydney"
+      },
+      {
+        "id": 67,
+        "label": "Crocodile Dundee"
+      },
+      {
+        "id": 65,
+        "label": "Australia"
+      },
+      {
+        "id": 69,
+        "label": "Bondi Beach"
+      }
+    ]
+    add_game_relationship(nodes)
     # print node_exists(node)
     # print nodes_with_num_relations(4)
     # print get_related_nodes({"name": "Scotland"})

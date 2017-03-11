@@ -58,10 +58,12 @@ def convert_for_sigma(current_node, all_nodes):
     out = json.dumps(data)
     print out
 
+#@csrf_exempt
 def game_over(request):
     resp = request.POST
-    resp = resp.json()
-    print resp
+    #resp = resp.json()
+    print "RESPONSE"
+    print resp["nodes"]
     # for x in resp:
     #     print x["nodes"]["label"]
     print request.POST.get('csrfmiddlewaretoken')
