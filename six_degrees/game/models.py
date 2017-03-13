@@ -1,34 +1,36 @@
 from __future__ import unicode_literals
 from django.db import models
-#from django.contrib.auth.models import User
-
-# Create your models here.
-class Game(models.Model):
-    gameID = models.IntegerField(unique=True)
-    username = models.CharField(max_length=128)
-    userID = models.IntegerField(unique=True)
-    source = models.CharField(max_length=128)
-    destination = models.CharField(max_length=128)
-    numLinks = models.IntegerField()
-
-    class Meta:
-        verbose_name_plural = 'games'
-
-    def __unicode__(self):
-        return self.username
+from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
-    username = models.CharField(max_length=128)
-    userID = models.IntegerField(unique=True)
-    password = models.CharField(max_length=128)
-    score = models.IntegerField()
+  #  username = models.CharField(max_length=128)
+   # userID = models.IntegerField(unique=True)
+   # password = models.CharField(max_length=128)
+    user = models.OneToOneField(User, null=True)
+    score = models.IntegerField(null=True)
 
     class Meta:
         verbose_name_plural = 'userprofiles'
 
-    def __unicode__(self):
-        return self.username
+    # def __unicode__(self):
+    #     return self.user
 
+# Create your models here.
+class Game(models.Model):
+   # gameID = models.IntegerField(unique=True)
+   # username = models.CharField(max_length=128)
+    user = models.ForeignKey('auth.User')
+    score = models.IntegerField(null=True)
+    source = models.CharField(max_length=128)
+    destination = models.CharField(max_length=128)
+    numLinks = models.IntegerField(null=True)
+    bestLinks = models.IntegerField(null=True)
+
+    class Meta:
+        verbose_name_plural = 'games'
+    #
+    # def __unicode__(self):
+    #     return self.user
 
 # class UserProfile(models.Model):
 #     user = models.OneToOneField(User)
