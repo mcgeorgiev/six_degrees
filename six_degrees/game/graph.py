@@ -2,7 +2,6 @@ from neo4j.v1 import GraphDatabase, basic_auth
 from Wiki import get_links_for
 import random
 from itertools import count
-
 from neo4jrestclient.client import GraphDatabase
 
 def connection():
@@ -123,7 +122,6 @@ def nodes_with_num_relations(min_number):
             """.format(min_number)
 
     results = gdb.query(query)[0]
-
     # first element of returned list is the start node
     start = results.pop(0)
     starting_node = {}
@@ -216,19 +214,41 @@ def add_game_relationship(nodes):
     query_string = ""
     gdb = connection()
 
+    gameid = random.randint(0, 1000000)
     for i in range(1,len(nodes)):
         source = nodes[i-1]["label"]
         dest = nodes[i]["label"]
-        gameid = "game11"
-        query = "MATCH (a:Article {{name:'{0}'}}), (b:Article {{name:'{1}'}}) CREATE (a)-[:{2}]->(b)".format(source, dest, gameid)
+        query = "MATCH (a:Article {{name:'{0}'}}), (b:Article {{name:'{1}'}}) CREATE (a)-[:game{2}]->(b)".format(source, dest, gameid)
         gdb.query(query)
 
+def get_id():
+    gdb = connection()
+    query = "match (m:Article {name: 'Australia'})-[r:linksTo]-(p:Article {name: 'Bondi Beach'}) return r"
+    results = gdb.query(query)
+    for r in results:
+        print r
+
+
+def get_shortest_path(source, dest):
+    query = """
+    MATCH p=shortestPath(
+    (a:Article {name:"Sydney"})-[*]-(b:Article {name:"Bondi Beach"}))
+    RETURN a,b,p
+    """
+
+    gdb = connection()
+    results = gdb.query(query)
+
+    for result in results:
+        print result
+        print "-----"
 
 # * Useful code to find an objects properties names
 # for property, value in vars(related).iteritems():
 #     print property, ": ", value
 
 if __name__ == "__main__":
+    get_shortest_path("Sydney", "Bondi Beach")
     nodes = [
       {
         "id": 101,
@@ -247,7 +267,7 @@ if __name__ == "__main__":
         "label": "Bondi Beach"
       }
     ]
-    add_game_relationship(nodes)
+    #add_game_relationship(nodes)
     # print node_exists(node)
     # print nodes_with_num_relations(4)
     # print get_related_nodes({"name": "Scotland"})
