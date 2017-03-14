@@ -210,7 +210,7 @@ def contains_quotes(name):
     return True if "'" in name or '"' in name else False
 
 
-def add_game_relationship(nodes):
+def add_game_relationship(nodes, gameid):
     query_string = ""
     gdb = connection()
 

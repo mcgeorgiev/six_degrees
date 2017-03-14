@@ -78,8 +78,18 @@ def convert_for_sigma(current_node, all_nodes):
     print out
 
 #@csrf_exempt
-def game_over(request):
-    print get_shortest_path(source, dest)
+def game_over():
+    # shortest_path = get_shortest_path(source, dest)
+    #
+    # if len(shortest_path) == len(nodes):
+    #     shortest_path = [node["label"] for node in nodes]
+    #     print "you got the shortest_path"
+
+    user = User.objects.get(username= 'admin')#request.username)
+    Game.objects.create(user=user, score=21, source='Scotland', destination='England', numLinks=19, bestLinks=8)
+    game = Game.objects.filter(user=user).latest('id')
+
+    add_game_relationship(nodes, game.id)
     #resp = request.POST
     #resp = resp.json()
     #print resp
