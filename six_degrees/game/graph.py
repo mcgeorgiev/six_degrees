@@ -210,15 +210,16 @@ def contains_quotes(name):
     return True if "'" in name or '"' in name else False
 
 
-def add_game_relationship(nodes, gameid):
+def add_game_relationship(nodes, game_id):
     query_string = ""
     gdb = connection()
-
-    gameid = random.randint(0, 1000000)
+    print type(nodes)
+    print nodes[0]
+    print "----"
     for i in range(1,len(nodes)):
         source = nodes[i-1]["label"]
         dest = nodes[i]["label"]
-        query = "MATCH (a:Article {{name:'{0}'}}), (b:Article {{name:'{1}'}}) CREATE (a)-[:game{2}]->(b)".format(source, dest, gameid)
+        query = "MATCH (a:Article {{name:'{0}'}}), (b:Article {{name:'{1}'}}) CREATE (a)-[:game{2}]->(b)".format(source, dest, game_id)
         gdb.query(query)
 
 def get_id():
@@ -237,6 +238,7 @@ def get_shortest_path(source, dest):
     ORDER BY LENGTH(p) ASC
     LIMIT 1
     """.format(source, dest)
+
     gdb = connection()
     results = gdb.query(query)
 
@@ -246,7 +248,6 @@ def get_shortest_path(source, dest):
         for node in node_url:
             node_id_list.append(node.split("/")[-1])
         break
-
     return get_names_from_ids(node_id_list)
 
 
@@ -269,7 +270,7 @@ def get_names_from_ids(id_list):
 #     print property, ": ", value
 
 if __name__ == "__main__":
-    get_shortest_path("Sydney", "Bondi Beach")
+    print get_shortest_path("Victoria (Australia)", "Sydney")
     nodes = [
       {
         "id": 101,

@@ -27,13 +27,11 @@ def home(request):
     return render(request, 'game/home.html')
 
 
-
-
 def get_start_node(request):
     data = nodes_with_num_relations(4)
     return HttpResponse(json.dumps(data))
 
-# incoming
+
 def incoming_node(request, title):
 
     current_node = {"name": title, "id": 0}
@@ -48,10 +46,7 @@ def incoming_node(request, title):
     print db_nodes
 
     return HttpResponse(json.dumps(db_nodes))
-    # # print data_back
-    # # print type(data_back)
 
-    # return HttpResponse(data_back)
 
 def convert_for_sigma(current_node, all_nodes):
     # build json response with all current nodes
@@ -77,33 +72,34 @@ def convert_for_sigma(current_node, all_nodes):
     out = json.dumps(data)
     print out
 
+
 #@csrf_exempt
-def game_over():
-    # shortest_path = get_shortest_path(source, dest)
-    #
-    # if len(shortest_path) == len(nodes):
-    #     shortest_path = [node["label"] for node in nodes]
-    #     print "you got the shortest_path"
+def game_over(request):
+    data = request.POST
+    nodes = json.loads(data["nodes"])
+
+    source = nodes[0]
+    destination = nodes[-1]
+    shortest_path = get_shortest_path(source["label"], destination["label"])
+
+    if len(shortest_path) == len(nodes):
+        shortest_path = [node["label"] for node in nodes]
+        print "you got the shortest_path"
 
     user = User.objects.get(username= 'admin')#request.username)
-    Game.objects.create(user=user, score=21, source='Scotland', destination='England', numLinks=19, bestLinks=8)
+    Game.objects.create(user=user,
+                        score=21,
+                        source=source,
+                        destination=destination,
+                        numLinks=len(nodes)-1,
+                        bestLinks=len(shortest_path)-1)
+
+    # gets the last entry for a user and adds it to the graph db
     game = Game.objects.filter(user=user).latest('id')
-
     add_game_relationship(nodes, game.id)
-    #resp = request.POST
-    #resp = resp.json()
-    #print resp
-    # for x in resp:
-    #     print x["nodes"]["label"]
-    # print request.POST.get('csrfmiddlewaretoken')
 
-    #return HttpResponse()
+    return HttpResponse()
 
-    # me=User.objects.get(username='Cam5')
-    # Game.objects.create(user=me, score=21, source='Scotland', destination='England', numLinks=19, bestLinks=8)
-    # g=Game.objects.all()
-    # l=g[len(g)-1]
-    # print l.user, l.score, l.source, l.destination, l.numLinks, l.bestLinks
 
     if __name__=='__main__':
         game_over('')
