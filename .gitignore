@@ -1,4 +1,4 @@
 *.pyc
 /venv/
 venv/
-db.sqlite3
+six_degrees/db.sqlite3

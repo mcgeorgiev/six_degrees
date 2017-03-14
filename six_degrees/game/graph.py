@@ -6,8 +6,8 @@ from neo4jrestclient.client import GraphDatabase
 
 def connection():
     return GraphDatabase("http://localhost:7474/db/data/", username="neo4j", password="password")
-    # return GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
-    # return GraphDatabase("http://hobby-ekngppohojekgbkepjibeaol.dbs.graphenedb.com:24789/db/data/", username="testing-user", password = "b.SIxCtcPc51R5.aaW8WZa65LdsjGgZ")
+    #return GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
+    #return GraphDatabase("http://hobby-ekngppohojekgbkepjibeaol.dbs.graphenedb.com:24789/db/data/", username="testing-user", password = "b.SIxCtcPc51R5.aaW8WZa65LdsjGgZ")
 
 
 # def get_nodes_from_game(start, game, end):
@@ -232,16 +232,37 @@ def get_id():
 def get_shortest_path(source, dest):
     query = """
     MATCH p=shortestPath(
-    (a:Article {name:"Sydney"})-[*]-(b:Article {name:"Bondi Beach"}))
-    RETURN a,b,p
-    """
-
+    (a:Article {{name:"{0}"}})-[*]-(b:Article {{name:"{1}"}}))
+    RETURN p
+    ORDER BY LENGTH(p) ASC
+    LIMIT 1
+    """.format(source, dest)
     gdb = connection()
     results = gdb.query(query)
 
+    node_id_list = []
     for result in results:
-        print result
-        print "-----"
+        node_url = result[0]["nodes"]
+        for node in node_url:
+            node_id_list.append(node.split("/")[-1])
+        break
+
+    return get_names_from_ids(node_id_list)
+
+
+def get_names_from_ids(id_list):
+    id_list =  str([int(i) for i in id_list])
+
+    query = """
+    MATCH (a:Article)
+    WHERE id(a) IN {}
+    RETURN a.name
+    """.format(id_list)
+
+    gdb = connection()
+    results = gdb.query(query)
+    return [name[0] for name in results]
+
 
 # * Useful code to find an objects properties names
 # for property, value in vars(related).iteritems():

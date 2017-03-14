@@ -1,13 +1,16 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 #from Wiki import get_page_links
-from game.models import Game
-from game.models import UserProfile
+from models import UserProfile
+from django.contrib.auth.models import User
+from models import Game
+from django.contrib.auth.decorators import login_required
 
 import json
 from graph import *
 from django.views.decorators.csrf import csrf_exempt
 
+@login_required
 def index(request):
     # Returns a starting node, related and end nodes
     return render(request, 'game/index.html', context={"a": "B"})
@@ -76,11 +79,21 @@ def convert_for_sigma(current_node, all_nodes):
 
 #@csrf_exempt
 def game_over(request):
-    resp = request.POST
+    print get_shortest_path(source, dest)
+    #resp = request.POST
     #resp = resp.json()
-    print "RESPONSE"
-    print resp["nodes"]
+    #print resp
     # for x in resp:
     #     print x["nodes"]["label"]
-    print request.POST.get('csrfmiddlewaretoken')
-    return HttpResponse()
+    # print request.POST.get('csrfmiddlewaretoken')
+
+    #return HttpResponse()
+
+    # me=User.objects.get(username='Cam5')
+    # Game.objects.create(user=me, score=21, source='Scotland', destination='England', numLinks=19, bestLinks=8)
+    # g=Game.objects.all()
+    # l=g[len(g)-1]
+    # print l.user, l.score, l.source, l.destination, l.numLinks, l.bestLinks
+
+    if __name__=='__main__':
+        game_over('')
