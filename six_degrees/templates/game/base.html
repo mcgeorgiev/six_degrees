@@ -20,7 +20,11 @@
         <nav class="navbar navbar-inverse navbar-fixed-top">
           <div class="container">
             <div class="navbar-header">
-              <a class="navbar-brand" href="/">SixDegrees</a>
+                {% if user.is_authenticated %}
+                <a class="navbar-brand" href="/game/dashboard">SixDegrees</a>
+                {% else %}
+                <a class="navbar-brand" href="/">SixDegrees</a>
+                {% endif %}
             </div>
             <div id="navbar" class="navbar-collapse collapse navbar-right">
           <ul class="nav navbar-nav ">
@@ -53,6 +57,11 @@
         {% block body_block %}
         {% endblock %}
         </div>
+        <footer class="footer">
+          <div class="container">
+            <p>Built by Team B for Internet Technology project</p>
+          </div>
+        </footer>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
