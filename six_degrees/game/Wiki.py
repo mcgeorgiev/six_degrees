@@ -10,7 +10,9 @@ def get_links_for(name):
     get_page(name)
 
     filtered_links = remove_meta_links(all_links)
-    print len(filtered_links)
+    if filtered_links == []:
+        return None
+
     try:
         random_indexes = random.sample(range(0, len(filtered_links)), 10)
     except ValueError:
