@@ -86,7 +86,7 @@ def game_over(request):
         shortest_path = [node["label"] for node in nodes]
         print "you got the shortest_path"
 
-    user = User.objects.get(username= 'admin')#request.username)
+    user = User.objects.get(username=request.username)
     Game.objects.create(user=user,
                         score=21,
                         source=source,
