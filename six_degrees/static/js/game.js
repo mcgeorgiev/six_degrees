@@ -108,33 +108,18 @@ function startSigma() {
                         "label": e.data.node.label
                     });
           if(nodeId == endNode.id) {
-            gameOverNodeList = JSON.stringify(visitedNodes["nodes"], null, 2); // Indented 4 spaces
-            $.post(baseUrl + "gameover/", {"nodes":gameOverNodeList, "csrfmiddlewaretoken":getCookie('csrftoken')});
-            // cannot click graph anymore
             isClickable = false;
-            // game is over, post visitedNodes to server and tell user they won
-            var clicks = Object.keys(visitedNodes["nodes"]).length - 1 ;
-            clickTxt = (clicks > 1) ? "clicks":"click";
-            $("#gameoverlay").html("<h1>You won the game!</h1><h2>"+clicks+" "+clickTxt+"</h2>");
-            jQuery.each(visitedNodes["nodes"], function(i, val) {
-              if(i < clicks) {
-                  $("#gameoverlay").append(val.label+' <span class="glyphicon glyphicon-triangle-right"></span> ')
-              } else {
-                  $("#gameoverlay").append('<strong>'+val.label+'</strong>');
-              }
-            })
-            $("#gameoverlay").append(
-                '<div class="text-center"><div class="btn-group">'+
-                '<a class="btn btn-info btn-lg" href="#">View Graph</a>'+
-                '<a class="btn btn-info btn-lg" href="../game/">Play Again</a>'+
-                '<a class="btn btn-info btn-lg" href="../">Exit</a>'+
-                '</div></div>'
-            );
-            $("#gameoverlay").fadeIn(400);
-
+            // game has been won
+            gameWin();
             return;
           }
 
+          //************************TESTING
+          //************************TESTING
+          if(clicks == 4) {
+              isClickable = false;
+              gameWin();
+          }
 
           toKeep = s.graph.neighbors(nodeId);
           toKeep[nodeId] = e.data.node;
@@ -271,6 +256,7 @@ function newNodeXY(originNode, numNodes) {
   return nodeLocs;
 }
 
+// game has been lost
 function gameOver() {
     var clicks = Object.keys(visitedNodes["nodes"]).length - 1 ;
     clickTxt = (clicks > 1) ? "clicks":"click";
@@ -297,4 +283,51 @@ function getCookie(name) {
     var value = "; " + document.cookie;
     var parts = value.split("; " + name + "=");
     if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+// game has been won
+function gameWin() {
+    gameOverNodeList = JSON.stringify(visitedNodes["nodes"], null, 2); // Indented 4 spaces
+    // $.post(baseUrl + "gameover/", {"nodes":gameOverNodeList, "csrfmiddlewaretoken":getCookie('csrftoken')});
+    $.ajax({
+        url: baseUrl + "gameover/",
+        datatype: 'json',
+        type: 'POST',
+        method: 'POST',
+        data: {
+            "nodes":gameOverNodeList,
+            "csrfmiddlewaretoken":getCookie('csrftoken')
+        },
+        success: function(resp) {
+            var jsonResp = JSON.parse(resp);
+            if(jsonResp["code"] == 500) {
+                gameOver();
+            }
+            alert("GOT IT");
+            alert(resp);
+        },
+        failure: function(resp) {
+            alert('Something went wrong! Please try again.');
+        }
+      });
+
+    // game is over, post visitedNodes to server and tell user they won
+    var clicks = Object.keys(visitedNodes["nodes"]).length - 1 ;
+    clickTxt = (clicks > 1) ? "clicks":"click";
+    $("#gameoverlay").html("<h1>You won the game!</h1><h2>"+clicks+" "+clickTxt+"</h2>");
+    jQuery.each(visitedNodes["nodes"], function(i, val) {
+      if(i < clicks) {
+          $("#gameoverlay").append(val.label+' <span class="glyphicon glyphicon-triangle-right"></span> ')
+      } else {
+          $("#gameoverlay").append('<strong>'+val.label+'</strong>');
+      }
+    })
+    $("#gameoverlay").append(
+        '<div class="text-center"><div class="btn-group">'+
+        '<a class="btn btn-info btn-lg" href="#">View Graph</a>'+
+        '<a class="btn btn-info btn-lg" href="../game/">Play Again</a>'+
+        '<a class="btn btn-info btn-lg" href="../game/dashboard">Exit</a>'+
+        '</div></div>'
+    );
+    $("#gameoverlay").fadeIn(400);
 }

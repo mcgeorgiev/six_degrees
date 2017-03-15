@@ -80,7 +80,7 @@ def convert_for_sigma(current_node, all_nodes):
 def game_over(request):
     data = request.POST
     nodes = json.loads(data["nodes"])
-
+    
     source = nodes[0]
     destination = nodes[-1]
     shortest_path = get_shortest_path(source["label"], destination["label"])

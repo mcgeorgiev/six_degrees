@@ -57,11 +57,14 @@
         {% block body_block %}
         {% endblock %}
         </div>
-        <footer class="footer">
-          <div class="container">
-            <p>Built by Team B for Internet Technology project</p>
-          </div>
-        </footer>
+        {% url 'index' as game_url %}
+        {% if request.get_full_path != game_url %}
+            <footer class="footer">
+              <div class="container">
+                <p>Built by <strong>Team B</strong> for Internet Technology project</p>
+              </div>
+            </footer>
+        {% endif %}
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
