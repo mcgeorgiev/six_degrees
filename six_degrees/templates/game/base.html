@@ -24,8 +24,13 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse navbar-right">
           <ul class="nav navbar-nav ">
+              {% if user.is_authenticated %}
+              {% url 'dashboard' as dash_url %}
+            <li {% if request.get_full_path == dash_url %}class="active"{% endif %}><a href="{% url 'dashboard' %}">{{ user.username }}'s dashboard</a><li>
+              {% else %}
               {% url 'home' as home_url %}
             <li {% if request.get_full_path == home_url %}class="active"{% endif %}><a href="{% url 'home' %}">Home</a><li>
+            {% endif %}
             {% url 'index' as game_url %}
             <li {% if request.get_full_path == game_url %}class="active"{% endif %}><a href="{% url 'index' %}">New Game</a><li>
             {% url 'rules' as rules_url %}
