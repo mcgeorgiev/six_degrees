@@ -219,6 +219,7 @@ function callback(data, sourceNode) {
   });
 }
 
+// add a new node to the graph and call create an edge
 function addNewNode(obj, sourceNode, x, y) {
 
   s.graph.addNode({ id: obj.id,
@@ -232,6 +233,7 @@ function addNewNode(obj, sourceNode, x, y) {
   allNodes.push(obj.id);
 }
 
+// adds an edge between two nodes
 function addNewEdge(newNode, existNode) {
     console.log(newNode.id);
     console.log(existNode.id);
@@ -243,6 +245,7 @@ function addNewEdge(newNode, existNode) {
     });
 }
 
+// calculates the X and Y positions to position the new nodes around the source
 function newNodeXY(originNode, numNodes) {
   var radius = [0.7, 0.6, 0.63, 0.82, 0.52] // radius to place around node
   var x0 = originNode.x;
@@ -269,13 +272,27 @@ function newNodeXY(originNode, numNodes) {
 }
 
 function gameOver() {
-  $("#goal").text("You lost after "+visitedNodes.length-1+" clicks!");
-  $("#result").text("List: ");
-  visitedNodes.forEach(function(n) {
-    $("#result").append("<li>"+n+"</li>")
-  });
+    var clicks = Object.keys(visitedNodes["nodes"]).length - 1 ;
+    clickTxt = (clicks > 1) ? "clicks":"click";
+    $("#gameoverlay").html("<h1>Game over! You hit a dead link.</h1><h2>"+clicks+" "+clickTxt+"</h2>");
+    jQuery.each(visitedNodes["nodes"], function(i, val) {
+      if(i < clicks) {
+          $("#gameoverlay").append(val.label+' <span class="glyphicon glyphicon-triangle-right"></span> ')
+      } else {
+          $("#gameoverlay").append('<strong>'+val.label+'</strong>');
+      }
+    })
+    $("#gameoverlay").append(
+        '<div class="text-center"><div class="btn-group">'+
+        '<a class="btn btn-info btn-lg" href="#">View Graph</a>'+
+        '<a class="btn btn-info btn-lg" href="../game/">Play Again</a>'+
+        '<a class="btn btn-info btn-lg" href="../">Exit</a>'+
+        '</div></div>'
+    );
+    $("#gameoverlay").fadeIn(400);
 }
 
+// function to get value of a given cookie
 function getCookie(name) {
     var value = "; " + document.cookie;
     var parts = value.split("; " + name + "=");

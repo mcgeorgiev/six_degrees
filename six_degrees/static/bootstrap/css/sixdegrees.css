@@ -1,6 +1,7 @@
 /* body */
 body {
     padding-top: 70px;
+    font-family: "Helvetica", sans-serif;
 }
 /* custom top bar */
 .navbar {
@@ -107,4 +108,16 @@ body {
     font-weight: bold;
     color: #fff;
     border: 1px solid #090909;
+}
+
+/* footer */
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  padding-top: 4px;
+  text-align: center;
+  color: #fff;
+  background-color: #666;
 }
