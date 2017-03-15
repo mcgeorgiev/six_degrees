@@ -1,5 +1,5 @@
 var startData;
-var baseUrl = "";//"http://127.0.0.1:8000/game/"
+var baseUrl = "";
 var s;
 var allNodes = [];
 var visitedNodes = {};

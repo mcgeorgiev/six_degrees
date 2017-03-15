@@ -1,14 +1,21 @@
 {% extends "game/base.html" %}
+{% load staticfiles %}
 {% block title_block %}
+Login
 {% endblock %}
 {% block body_block %}
-<h1>Login</h1>
-<form method="post" action=".">
-{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Log in" />
-<input type="hidden" name="next" value="{{ next }}" />
-</form> <p>
-Not a member?
-<a href="{% url 'registration_register' %}">Register</a> </p>
-{% endblock %}
+    <div class="col-md-4 col-md-offset-4">
+    <h1>Login</h1>
+    <div id="signupForm">
+        <form class="form-signin" method="post" action=".">
+          <div class="form-group">
+              {% csrf_token %}
+              {{ form.as_p }}
+          </div>
+          <input type="submit" value="Log in" class="btn btn-md btn-info" />
+          <input type="hidden" name="next" value="{{ next }}" />
+          </div>
+       </form>
+       <p>Not a member? <a href="{% url 'registration_register' %}">Register</a> </p>
+   </div>
+    {% endblock %}

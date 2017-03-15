@@ -1,0 +1,103 @@
+{% extends 'game/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    {{ user.username }}'s homepage
+{% endblock %}
+{% block body_block %}
+    <div class="col-md-3 profile-col">
+        <img src="{% static "test.jpg" %}" class="img-rounded img-responsive img-profile" alt="User profile img" />
+        <h3>{{ user.username }}</h3>
+
+        <p>
+            <ul>
+                <li>
+                    <a href="#" class="btn btn-md btn-warning">Edit profile</a>
+                </li>
+                <li>
+                    <a href="#" class="btn btn-md btn-danger">Delete profile</a>
+                </li>
+            </ul>
+        </p>
+    </div>
+    <div class="col-md-8 col-md-offset-1">
+        <h1 class="text-center"><a href="/game/">PLAY GAME</a></h1>
+        <hr/>
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="game-t-head">
+                <tr>
+                    <th>
+                        Game
+                    </th>
+                    <th>
+                        Source
+                    </th>
+                    <th>
+                        Destination
+                    </th>
+                    <th>
+                        Score
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td scope="row">
+                        1
+                    </td>
+                    <td>
+                        fdsjfd
+                    </td>
+                    <td>
+                        sgjdf
+                    </td>
+                    <td>
+                        10
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">
+                        1
+                    </td>
+                    <td>
+                        fdsjfd
+                    </td>
+                    <td>
+                        sgjdf
+                    </td>
+                    <td>
+                        10
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">
+                        1
+                    </td>
+                    <td>
+                        fdsjfd
+                    </td>
+                    <td>
+                        sgjdf
+                    </td>
+                    <td>
+                        10
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">
+                        1
+                    </td>
+                    <td>
+                        fdsjfd
+                    </td>
+                    <td>
+                        sgjdf
+                    </td>
+                    <td>
+                        10
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

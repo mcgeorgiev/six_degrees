@@ -26,6 +26,10 @@ def rules(request):
 def home(request):
     return render(request, 'game/home.html')
 
+@login_required
+def dashboard(request):
+    return render(request, 'game/dashboard.html')
+
 
 def get_start_node(request):
     data = nodes_with_num_relations(4)
