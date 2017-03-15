@@ -30,7 +30,6 @@ def home(request):
 def dashboard(request):
     return render(request, 'game/dashboard.html')
 
-
 def get_start_node(request):
     data = nodes_with_num_relations(4)
     return HttpResponse(json.dumps(data))
@@ -90,7 +89,7 @@ def game_over(request):
         shortest_path = [node["label"] for node in nodes]
         print "you got the shortest_path"
 
-    user = User.objects.get(username= 'admin')#request.username)
+    user = User.objects.get(username=request.user.username)
     Game.objects.create(user=user,
                         score=21,
                         source=source,
@@ -102,7 +101,11 @@ def game_over(request):
     game = Game.objects.filter(user=user).latest('id')
     add_game_relationship(nodes, game.id)
 
-    return HttpResponse()
+    shortest_path_nodes = []
+    for item in shortest_path:
+        shortest_path_nodes.append({"label": item})
+    print shortest_path_nodes
+    return HttpResponse(json.dumps(shortest_path_nodes))
 
 
     if __name__=='__main__':
