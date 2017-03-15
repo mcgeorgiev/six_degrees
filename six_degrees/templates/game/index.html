@@ -4,7 +4,6 @@
 Game
 {% endblock %}
 {% block body_block %}
-  <div class="container">
       <div class="starter-template gamecontainer" id="container">
           <div class="goaloverlay" id="goal"></div>
           <div class="clicksoverlay" id="clicks"><small>clicks: </small>0</div>
@@ -14,7 +13,6 @@ Game
               </button>
           </div>
       </div>
-  </div>
   <script src="{% static "js/sigma.min.js" %}"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="{% static "js/plugins/sigma.parsers.json.min.js" %}"></script>
