@@ -88,3 +88,23 @@ body {
     from { -webkit-transform: rotate(0deg); }
     to { -webkit-transform: rotate(360deg); }
 }
+
+/* profile page */
+.img-profile {
+    padding: 3px;
+    border: 2px solid #ccc;
+}
+.profile-col ul {
+    padding: 0;
+    margin: 0;
+}
+.profile-col li {
+    margin-bottom: 10px;
+    list-style: none;
+}
+.game-t-head {
+    background: #666;
+    font-weight: bold;
+    color: #fff;
+    border: 1px solid #090909;
+}
