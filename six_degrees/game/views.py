@@ -16,9 +16,14 @@ def index(request):
     return render(request, 'game/index.html', context={"a": "B"})
 
 def scores(request):
-    score_list = UserProfile.objects.order_by('score')[:100]
-    context_dict = {'userprofiles': score_list}
-    return render(request, 'game/scores.html', context_dict)
+    score_list = Game.objects.order_by('-score')[:100]
+    context = {'score_list': score_list,}
+    return render(request, 'game/scores.html', context)
+
+# def scores(request):
+#     score_list = UserProfile.objects.order_by('score')[:100]
+#     context_dict = {'userprofiles': score_list}
+#     return render(request, 'game/scores.html', context_dict)
 
 def rules(request):
     return render(request, 'game/rules.html')
