@@ -4,6 +4,7 @@ var s;
 var allNodes = [];
 var visitedNodes = {};
 visitedNodes['nodes'] = [];
+var endNode;
 
 /////////////////////// GET STARTING DATA ///////////////////////////
 function getStartData() {
@@ -79,7 +80,7 @@ function startSigma() {
     var currentNode= s.graph.nodes(startData.start.id);
 
     allNodes.push(startData.start.id);
-    var endNode = startData.end;
+    endNode = startData.end;
 
     // show some game details on screen
     $("#gameoverlay").html(
@@ -173,7 +174,7 @@ function nextNodes(urlPost, callback, sourceNode) {
       url: urlPost,
       datatype: 'json',
       method: 'POST',
-      data: {"csrfmiddlewaretoken":getCookie('csrftoken')},
+      data: {"csrfmiddlewaretoken":getCookie('csrftoken'), "endNode":endNode},
       success: function(data) {
           var jsonResp = JSON.parse(data);
           if(jsonResp["code"] == 500) {
