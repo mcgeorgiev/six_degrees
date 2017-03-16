@@ -172,6 +172,7 @@ function nextNodes(urlGet, callback, sourceNode) {
   $.ajax({
       url: urlGet,
       datatype: 'json',
+      method: 'POST',
       success: function(data) {
           var jsonResp = JSON.parse(data);
           if(jsonResp["code"] == 500) {
