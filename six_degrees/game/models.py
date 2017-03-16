@@ -7,7 +7,6 @@ class UserProfile(models.Model):
    # userID = models.IntegerField(unique=True)
    # password = models.CharField(max_length=128)
     user = models.OneToOneField(User, null=True)
-    score = models.IntegerField(null=True)
     picture = models.ImageField(upload_to='profile_images', blank=True)
 
     class Meta:
@@ -41,4 +40,3 @@ class Game(models.Model):
 #
 #     def __unicode__(self):
 #         return self.user.username
-

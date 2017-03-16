@@ -38,6 +38,7 @@ def home(request):
 def dashboard(request):
     user = User.objects.get(username=request.user.username)
     score_list = Game.objects.all().filter(user=user).order_by('-score')[:100]
+    profile = UserProfile.objects.get(user=user)
     # userprofile = UserProfile.objects.get_or_create(user=user)[0]
     # form = UserProfileForm(
     #     {'picture': userprofile.picture})
@@ -53,7 +54,7 @@ def dashboard(request):
     #     {'userprofile': userprofile, 'selecteduser': user, 'form': form})
     try:
         best_score = score_list.last().score
-        context = {'score_list': score_list, 'best_score': best_score}
+        context = {'score_list': score_list, 'best_score': best_score, 'profile': profile}
         return render(request, 'game/dashboard.html', context)
     except:
         return render(request, 'game/dashboard.html')
