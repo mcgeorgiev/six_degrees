@@ -3,8 +3,9 @@ import json
 from itertools import count
 import sys
 import random
+from bisect import bisect
 
-def get_links_for(name):
+def get_links_for(name, end):
     global all_links
     all_links = []
     get_page(name)
@@ -13,14 +14,26 @@ def get_links_for(name):
     if filtered_links == []:
         return None
 
+    # check if the end node exists in the filtered links
+    end_node = None
+    for i in range(0, len(filtered_links)):
+        if filtered_links[i]["title"] == end:
+            end_node = filtered_links[i]
+            break
+
     try:
-        random_indexes = random.sample(range(0, len(filtered_links)), 10)
+        random_indexes = random.sample(range(0, len(filtered_links)), 9)
     except ValueError:
         random_indexes = random.sample(range(0, len(filtered_links)), len(filtered_links)-1)
     chosen_links = []
     for i in random_indexes:
         filtered_links[i]["title"].encode('utf-8')
         chosen_links.append(filtered_links[i])
+
+    # add the end node
+    if end_node:
+        chosen_links.append(end_node)
+
     return chosen_links
 
 
@@ -60,6 +73,6 @@ def get_page(name, cont=""):
 
 
 if __name__ == '__main__':
-    get_links_for("Glasgow")
+    print get_links_for("Glasgow", "Scotland")
     # wiki = Wikipedia()
     # print len(wiki.get_links("Australia"))

@@ -45,9 +45,9 @@ def get_start_node(request):
 
 
 def incoming_node(request, title):
-    print request.POST["endNode[name]"]
+    end_name = request.POST["endNode"]
     current_node = {"name": title, "id": 0}
-    if has_enough_edges(current_node):
+    if has_enough_edges(current_node, end_name):
         # get the existing edges first and then fill up with the others
         pass
     else:

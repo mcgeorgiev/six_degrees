@@ -184,8 +184,8 @@ def node_exists(node):
         return False
 
 
-def add_API_nodes(current_node):
-    all_links = get_links_for(current_node["name"])
+def add_API_nodes(current_node, end_name):
+    all_links = get_links_for(current_node["name"], end_name)
     if all_links is None:
         return None
 
