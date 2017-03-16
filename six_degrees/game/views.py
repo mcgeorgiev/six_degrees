@@ -5,6 +5,7 @@ from models import UserProfile
 from django.contrib.auth.models import User
 from models import Game
 from django.contrib.auth.decorators import login_required
+from forms import UserProfileForm
 
 import json
 from graph import *
@@ -87,6 +88,21 @@ def convert_for_sigma(current_node, all_nodes):
 
     out = json.dumps(data)
     print out
+
+@login_required
+def register_profile(request):
+    form = UserProfileForm()
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            user_profile = form.save(commit=False)
+            user_profile.user = request.user
+            user_profile.save()
+            return redirect('index')
+        else:
+            print(form.errors)
+    context_dict = {'form':form}
+    return render(request, 'game/profile_registration.html', context_dict)
 
 
 #@csrf_exempt
