@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from models import Game
 from django.contrib.auth.decorators import login_required
 from forms import UserProfileForm
+from django.shortcuts import redirect
+
 
 import json
 from graph import *
@@ -36,6 +38,19 @@ def home(request):
 def dashboard(request):
     user = User.objects.get(username=request.user.username)
     score_list = Game.objects.all().filter(user=user).order_by('-score')[:100]
+    # userprofile = UserProfile.objects.get_or_create(user=user)[0]
+    # form = UserProfileForm(
+    #     {'picture': userprofile.picture})
+    #
+    # if request.method == 'POST':
+    #     form = UserProfileForm(request.POST, request.FILES, instance=userprofile)
+    #     if form.is_valid():
+    #         form.save(commit=True)
+    #         return redirect('profile', user.username)
+    #     else:
+    #         print(form.errors)
+    # return render(request, 'game/dashboard.html',
+    #     {'userprofile': userprofile, 'selecteduser': user, 'form': form})
     try:
         best_score = score_list.last().score
         context = {'score_list': score_list, 'best_score': best_score}
@@ -89,7 +104,6 @@ def convert_for_sigma(current_node, all_nodes):
     out = json.dumps(data)
     print out
 
-@login_required
 def register_profile(request):
     form = UserProfileForm()
     if request.method == 'POST':

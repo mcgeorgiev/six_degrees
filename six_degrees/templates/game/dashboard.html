@@ -6,7 +6,7 @@
 {% endblock %}
 {% block body_block %}
     <div class="col-md-3 profile-col">
-        <img src="{% static "test.jpg" %}" class="img-rounded img-responsive img-profile" alt="User profile img" />
+        <img src="{{ userprofile.picture.url }}" class="img-rounded img-responsive img-profile" alt="User profile img" />
         <h3>{{ user.username }}</h3>
         <h4 class="small">Member since {{ user.date_joined }}</h4>
         {% if best_score %}<h4 class="small">Best score: {{ best_score }}</h4>{% endif %}
