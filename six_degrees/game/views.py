@@ -100,8 +100,8 @@ def game_over(request):
     user = User.objects.get(username=request.user.username)
     Game.objects.create(user=user,
                         score=21,
-                        source=source,
-                        destination=destination,
+                        source=str(source['label']),
+                        destination=str(destination['label']),
                         numLinks=len(nodes)-1,
                         bestLinks=len(shortest_path)-1)
 
