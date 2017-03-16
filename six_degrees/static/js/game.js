@@ -29,8 +29,6 @@ var  NUMBER_OF_NODES;
 function startSigma() {
   console.log(startData.start);
 
-  // alert(getCookie('csrftoken'));
-
   NUMBER_OF_NODES = Object.keys(startData.related).length;
   console.log(NUMBER_OF_NODES);
   new sigma.classes.configurable(
@@ -174,7 +172,7 @@ function nextNodes(urlPost, callback, sourceNode) {
       url: urlPost,
       datatype: 'json',
       method: 'POST',
-      data: {"csrfmiddlewaretoken":getCookie('csrftoken'), "endNode":endNode},
+      data: {"csrfmiddlewaretoken":getCookie('csrftoken'), "endNode":endNode.name},
       success: function(data) {
           var jsonResp = JSON.parse(data);
           if(jsonResp["code"] == 500) {
@@ -188,11 +186,10 @@ function nextNodes(urlPost, callback, sourceNode) {
     });
 }
 function callback(data, sourceNode) {
-  // console.log(data);
+
   var json = JSON.parse(data);
   var nodeLocs = newNodeXY(sourceNode, Object.keys(json).length);
   jQuery.each(json, function(i, val) {
-    // alert(val["title"]);
     var pos = allNodes.indexOf(val.id);
     if(pos == -1) {
       addNewNode(val, sourceNode, nodeLocs[i].x, nodeLocs[i].y);
@@ -253,9 +250,7 @@ function newNodeXY(originNode, numNodes) {
     var newY = y0 + (radius[rad] * Math.sin(alpha));
     nodeLocs.push({"x":newX, "y":newY});
   }
-  // nodeLocs.forEach(function(e) {
-  //   alert("x: "+e.x+", y: "+e.y);
-  // });
+
   return nodeLocs;
 }
 
