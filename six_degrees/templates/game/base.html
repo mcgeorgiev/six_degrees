@@ -57,6 +57,7 @@
         {% block body_block %}
         {% endblock %}
         </div>
+        <div id="push"></div>
         {% url 'index' as game_url %}
         {% if request.get_full_path != game_url %}
             <footer class="footer">
