@@ -156,10 +156,10 @@ function startSigma() {
 
           s.refresh();
 
-          var url_get = baseUrl+"incomingnode/"+next_node;
+          var url_post = baseUrl+"incomingnode/"+next_node+"/";
 
           // use ajax to get the next set of nodes branching from this main node
-          nextNodes(url_get, callback, n);
+          nextNodes(url_post, callback, n);
           currentNode = e.data.node.id;
         }
     });
@@ -168,10 +168,12 @@ function startSigma() {
         s.refresh();
 }
 //////////////////// FUNCTIONS ///////////////////
-function nextNodes(urlGet, callback, sourceNode) {
+function nextNodes(urlPost, callback, sourceNode) {
   $.ajax({
-      url: urlGet,
+      url: urlPost,
       datatype: 'json',
+      method: 'POST',
+      data: {"csrfmiddlewaretoken":getCookie('csrftoken')},
       success: function(data) {
           var jsonResp = JSON.parse(data);
           if(jsonResp["code"] == 500) {

@@ -16,9 +16,14 @@ def index(request):
     return render(request, 'game/index.html', context={"a": "B"})
 
 def scores(request):
-    score_list = UserProfile.objects.order_by('score')[:100]
-    context_dict = {'userprofiles': score_list}
-    return render(request, 'game/scores.html', context_dict)
+    score_list = Game.objects.order_by('-score')[:100]
+    context = {'score_list': score_list,}
+    return render(request, 'game/scores.html', context)
+
+# def scores(request):
+#     score_list = UserProfile.objects.order_by('score')[:100]
+#     context_dict = {'userprofiles': score_list}
+#     return render(request, 'game/scores.html', context_dict)
 
 def rules(request):
     return render(request, 'game/rules.html')
@@ -28,7 +33,10 @@ def home(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'game/dashboard.html')
+    user = User.objects.get(username=request.user.username)
+    score_list = Game.objects.all().filter(user=user).order_by('-score')[:100]
+    context = {'score_list': score_list,}
+    return render(request, 'game/dashboard.html', context)
 
 def get_start_node(request):
     data = nodes_with_num_relations(4)
@@ -93,8 +101,8 @@ def game_over(request):
     user = User.objects.get(username=request.user.username)
     Game.objects.create(user=user,
                         score=21,
-                        source=source,
-                        destination=destination,
+                        source=str(source['label']),
+                        destination=str(destination['label']),
                         numLinks=len(nodes)-1,
                         bestLinks=len(shortest_path)-1)
 

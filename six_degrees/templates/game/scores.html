@@ -68,40 +68,35 @@
                     Destination
                 </th>
             </tr>
-           <tr>
-                <td>
-                    stuff in col 1
-                </td>
-                <td>
-                    stuff in col 2
-                </td>
-                <td>
-                    stuff in col 3
-                </td>
-                <td>
-                    stuff in col 4
-                </td>
-                <td>
-                    stuff in col 5
-                </td>
-            </tr>
-                       <tr>
-                <td>
-                    more stuff in col 1
-                </td>
-                <td>
-                   more stuff in col 2
-                </td>
-                <td>
-                    more stuff in col 3
-                </td>
-                <td>
-                    more stuff in col 4
-                </td>
-                <td>
-                    more stuff in col 5
-                </td>
-            </tr>
+                {% if score_list %}
+                        {% for Game in score_list %}
+                    <tr>
+                        <td>
+                         {{ Game.user }}
+                            </td>
+                        <td>
+                         {{ Game.score }}
+                            </td>
+                        <td>
+                         {{ Game.numLinks }}
+                            </td>
+                        <td>
+                         {{ Game.source }}
+                            </td>
+                        <td>
+                         {{ Game.destination }}
+                            </td>
+                    </tr>
+                {% endfor %}
+
+    {% else %}
+     <p>No scores are available.</p>
+    {% endif %}
         </table>
 </div>
+
+<div>
+
+</div>
+
 {% endblock %}
