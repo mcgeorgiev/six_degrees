@@ -33,7 +33,10 @@ def home(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'game/dashboard.html')
+    user = User.objects.get(username=request.user.username)
+    score_list = Game.objects.all().filter(user=user).order_by('-score')[:100]
+    context = {'score_list': score_list,}
+    return render(request, 'game/dashboard.html', context)
 
 def get_start_node(request):
     data = nodes_with_num_relations(4)
@@ -85,7 +88,7 @@ def convert_for_sigma(current_node, all_nodes):
 def game_over(request):
     data = request.POST
     nodes = json.loads(data["nodes"])
-    
+
     source = nodes[0]
     destination = nodes[-1]
     shortest_path = get_shortest_path(source["label"], destination["label"])

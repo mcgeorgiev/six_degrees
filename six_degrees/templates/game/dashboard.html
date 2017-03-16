@@ -29,7 +29,7 @@
             <thead class="game-t-head">
                 <tr>
                     <th>
-                        Game
+                        Game #
                     </th>
                     <th>
                         Source
@@ -43,62 +43,24 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td scope="row">
-                        1
-                    </td>
-                    <td>
-                        fdsjfd
-                    </td>
-                    <td>
-                        sgjdf
-                    </td>
-                    <td>
-                        10
-                    </td>
-                </tr>
-                <tr>
-                    <td scope="row">
-                        1
-                    </td>
-                    <td>
-                        fdsjfd
-                    </td>
-                    <td>
-                        sgjdf
-                    </td>
-                    <td>
-                        10
-                    </td>
-                </tr>
-                <tr>
-                    <td scope="row">
-                        1
-                    </td>
-                    <td>
-                        fdsjfd
-                    </td>
-                    <td>
-                        sgjdf
-                    </td>
-                    <td>
-                        10
-                    </td>
-                </tr>
-                <tr>
-                    <td scope="row">
-                        1
-                    </td>
-                    <td>
-                        fdsjfd
-                    </td>
-                    <td>
-                        sgjdf
-                    </td>
-                    <td>
-                        10
-                    </td>
-                </tr>
+                {% if score_list %}
+                    {% for Game in score_list %}
+                        <tr>
+                            <td>
+                                {{ Game.id }}
+                            </td>
+                            <td>
+                                {{ Game.source }}
+                            </td>
+                            <td>
+                             {{ Game.destination }}
+                            </td>
+                            <td>
+                                 {{ Game.score }}
+                            </td>
+                        </tr>
+                {% endfor %}
+                {% endif %}
             </tbody>
         </table>
     </div>
