@@ -4,6 +4,7 @@ var s;
 var allNodes = [];
 var visitedNodes = {};
 visitedNodes['nodes'] = [];
+var endNode;
 
 /////////////////////// GET STARTING DATA ///////////////////////////
 function getStartData() {
@@ -27,8 +28,6 @@ function getStartData() {
 var  NUMBER_OF_NODES;
 function startSigma() {
   console.log(startData.start);
-
-  // alert(getCookie('csrftoken'));
 
   NUMBER_OF_NODES = Object.keys(startData.related).length;
   console.log(NUMBER_OF_NODES);
@@ -79,7 +78,7 @@ function startSigma() {
     var currentNode= s.graph.nodes(startData.start.id);
 
     allNodes.push(startData.start.id);
-    var endNode = startData.end;
+    endNode = startData.end;
 
     // show some game details on screen
     $("#gameoverlay").html(
@@ -116,10 +115,10 @@ function startSigma() {
 
           //************************TESTING
           //************************TESTING
-          if(clicks == 4) {
-              isClickable = false;
-              gameWin();
-          }
+        //   if(clicks == 4) {
+        //       isClickable = false;
+        //       gameWin();
+        //   }
 
           toKeep = s.graph.neighbors(nodeId);
           toKeep[nodeId] = e.data.node;
@@ -173,7 +172,7 @@ function nextNodes(urlPost, callback, sourceNode) {
       url: urlPost,
       datatype: 'json',
       method: 'POST',
-      data: {"csrfmiddlewaretoken":getCookie('csrftoken')},
+      data: {"csrfmiddlewaretoken":getCookie('csrftoken'), "endNode":endNode.name},
       success: function(data) {
           var jsonResp = JSON.parse(data);
           if(jsonResp["code"] == 500) {
@@ -187,11 +186,10 @@ function nextNodes(urlPost, callback, sourceNode) {
     });
 }
 function callback(data, sourceNode) {
-  // console.log(data);
+
   var json = JSON.parse(data);
   var nodeLocs = newNodeXY(sourceNode, Object.keys(json).length);
   jQuery.each(json, function(i, val) {
-    // alert(val["title"]);
     var pos = allNodes.indexOf(val.id);
     if(pos == -1) {
       addNewNode(val, sourceNode, nodeLocs[i].x, nodeLocs[i].y);
@@ -234,7 +232,7 @@ function addNewEdge(newNode, existNode) {
 
 // calculates the X and Y positions to position the new nodes around the source
 function newNodeXY(originNode, numNodes) {
-  var radius = [0.7, 0.6, 0.63, 0.82, 0.52] // radius to place around node
+  var radius = [0.7, 0.6, 0.63, 0.82, 0.52, 1.1, 1.3, 0.98, 0.57, 0.97, 0.9, 0.73] // radius to place around node
   var x0 = originNode.x;
   var y0 = originNode.y;
   var alpha = (1.8*Math.PI)/(numNodes+1);
@@ -252,32 +250,31 @@ function newNodeXY(originNode, numNodes) {
     var newY = y0 + (radius[rad] * Math.sin(alpha));
     nodeLocs.push({"x":newX, "y":newY});
   }
-  // nodeLocs.forEach(function(e) {
-  //   alert("x: "+e.x+", y: "+e.y);
-  // });
+
   return nodeLocs;
 }
 
 // game has been lost
 function gameOver() {
     var clicks = Object.keys(visitedNodes["nodes"]).length - 1 ;
+    $.ajax({
+        url: baseUrl + "gameover/",
+        datatype: 'json',
+        type: 'POST',
+        method: 'POST',
+        data: {
+            "nodes":"None",
+            "csrfmiddlewaretoken":getCookie('csrftoken')
+        },
+        success: function(resp) {
+            displayEndGame(clicks, JSON.parse(resp));
+        },
+        failure: function(resp) {
+            alert('Something went wrong! Please try again.');
+        }
+      });
     clickTxt = (clicks > 1) ? "clicks":"click";
     $("#gameoverlay").html("<h1>Game over! You hit a dead link.</h1><h2>"+clicks+" "+clickTxt+"</h2>");
-    jQuery.each(visitedNodes["nodes"], function(i, val) {
-      if(i < clicks) {
-          $("#gameoverlay").append(val.label+' <span class="glyphicon glyphicon-triangle-right"></span> ')
-      } else {
-          $("#gameoverlay").append('<strong>'+val.label+'</strong>');
-      }
-    })
-    $("#gameoverlay").append(
-        '<div class="text-center"><div class="btn-group">'+
-        '<a class="btn btn-info btn-lg" href="#">View Graph</a>'+
-        '<a class="btn btn-info btn-lg" href="../game/">Play Again</a>'+
-        '<a class="btn btn-info btn-lg" href="../">Exit</a>'+
-        '</div></div>'
-    );
-    $("#gameoverlay").fadeIn(400);
 }
 
 // function to get value of a given cookie
@@ -290,6 +287,7 @@ function getCookie(name) {
 // game has been won
 function gameWin() {
     gameOverNodeList = JSON.stringify(visitedNodes["nodes"], null, 2); // Indented 4 spaces
+    var clicks = Object.keys(visitedNodes["nodes"]).length - 1 ;
     // $.post(baseUrl + "gameover/", {"nodes":gameOverNodeList, "csrfmiddlewaretoken":getCookie('csrftoken')});
     $.ajax({
         url: baseUrl + "gameover/",
@@ -301,12 +299,8 @@ function gameWin() {
             "csrfmiddlewaretoken":getCookie('csrftoken')
         },
         success: function(resp) {
-            var jsonResp = JSON.parse(resp);
-            if(jsonResp["code"] == 500) {
-                gameOver();
-            }
-            alert("GOT IT");
             alert(resp);
+            displayEndGame(clicks, JSON.parse(resp));
         },
         failure: function(resp) {
             alert('Something went wrong! Please try again.');
@@ -314,16 +308,30 @@ function gameWin() {
       });
 
     // game is over, post visitedNodes to server and tell user they won
-    var clicks = Object.keys(visitedNodes["nodes"]).length - 1 ;
     clickTxt = (clicks > 1) ? "clicks":"click";
     $("#gameoverlay").html("<h1>You won the game!</h1><h2>"+clicks+" "+clickTxt+"</h2>");
+}
+
+// shows the end game screen, the players links and the best path
+function displayEndGame(clicks, response) {
+    alert(response);
     jQuery.each(visitedNodes["nodes"], function(i, val) {
       if(i < clicks) {
           $("#gameoverlay").append(val.label+' <span class="glyphicon glyphicon-triangle-right"></span> ')
       } else {
-          $("#gameoverlay").append('<strong>'+val.label+'</strong>');
+          $("#gameoverlay").append('<strong>'+val.label+'</strong><hr/>');
       }
-    })
+    });
+    $("#gameoverlay").append('<h2>Best path</h2>');
+    var minLinks = Object.keys(response).length - 1;
+    jQuery.each(response, function(i, val) {
+        if(i < minLinks) {
+            $("#gameoverlay").append(val.label+' <span class="glyphicon glyphicon-triangle-right"></span> ')
+        } else {
+            $("#gameoverlay").append('<strong>'+val.label+'</strong><hr/>');
+        }
+    });
+
     $("#gameoverlay").append(
         '<div class="text-center"><div class="btn-group">'+
         '<a class="btn btn-info btn-lg" href="#">View Graph</a>'+

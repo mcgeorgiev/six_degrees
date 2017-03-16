@@ -9,6 +9,7 @@
         <img src="{% static "test.jpg" %}" class="img-rounded img-responsive img-profile" alt="User profile img" />
         <h3>{{ user.username }}</h3>
         <h4 class="small">Member since {{ user.date_joined }}</h4>
+        <h4 class="small">Best score: {{ best_score }}</h4>
         <hr/>
         <p>
             <ul>
@@ -29,9 +30,6 @@
             <thead class="game-t-head">
                 <tr>
                     <th>
-                        Game #
-                    </th>
-                    <th>
                         Source
                     </th>
                     <th>
@@ -46,9 +44,6 @@
                 {% if score_list %}
                     {% for Game in score_list %}
                         <tr>
-                            <td>
-                                {{ Game.id }}
-                            </td>
                             <td>
                                 {{ Game.source }}
                             </td>
