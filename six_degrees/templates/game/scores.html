@@ -4,54 +4,11 @@
     Scores
 {% endblock %}
     {% block body_block %}
-    <div>
-
-
-        <style>
-            table, th, td
-            {
-                border: 2px solid black;
-                border-collapse: collapse;
-
-            }
-
-            th, td
-            {
-                padding: 10px;
-                text-align: center;
-            }
-
-            th
-            {
-                background-color: black;
-                color: #e8e8e8;
-            }
-
-            tr:nth-child(even)
-            {
-                background-color: #e8e8e8;
-            }
-            tr:nth-child(odd)
-            {
-                background-color: white;
-            }
-
-            table
-            {
-                width: 80%;
-            }
-
-            #header
-            {
-                background-color: #e8e8e8;
-            }
-
-        </style>
-        <table align="center" >
+    {% if score_list %}
+    <div class="col-md-8 col-md-offset-1">
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="game-t-head">
             <tr>
-                <td id="header" colspan="5"> <h1> Global High Scores </h1></td>
-            </tr>
-            <tr class="success">
                 <th>
                     User
                 </th>
@@ -68,7 +25,8 @@
                     Destination
                 </th>
             </tr>
-                {% if score_list %}
+            <thead/>
+            <tbody>
                         {% for Game in score_list %}
                     <tr>
                         <td>
@@ -88,11 +46,13 @@
                             </td>
                     </tr>
                 {% endfor %}
+            </tbody>
+        </table>
 
     {% else %}
      <p>No scores are available.</p>
     {% endif %}
-        </table>
+
 </div>
 
 <div>
