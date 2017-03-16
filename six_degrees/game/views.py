@@ -35,7 +35,8 @@ def home(request):
 def dashboard(request):
     user = User.objects.get(username=request.user.username)
     score_list = Game.objects.all().filter(user=user).order_by('-score')[:100]
-    context = {'score_list': score_list,}
+    best_score = score_list.last().score
+    context = {'score_list': score_list, 'best_score': best_score}
     return render(request, 'game/dashboard.html', context)
 
 def get_start_node(request):
