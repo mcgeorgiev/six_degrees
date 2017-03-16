@@ -50,11 +50,11 @@ def get_start_node(request):
 def incoming_node(request, title):
     end_name = request.POST["endNode"]
     current_node = {"name": title, "id": 0}
-    if has_enough_edges(current_node, end_name):
+    if has_enough_edges(current_node):
         # get the existing edges first and then fill up with the others
         pass
     else:
-        if not add_API_nodes(current_node):
+        if not add_API_nodes(current_node, end_name):
             return HttpResponse(json.dumps({"code": 500, "status":"Failed"}))
 
     db_nodes = get_related_nodes(current_node)
