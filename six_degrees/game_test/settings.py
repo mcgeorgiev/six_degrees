@@ -106,6 +106,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [STATIC_DIR, ]
 
+PROFILE_URL = '/profile_images/'
+
 # If True, users can register
 REGISTRATION_OPEN = True
 # One-week activation window; you may, of course, use a different value.

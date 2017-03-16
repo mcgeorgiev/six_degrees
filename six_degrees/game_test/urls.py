@@ -21,7 +21,7 @@ from registration.backends.simple.views import RegistrationView
 
 class MyRegistrationView(RegistrationView):
     def get_success_url(self, user):
-        return "{% url 'home %}"
+        return url('register_profile')
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
@@ -33,5 +33,6 @@ urlpatterns = [
     url(r'^accounts/register/$',
         MyRegistrationView.as_view(),
             name='registration_register'),
+    url(r'^register_profile/$', views.register_profile, name='register_profile')
 ]
 
