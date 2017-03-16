@@ -39,14 +39,15 @@ def incoming_node(request, title):
 
     current_node = {"name": title, "id": 0}
     if has_enough_edges(current_node):
-        db_nodes = get_related_nodes(current_node)
+        # get the existing edges first and then fill up with the others
+        pass 
     else:
         if not add_API_nodes(current_node):
             return HttpResponse(json.dumps({"code": 500, "status":"Failed"}))
 
-        db_nodes = get_related_nodes(current_node)
+    db_nodes = get_related_nodes(current_node)
 
-    print db_nodes
+    print "Number of all the nodes returned:" + str(len(db_nodes))
 
     return HttpResponse(json.dumps(db_nodes))
 
@@ -80,7 +81,7 @@ def convert_for_sigma(current_node, all_nodes):
 def game_over(request):
     data = request.POST
     nodes = json.loads(data["nodes"])
-    
+
     source = nodes[0]
     destination = nodes[-1]
     shortest_path = get_shortest_path(source["label"], destination["label"])

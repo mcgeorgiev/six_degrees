@@ -84,7 +84,6 @@ def get_related_nodes(node):
 
     query = "MATCH (Article {{ name: '{0}' }})--(related) return related".format(node["name"])
     results = gdb.query(query)
-
     all_nodes = []
     for record in results:
         related_node = {}
@@ -107,6 +106,7 @@ def has_enough_edges(current_node):
     for record in results:
         all_relations.append(record[0])
     distinct_relations = frozenset(all_relations)
+    print "Number of relations: " + str(len(distinct_relations))
 
     return True if len(distinct_relations) >= min_relations else False
 
@@ -270,7 +270,7 @@ def get_names_from_ids(id_list):
 #     print property, ": ", value
 
 if __name__ == "__main__":
-    print get_shortest_path("Victoria (Australia)", "Sydney")
+    #print get_shortest_path("Victoria (Australia)", "Sydney")
     nodes = [
       {
         "id": 101,
@@ -292,11 +292,11 @@ if __name__ == "__main__":
     #add_game_relationship(nodes)
     # print node_exists(node)
     # print nodes_with_num_relations(4)
-    # print get_related_nodes({"name": "Scotland"})
+    print get_related_nodes({"name": "Glasgow"})
     # add_API_nodes(get_node_from_name("Kangaroo"))
     # print get_node_from_name("Australia")
     # print get_end_node("Scotland", ["Isle of Arran", "Scottish Parliament", "Thistle", "England", "Glasgow", "Rob Roy", "William Wallace"])
-    # print has_enough_edges({"name": "Bogan"})
+    # print has_enough_edges({"name": "Glasgow"})
     #add_edge({"name": "England"}, {"name": "Scotland"}, "game3")
     #add_node("England", 9)
     #add_node("Anglican Communion", 8)
