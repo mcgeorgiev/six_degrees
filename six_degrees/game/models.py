@@ -8,12 +8,13 @@ class UserProfile(models.Model):
    # password = models.CharField(max_length=128)
     user = models.OneToOneField(User, null=True)
     score = models.IntegerField(null=True)
+    picture = models.ImageField(upload_to='profile_images', blank=True)
 
     class Meta:
-        verbose_name_plural = 'userprofiles'
+      verbose_name_plural = 'userprofiles'
 
-    # def __unicode__(self):
-    #     return self.user
+    def __unicode__(self):
+      return self.user.username
 
 # Create your models here.
 class Game(models.Model):

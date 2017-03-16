@@ -6,3 +6,4 @@ py2neo==3.1.2
 requests==2.4.3
 wheel==0.24.0
 django-registration-redux==1.4
+Pillow==4.0.0

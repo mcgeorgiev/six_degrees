@@ -9,7 +9,7 @@
         <img src="{% static "test.jpg" %}" class="img-rounded img-responsive img-profile" alt="User profile img" />
         <h3>{{ user.username }}</h3>
         <h4 class="small">Member since {{ user.date_joined }}</h4>
-        <h4 class="small">Best score: {{ best_score }}</h4>
+        {% if best_score %}<h4 class="small">Best score: {{ best_score }}</h4>{% endif %}
         <hr/>
         <p>
             <ul>
@@ -54,7 +54,7 @@
                                  {{ Game.score }}
                             </td>
                         </tr>
-                {% endfor %}
+                    {% endfor %}
                 {% endif %}
             </tbody>
         </table>
