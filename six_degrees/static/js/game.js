@@ -115,10 +115,10 @@ function startSigma() {
 
           //************************TESTING
           //************************TESTING
-        //   if(clicks == 4) {
-        //       isClickable = false;
-        //       gameWin();
-        //   }
+          if(clicks == 2) {
+              isClickable = false;
+              gameOver();
+          }
 
           toKeep = s.graph.neighbors(nodeId);
           toKeep[nodeId] = e.data.node;
@@ -257,6 +257,7 @@ function newNodeXY(originNode, numNodes) {
 
 // game has been lost
 function gameOver() {
+    gameOverNodeList = JSON.stringify(visitedNodes["nodes"], null, 2); // Indented 4 spaces
     var clicks = Object.keys(visitedNodes["nodes"]).length - 1 ;
     $.ajax({
         url: baseUrl + "gameover/",
@@ -264,8 +265,10 @@ function gameOver() {
         type: 'POST',
         method: 'POST',
         data: {
-            "nodes":"None",
-            "csrfmiddlewaretoken":getCookie('csrftoken')
+            "nodes":gameOverNodeList,
+            "csrfmiddlewaretoken":getCookie('csrftoken'),
+            "lost":"True",
+            "end":endNode.name
         },
         success: function(resp) {
             displayEndGame(clicks, JSON.parse(resp));
@@ -297,7 +300,8 @@ function gameWin() {
         method: 'POST',
         data: {
             "nodes":gameOverNodeList,
-            "csrfmiddlewaretoken":getCookie('csrftoken')
+            "csrfmiddlewaretoken":getCookie('csrftoken'),
+            "lost":"False"
         },
         success: function(resp) {
             alert(resp);
