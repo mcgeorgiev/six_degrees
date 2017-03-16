@@ -92,6 +92,7 @@ def convert_for_sigma(current_node, all_nodes):
 #@csrf_exempt
 def game_over(request):
     data = request.POST
+    print data
     nodes = json.loads(data["nodes"])
 
     source = nodes[0]
@@ -101,23 +102,22 @@ def game_over(request):
     if len(shortest_path) == len(nodes):
         shortest_path = [node["label"] for node in nodes]
         print "you got the shortest_path"
+    if nodes != None:
+        user = User.objects.get(username=request.user.username)
+        Game.objects.create(user=user,
+                            score=21,
+                            source=str(source['label']),
+                            destination=str(destination['label']),
+                            numLinks=len(nodes)-1,
+                            bestLinks=len(shortest_path)-1)
 
-    user = User.objects.get(username=request.user.username)
-    Game.objects.create(user=user,
-                        score=21,
-                        source=str(source['label']),
-                        destination=str(destination['label']),
-                        numLinks=len(nodes)-1,
-                        bestLinks=len(shortest_path)-1)
-
-    # gets the last entry for a user and adds it to the graph db
-    game = Game.objects.filter(user=user).latest('id')
-    add_game_relationship(nodes, game.id)
+        # gets the last entry for a user and adds it to the graph db
+        game = Game.objects.filter(user=user).latest('id')
+        add_game_relationship(nodes, game.id)
 
     shortest_path_nodes = []
     for item in shortest_path:
         shortest_path_nodes.append({"label": item})
-    print shortest_path_nodes
     return HttpResponse(json.dumps(shortest_path_nodes))
 
 

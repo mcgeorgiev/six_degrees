@@ -50,7 +50,7 @@ def get_page(name, cont=""):
     if cont != "":
         cont = "&plcontinue=" + cont
 
-    api_url = "https://en.wikipedia.org/w/api.php?action=query&titles={0}&prop=links&pllimit={1}&format=json&redirects=1{2}".format(page_name, link_limit, cont)
+    api_url = u"https://en.wikipedia.org/w/api.php?action=query&titles={0}&prop=links&pllimit={1}&format=json&redirects=1{2}".format(page_name, link_limit, cont)
 
     r = requests.get(api_url)
     resp = r.json()
