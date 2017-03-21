@@ -43,7 +43,7 @@ def dashboard(request):
         return render(request, 'game/dashboard.html')
 
 def get_start_node(request):
-    data = nodes_with_num_relations(4)
+    data = get_start_data()
     return HttpResponse(json.dumps(data))
 
 

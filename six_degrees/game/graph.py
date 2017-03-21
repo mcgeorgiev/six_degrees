@@ -145,13 +145,37 @@ def nodes_with_num_relations(min_number):
     output_dict["related"] = {value['name']:value for value in related_nodes_list}.values()
     output_dict["end"] = end_node
 
+
+
     try:
         output_dict["related"].remove(starting_node)
     except ValueError:
         print "All good removing starting node from related node list"
 
-    return output_dict
+    print "Start: " + output_dict['start']["name"]
+    print "End: " + output_dict['end']["name"]
+    path = get_shortest_path(output_dict['start']["name"], output_dict['end']["name"])
+    print path
+    if len(path) == 0:
+        print "Searching again"
+        return nodes_with_num_relations(min_number)
+    else:
+        return output_dict
 
+def get_start_data():
+    return nodes_with_num_relations(4)
+
+def does_connection_exist(start, end):
+    gdb = connection()
+    query = """
+    MATCH (a:Article)-[]->(b:Article)
+    WHERE a.name='{0}' and b.name='{1}'
+    return a, b
+    """.format(start, end)
+    results = gdb.query(query)
+    for result in results:
+        print result
+        print "---"
 
 def get_end_node(starting_name, related_names):
     gdb = connection()
@@ -270,7 +294,8 @@ def get_names_from_ids(id_list):
 #     print property, ": ", value
 
 if __name__ == "__main__":
-    #print get_shortest_path("Victoria (Australia)", "Sydney")
+    #does_connection_exist("Australia", "Crocodile Dundee")
+    #print get_shortest_path("Bondi Beach", "Crocodile Dundee")
     nodes = [
       {
         "id": 101,
@@ -291,8 +316,8 @@ if __name__ == "__main__":
     ]
     #add_game_relationship(nodes)
     # print node_exists(node)
-    # print nodes_with_num_relations(4)
-    print get_related_nodes({"name": "Glasgow"})
+    nodes_with_num_relations(4)
+    #print get_related_nodes({"name": "Glasgow"})
     # add_API_nodes(get_node_from_name("Kangaroo"))
     # print get_node_from_name("Australia")
     # print get_end_node("Scotland", ["Isle of Arran", "Scottish Parliament", "Thistle", "England", "Glasgow", "Rob Roy", "William Wallace"])
