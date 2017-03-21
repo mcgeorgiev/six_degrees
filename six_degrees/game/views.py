@@ -38,8 +38,8 @@ def home(request):
 def dashboard(request):
     user = User.objects.get(username=request.user.username)
     score_list = Game.objects.all().filter(user=user).order_by('-score')[:100]
-    profile = UserProfile.objects.get(user=user)
-    # userprofile = UserProfile.objects.get_or_create(user=user)[0]
+    #profile = UserProfile.objects.all().get(user=user)
+    userprofile = UserProfile.objects.get_or_create(user=user)[0]
     # form = UserProfileForm(
     #     {'picture': userprofile.picture})
     #
@@ -111,7 +111,7 @@ def register_profile(request):
         form = UserProfileForm(request.POST, request.FILES)
         if form.is_valid():
             user_profile = form.save(commit=False)
-            user_profile.user = request.user
+           # user_profile.user = request.user
             user_profile.save()
             return redirect('index')
         else:

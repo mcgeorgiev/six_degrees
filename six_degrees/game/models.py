@@ -2,18 +2,25 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class UserProfile(models.Model):
   #  username = models.CharField(max_length=128)
    # userID = models.IntegerField(unique=True)
    # password = models.CharField(max_length=128)
     user = models.OneToOneField(User, null=True)
     picture = models.ImageField(upload_to='profile_images', blank=True)
+    score = models.DecimalField(decimal_places=3, max_digits=4, default=0.0, editable=False)
 
     class Meta:
       verbose_name_plural = 'userprofiles'
 
     def __unicode__(self):
       return self.user.username
+
+    def __str__(self):
+      return self.user
+
+
 
 # Create your models here.
 class Game(models.Model):
