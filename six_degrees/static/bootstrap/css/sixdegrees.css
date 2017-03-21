@@ -33,6 +33,21 @@ body {
     position: relative;
 }
 
+.game-inner {
+    width: 90%;
+    height: 90%;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+}
+.game-inner-tut {
+    width: 90%;
+    height: 80%;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+}
+
 .overlay {
   position: absolute;
   top: 50%; left: 50%;
@@ -81,6 +96,23 @@ body {
     opacity: 0;
 }
 
+.tutorial-hint {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #666;
+    padding: 4px;
+    opacity: 0;
+    font-size: 32px;
+    text-align: center;
+    color: #fff;
+}
+
+.tut-data {
+    visibility: hidden;
+}
+
 /* loading animation */
 .glyphicon.spinning {
     animation: spin 1s infinite linear;
@@ -115,6 +147,15 @@ body {
     font-weight: bold;
     color: #fff;
     border: 1px solid #090909;
+}
+
+/* how to play */
+.how-to-play {
+    padding: 0;
+    margin: 0;
+}
+p .btn {
+    margin-top: 15px;
 }
 
 /* footer */

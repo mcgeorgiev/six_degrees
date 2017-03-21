@@ -40,6 +40,7 @@ function startSigma() {
       fontStyle: "bold",
     });
 
+
     sigma.classes.graph.addMethod('neighbors', function(nodeId) {
     var k,
         neighbors = {},
@@ -63,6 +64,10 @@ function startSigma() {
             defaultNodeHoverColor: "#696",
         }
     });
+    s.settings({
+        autoResize: false,
+        //autoRescale: false,
+    });
     cam = s.addCamera();
 
     // make a node from the "start" node
@@ -85,7 +90,7 @@ function startSigma() {
         "<h3>Your goal is to link</h3><h1><strong>"+startData.start.name+"</strong></h1>"+
         " and <h1><strong>"+endNode.name+"</strong></h1>"+
         "<h3> Click the first node when it appears to begin.</h3>");
-    $("#gameoverlay").delay( 2500 ).fadeOut(400);
+    $("#gameoverlay").delay( 7500 ).fadeOut(400);
     $("#gameoverlay").promise().done(function() {
         $("#goal").html("Goal: <strong>"+endNode.name+"</strong>");
         $("#goal").css("opacity", 1);
@@ -115,10 +120,10 @@ function startSigma() {
 
           //************************TESTING
           //************************TESTING
-          if(clicks == 2) {
-              isClickable = false;
-              gameOver();
-          }
+//           if(clicks == 2) {
+//               isClickable = false;
+//               gameWon();
+//           }
 
           toKeep = s.graph.neighbors(nodeId);
           toKeep[nodeId] = e.data.node;
@@ -130,12 +135,6 @@ function startSigma() {
           });
           s.graph.edges().forEach(function(e) {
               e.color = '#ccc';
-            //   var pos = visitedNodes.indexOf(e.source);
-            //   if(pos > 0) {
-            //       e.color = '#696';
-            //     //   s.graph.nodes(visitedNodes[pos]).color = '#696';
-            //       e.size = 8;
-            //   }
           });
           // make the previous node and edge green to differentiate path
           e.data.node.color = '#696';
@@ -149,7 +148,7 @@ function startSigma() {
           cam.goTo({
             x: n.x,
             y: n.y,
-            ratio: 0.77, //zoom ratio
+            ratio: 1, //zoom ratio
             angle: 0,
           });
 
@@ -167,6 +166,8 @@ function startSigma() {
         s.refresh();
 }
 //////////////////// FUNCTIONS ///////////////////
+
+// gets the next set of nodes to be displayed on screen
 function nextNodes(urlPost, callback, sourceNode) {
   $.ajax({
       url: urlPost,
@@ -185,22 +186,31 @@ function nextNodes(urlPost, callback, sourceNode) {
       }
     });
 }
+
+// callback function to handle the response from nextNodes()
 function callback(data, sourceNode) {
 
   var json = JSON.parse(data);
-  var nodeLocs = newNodeXY(sourceNode, Object.keys(json).length);
+  var l = Object.keys(json).length;
+  if(l < 20) {
+      var nodeLocs = newNodeXY(sourceNode, l);
+  } else {
+      var nodeLocs = newNodeXY(sourceNode, 20);
+  }
   jQuery.each(json, function(i, val) {
     var pos = allNodes.indexOf(val.id);
-    if(pos == -1) {
+    if(i < 20) {
+        if(pos == -1) {
       addNewNode(val, sourceNode, nodeLocs[i].x, nodeLocs[i].y);
-  } else {
-      // node already exists, create a link back to it
-      addNewEdge(val, sourceNode);
-      // and make the node big again
-      s.graph.nodes(val.id).size = 5;
-      s.graph.nodes(val.id).color = "#666";
+      } else {
+          // node already exists, create a link back to it
+          addNewEdge(val, sourceNode);
+          // and make the node big again
+          s.graph.nodes(val.id).size = 5;
+          s.graph.nodes(val.id).color = "#666";
+      }
+      s.refresh();
   }
-  s.refresh();
   });
 }
 
@@ -232,22 +242,26 @@ function addNewEdge(newNode, existNode) {
 
 // calculates the X and Y positions to position the new nodes around the source
 function newNodeXY(originNode, numNodes) {
-  var radius = [0.7, 0.6, 0.63, 0.82, 0.52, 1.1, 1.3, 0.98, 0.57, 0.97, 0.9, 0.73] // radius to place around node
+  var radius = [0.7, 0.5, 0.9, 0.65, 1.1, 0.8, 0.98, 0.57, 0.9] // radius to place around node
   var x0 = originNode.x;
   var y0 = originNode.y;
   var alpha = (1.8*Math.PI)/(numNodes+1);
 
-  var firstX = x0 + (1 * Math.cos(alpha));
-  var firstY = y0 + (1 * Math.sin(alpha));
+  var firstX = x0 + (0.4 * Math.cos(alpha));
+  var firstY = y0 + (0.4 * Math.sin(alpha));
   var nodeLocs = [{"x":firstX, "y":firstY}];
 
   for(i=0; i<numNodes; i++) {
     // increment alpha angle by adding 2pi/N
-    var rad = Math.floor(Math.random()*radius.length);
+    if(i < radius.length) {
+        var rad = radius[i];
+    } else {
+        var rad = radius[i - radius.length];
+    }
     alpha = alpha + ((2*Math.PI)/(numNodes+1));
 
-    var newX = x0 + (radius[rad] * Math.cos(alpha));
-    var newY = y0 + (radius[rad] * Math.sin(alpha));
+    var newX = x0 + (rad * Math.cos(alpha));
+    var newY = y0 + (rad * Math.sin(alpha));
     nodeLocs.push({"x":newX, "y":newY});
   }
 
@@ -303,7 +317,6 @@ function gameWin() {
             "lost":"False"
         },
         success: function(resp) {
-            alert(resp);
             displayEndGame(clicks, JSON.parse(resp));
         },
         failure: function(resp) {
@@ -318,7 +331,6 @@ function gameWin() {
 
 // shows the end game screen, the players links and the best path
 function displayEndGame(clicks, response) {
-    alert(response);
     jQuery.each(visitedNodes["nodes"], function(i, val) {
       if(i < clicks) {
           $("#gameoverlay").append(val.label+' <span class="glyphicon glyphicon-triangle-right"></span> ')
@@ -338,10 +350,130 @@ function displayEndGame(clicks, response) {
 
     $("#gameoverlay").append(
         '<div class="text-center"><div class="btn-group">'+
-        '<a class="btn btn-info btn-lg" href="#">View Graph</a>'+
+        // '<a class="btn btn-info btn-lg" href="#">View Graph</a>'+
         '<a class="btn btn-info btn-lg" href="../game/">Play Again</a>'+
         '<a class="btn btn-info btn-lg" href="../game/dashboard">Exit</a>'+
         '</div></div>'
     );
     $("#gameoverlay").fadeIn(400);
+}
+
+//////////////// TUTORIAL GAME /////////////////
+function tutorialGame() {
+    // show details on screen to begin
+    $("#gameoverlay").html(
+        "<p>This tutorial will show you how to play SixDegrees!</p>"+
+        "<h3>Your goal is to link</h3><h1><strong>Scotland</strong></h1>"+
+        " and <h1><strong>University of Glasgow</strong></h1>"+
+        "<h3>Follow the hint box below!</h3>"+
+        '<a href="#" class="btn btn-lrg btn-info" onclick="startTut()">Start!</a>');
+}
+function startTut() {
+    var data = ({
+        "start": {
+            "id":1,
+            "label":"Scotland"
+        },
+        "load1": [
+             {
+                "id":2,
+                "label":"Glasgow"
+            },
+             {
+                "id":3,
+                "label":"Edinburgh"
+            },
+             {
+                "id":4,"label":"Dundee"
+            }
+        ],
+        "load2": [
+            {
+                "id":5,
+                "label":"Strathclyde"
+            },
+            {
+                "id":6,
+                "label":"Partick Thistle F.C."
+            },
+            {
+                "id":7,
+                "label":"University of Glasgow"
+            }
+        ]
+    });
+
+    $("#gameoverlay").fadeOut(400);
+    $("#goal").html("Goal: <strong>University of Glasgow</strong>");
+    $("#tutorial-hint").html("Click the node titled Scotland!");
+    $("#tutorial-hint").css("opacity", 1);
+    $("#goal").css("opacity", 1);
+
+    s = new sigma({
+        container: 'container',
+        settings: {
+            defaultNodeColor: '#666',
+            labelThreshold: 4,
+            singleHover: true,
+            defaultLabelSize: 13,
+            fontStyle: "bold",
+            defaultNodeHoverColor: "#696",
+        }
+    });
+    s.settings({
+        autoResize: false,
+        //autoRescale: false,
+    });
+    cam = s.addCamera();
+
+    // make a node from the "start" node
+    s.graph.addNode({
+      "id": data.start.id,
+      "label": data.start.label,
+      "x": 0,
+      "y": 0,
+      "size": 8,
+      "color": "#ccc",
+    });
+    s.refresh();
+
+    s.bind('clickNode', function(e) {
+        var n = s.graph.nodes(e.data.node.id);
+        if(e.data.node.id === 1) {
+            var nodeLocs = newNodeXY(n, 2);
+            jQuery.each((data.load1), function(i, val) {
+                s.graph.addNode({
+                  "id": val.id,
+                  "label": val.label,
+                  "x": nodeLocs[i].x,
+                  "y": nodeLocs[i].y,
+                  "size": 8,
+                  "color": "#ccc",
+                });
+                addNewEdge(val, n);
+            });
+            $("#tutorial-hint").html("Now, click Glasgow!");
+            s.refresh();
+        } else if(e.data.node.id === 2) {
+            var nodeLocs = newNodeXY(n, 6);
+            jQuery.each((data.load2), function(i, val) {
+                s.graph.addNode({
+                  "id": val.id,
+                  "label": val.label,
+                  "x": nodeLocs[i].x,
+                  "y": nodeLocs[i].y,
+                  "size": 8,
+                  "color": "#ccc",
+                });
+                addNewEdge(val, n);
+            });
+            $("#tutorial-hint").html("Finally, your goal is there! Click it!");
+            s.refresh();
+        } else if(e.data.node.id === 7) {
+            $("#gameoverlay").html("<h1>Well done!</h1><h3>That is the tutorial complete.</h3>"
+            +        '<a class="btn btn-info btn-lg" href="/game/">Play Full Game</a>');
+            $("#gameoverlay").fadeIn(200);
+
+        }
+    });
 }

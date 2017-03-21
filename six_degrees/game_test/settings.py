@@ -16,6 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
+MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 
 #DATABASE_PATH = os.path.join(PROJECT_PATH, 'Game.db')
 
@@ -99,12 +100,19 @@ USE_L10N = True
 
 USE_TZ = True
 
+MEDIA_ROOT = MEDIA_DIR
+MEDIA_URL = '/media/'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [STATIC_DIR, ]
+
+#PROFILE_URL = '/profile_images/'
+
+# AUTH_PROFILE_MODULE = 'game.UserProfile'
 
 # If True, users can register
 REGISTRATION_OPEN = True

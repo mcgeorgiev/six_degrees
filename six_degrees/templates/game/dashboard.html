@@ -6,7 +6,11 @@
 {% endblock %}
 {% block body_block %}
     <div class="col-md-3 profile-col">
+        {% if profile %}
+        <img src="/{{ profile.picture }}" class="img-rounded img-responsive img-profile" alt="User profile img" />
+        {% else %}
         <img src="{% static "test.jpg" %}" class="img-rounded img-responsive img-profile" alt="User profile img" />
+        {% endif %}
         <h3>{{ user.username }}</h3>
         <h4 class="small">Member since {{ user.date_joined }}</h4>
         {% if best_score %}<h4 class="small">Best score: {{ best_score }}</h4>{% endif %}
@@ -14,7 +18,7 @@
         <p>
             <ul>
                 <li>
-                    <a href="#" class="btn btn-md btn-info btn-block">Edit profile</a>
+                    <a href="{% url 'register_profile' %}" class="btn btn-md btn-info btn-block">Edit profile</a>
                 </li>
                 <li>
                     <a href="#" class="btn btn-md btn-danger btn-block">Delete profile</a>

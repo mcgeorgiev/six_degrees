@@ -2,3 +2,5 @@
 /venv/
 venv/
 six_degrees/db.sqlite3
+profile_images/
+media/

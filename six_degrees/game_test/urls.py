@@ -21,17 +21,18 @@ from registration.backends.simple.views import RegistrationView
 
 class MyRegistrationView(RegistrationView):
     def get_success_url(self, user):
-        return "{% url 'home %}"
-
+        return url('register_profile')
+        
 urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^game/', include('game.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^scores/', views.scores, name='scores'),
     url(r'^rules/', views.rules, name='rules'),
+	url(r'^dashboard/$', views.dashboard, name='dashboard'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^accounts/register/$',
         MyRegistrationView.as_view(),
             name='registration_register'),
+    url(r'^dashboard/register_profile/$', views.register_profile, name='register_profile')
 ]
-
