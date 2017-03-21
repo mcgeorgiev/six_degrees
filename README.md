@@ -1,11 +1,33 @@
-## Virtual Environments and Requirements
+# Six Degrees 
 
-There is a file call requirements.txt which contains a list of all the external libraries and frameworks.
+![hashids](https://github.com/mcgeorgiev/six_degrees/blob/master/read_me_images/heading.jpg)
 
-1. Use a virtual environment.
-2. Enter: `pip install -r requirements.txt`
-  - this will install all requirements in the list
+[Play Six Degrees Game](http://sixdegrees.pythonanywhere.com/game/)
+
+## Installation
+
+1. Clone folder.
+2. Enter a virtual environment.
+3. Install the requirements:
   
+```cmd
+$ pip install -r requirements.txt
+```
+#### Table of requirments:
+
+| Software  | Version |
+| ------------- | ------------- |
+| beautifulsoup4  | 4.5.3  |
+| Django  | 1.10.6  |
+|    neo4j-driver     |    1.1.2     |
+|    neo4jrestclient     |    2.1.1     |
+|    py2neo     |    3.1.2    |
+|    requests     |    2.4.3     |
+|    wheel     |   0.24.0     |
+|    django-registration-redux     |    1.4     |
+|    Pillow     |   4.0.0     |
+
+
 ---
 If you need to pip install something else do so in the virtual environment:
 
