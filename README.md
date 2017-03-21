@@ -6,7 +6,7 @@
 
 ## Installation
 
-1. Clone folder.
+1. Clone repository. [How to clone a repository](https://help.github.com/articles/cloning-a-repository/)
 2. Enter a virtual environment.
 3. Install the requirements:
   
