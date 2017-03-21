@@ -36,3 +36,10 @@ class TestForms(TestCase):
         c = Client()
         resp = c.post('/accounts/register/', {'username':'test', 'password':'test', 'email':'test@t.com'})
         self.assertEqual(resp.status_code, 200)
+
+class TestViews(TestCase):
+
+    def test_game_notlogged(self):
+        c = Client()
+        resp = c.get('/game/')
+        self.assertEqual(resp.status_code, 302)
