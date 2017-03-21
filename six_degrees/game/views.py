@@ -54,7 +54,7 @@ def dashboard(request):
     #     {'userprofile': userprofile, 'selecteduser': user, 'form': form})
     try:
         best_score = score_list.last().score
-        context = {'score_list': score_list, 'best_score': best_score, 'profile': profile}
+        context = {'score_list': score_list, 'best_score': best_score, 'profile': userprofile}
         return render(request, 'game/dashboard.html', context)
     except:
         return render(request, 'game/dashboard.html')

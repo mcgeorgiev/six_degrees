@@ -8,7 +8,7 @@ class UserProfile(models.Model):
    # userID = models.IntegerField(unique=True)
    # password = models.CharField(max_length=128)
     user = models.OneToOneField(User, null=True)
-    picture = models.ImageField(upload_to='profile_images', blank=True)
+    picture = models.ImageField(upload_to='media', blank=True)
     score = models.DecimalField(decimal_places=3, max_digits=4, default=0.0, editable=False)
 
     class Meta:
