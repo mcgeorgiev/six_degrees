@@ -40,6 +40,7 @@ function startSigma() {
       fontStyle: "bold",
     });
 
+
     sigma.classes.graph.addMethod('neighbors', function(nodeId) {
     var k,
         neighbors = {},
@@ -62,6 +63,10 @@ function startSigma() {
             fontStyle: "bold",
             defaultNodeHoverColor: "#696",
         }
+    });
+    s.settings({
+        autoResize: false,
+        //autoRescale: false,
     });
     cam = s.addCamera();
 
@@ -143,7 +148,7 @@ function startSigma() {
           cam.goTo({
             x: n.x,
             y: n.y,
-            ratio: 0.70, //zoom ratio
+            ratio: 1, //zoom ratio
             angle: 0,
           });
 
