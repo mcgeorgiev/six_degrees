@@ -6,11 +6,8 @@ Game
 {% block body_block %}
       <div class="starter-template gamecontainer">
           <div class="goaloverlay" id="goal"></div>
-          <div class="clicksoverlay" id="clicks"><small>clicks: </small>0</div>
-          <div class="give-up" id="give-up" onclick="gameOver()">
-              Give Up!
-          </div>
-          <div class="game-inner" id="container">
+          <div class="tutorial-hint" id="tutorial-hint"></div>
+          <div class="game-inner-tut" id="container">
               <div class="overlay" id="gameoverlay">
                   <button class="btn btn-lg btn-info">
                       <span class="glyphicon glyphicon-refresh spinning"></span>
@@ -24,5 +21,5 @@ Game
   <script src="{% static "js/plugins/sigma.parsers.json.min.js" %}"></script>
   <script src="{% static "js/plugins/sigma.classes.graph.js" %}"></script>
   <script src="{% static "js/plugins/sigma.plugins.animate.min.js" %}"></script>
-  <script src="{% static "js/game.js" %}" onload="getStartData()"></script>
+  <script src="{% static "js/game.js" %}" onload="tutorialGame()"></script>
 {% endblock %}
