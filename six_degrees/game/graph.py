@@ -152,18 +152,21 @@ def nodes_with_num_relations(min_number):
     except ValueError:
         print "All good removing starting node from related node list"
 
-    print "Start: " + output_dict['start']["name"]
-    print "End: " + output_dict['end']["name"]
+    #print "Start: " + output_dict['start']["name"]
+    #print "End: " + output_dict['end']["name"]
     path = get_shortest_path(output_dict['start']["name"], output_dict['end']["name"])
-    print path
+    #print path
     if len(path) == 0:
         print "Searching again"
         return nodes_with_num_relations(min_number)
     else:
+        print len(output_dict["related"])
         return output_dict
+
 
 def get_start_data():
     return nodes_with_num_relations(4)
+
 
 def does_connection_exist(start, end):
     gdb = connection()
