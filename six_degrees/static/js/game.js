@@ -85,7 +85,7 @@ function startSigma() {
         "<h3>Your goal is to link</h3><h1><strong>"+startData.start.name+"</strong></h1>"+
         " and <h1><strong>"+endNode.name+"</strong></h1>"+
         "<h3> Click the first node when it appears to begin.</h3>");
-    $("#gameoverlay").delay( 2500 ).fadeOut(400);
+    $("#gameoverlay").delay( 7500 ).fadeOut(400);
     $("#gameoverlay").promise().done(function() {
         $("#goal").html("Goal: <strong>"+endNode.name+"</strong>");
         $("#goal").css("opacity", 1);
@@ -130,12 +130,6 @@ function startSigma() {
           });
           s.graph.edges().forEach(function(e) {
               e.color = '#ccc';
-            //   var pos = visitedNodes.indexOf(e.source);
-            //   if(pos > 0) {
-            //       e.color = '#696';
-            //     //   s.graph.nodes(visitedNodes[pos]).color = '#696';
-            //       e.size = 8;
-            //   }
           });
           // make the previous node and edge green to differentiate path
           e.data.node.color = '#696';
@@ -167,6 +161,8 @@ function startSigma() {
         s.refresh();
 }
 //////////////////// FUNCTIONS ///////////////////
+
+// gets the next set of nodes to be displayed on screen
 function nextNodes(urlPost, callback, sourceNode) {
   $.ajax({
       url: urlPost,
@@ -186,6 +182,7 @@ function nextNodes(urlPost, callback, sourceNode) {
     });
 }
 
+// callback function to handle the response from nextNodes()
 function callback(data, sourceNode) {
 
   var json = JSON.parse(data);
@@ -233,22 +230,26 @@ function addNewEdge(newNode, existNode) {
 
 // calculates the X and Y positions to position the new nodes around the source
 function newNodeXY(originNode, numNodes) {
-  var radius = [0.7, 0.6, 0.63, 0.82, 0.52, 1.1, 1.3, 0.98, 0.57, 0.97, 0.9, 0.73] // radius to place around node
+  var radius = [0.7, 0.5, 0.9, 0.65, 1.1, 0.8, 0.98, 0.57, 0.9] // radius to place around node
   var x0 = originNode.x;
   var y0 = originNode.y;
   var alpha = (1.8*Math.PI)/(numNodes+1);
 
-  var firstX = x0 + (1 * Math.cos(alpha));
-  var firstY = y0 + (1 * Math.sin(alpha));
+  var firstX = x0 + (0.4 * Math.cos(alpha));
+  var firstY = y0 + (0.4 * Math.sin(alpha));
   var nodeLocs = [{"x":firstX, "y":firstY}];
 
   for(i=0; i<numNodes; i++) {
     // increment alpha angle by adding 2pi/N
-    var rad = Math.floor(Math.random()*radius.length);
+    if(i < radius.length) {
+        var rad = radius[i];
+    } else {
+        var rad = radius[i - radius.length];
+    }
     alpha = alpha + ((2*Math.PI)/(numNodes+1));
 
-    var newX = x0 + (radius[rad] * Math.cos(alpha));
-    var newY = y0 + (radius[rad] * Math.sin(alpha));
+    var newX = x0 + (rad * Math.cos(alpha));
+    var newY = y0 + (rad * Math.sin(alpha));
     nodeLocs.push({"x":newX, "y":newY});
   }
 
@@ -304,7 +305,6 @@ function gameWin() {
             "lost":"False"
         },
         success: function(resp) {
-            alert(resp);
             displayEndGame(clicks, JSON.parse(resp));
         },
         failure: function(resp) {
