@@ -109,6 +109,15 @@ body {
     color: #fff;
 }
 
+.give-up {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 10px;
+    opacity: 0;
+    color: #fff;
+}
+
 .tut-data {
     visibility: hidden;
 }

@@ -95,6 +95,7 @@ function startSigma() {
         $("#goal").html("Goal: <strong>"+endNode.name+"</strong>");
         $("#goal").css("opacity", 1);
         $("#clicks").css("opacity", 1);
+        $("#give-up").css("opacity", 1);
     });
     var isClickable = true;
     // user has clicked a node
@@ -269,7 +270,7 @@ function newNodeXY(originNode, numNodes) {
 }
 
 // game has been lost
-function gameOver() {
+function gameOver(type) {
     gameOverNodeList = JSON.stringify(visitedNodes["nodes"], null, 2); // Indented 4 spaces
     var clicks = Object.keys(visitedNodes["nodes"]).length - 1 ;
     $.ajax({
@@ -291,7 +292,11 @@ function gameOver() {
         }
       });
     clickTxt = (clicks > 1) ? "clicks":"click";
-    $("#gameoverlay").html("<h1>Game over! You hit a dead link.</h1><h2>"+clicks+" "+clickTxt+"</h2>");
+    if(type === -1) {
+        $("#gameoverlay").html("<h1>You gave up!</h1><h2>"+clicks+" "+clickTxt+"</h2>");
+    } else {
+        $("#gameoverlay").html("<h1>Game over! You hit a dead link.</h1><h2>"+clicks+" "+clickTxt+"</h2>");
+    }
 }
 
 // function to get value of a given cookie
