@@ -38,7 +38,7 @@
             {% url 'index' as game_url %}
             <li {% if request.get_full_path == game_url %}class="active"{% endif %}><a href="{% url 'index' %}">New Game</a><li>
             {% url 'rules' as rules_url %}
-            <li {% if request.get_full_path == rules_url %}class="active"{% endif %}><a href="{% url 'rules' %}">Rules</a><li>
+            <li {% if request.get_full_path == rules_url %}class="active"{% endif %}><a href="{% url 'rules' %}">How to Play</a><li>
             {% url 'scores' as scores_url %}
             <li {% if request.get_full_path == scores_url %}class="active"{% endif %}><a href="{% url 'scores' %}">Scores</a><li>
               {% if user.is_authenticated %}
