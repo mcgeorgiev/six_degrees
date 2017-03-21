@@ -8,11 +8,21 @@
 
 1. Clone repository. [How to clone a repository](https://help.github.com/articles/cloning-a-repository/)
 2. Enter a virtual environment.
+3. [Install neo4j](https://neo4j.com/download/)
 3. Install the requirements:
   
 ```cmd
 $ pip install -r requirements.txt
 ```
+#### Set up neo4j
+
+1. register account
+2. Leave password as default: ```neo4j```
+
+
+---
+
+
 #### Table of requirments:
 
 | Software  | Version |
