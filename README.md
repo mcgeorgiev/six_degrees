@@ -10,7 +10,7 @@ Six Degrees of Wikipediaism is a game based on the idea of [six degrees of seper
 
 ## How to play
 
-[Just Play](http://sixdegrees.pythonanywhere.com/game/)
+[Click here to play](http://sixdegrees.pythonanywhere.com/game/)
 
 click the links 
 
