@@ -191,19 +191,26 @@ function nextNodes(urlPost, callback, sourceNode) {
 function callback(data, sourceNode) {
 
   var json = JSON.parse(data);
-  var nodeLocs = newNodeXY(sourceNode, Object.keys(json).length);
+  var l = Object.keys(json).length;
+  if(l < 20) {
+      var nodeLocs = newNodeXY(sourceNode, l);
+  } else {
+      var nodeLocs = newNodeXY(sourceNode, 20);
+  }
   jQuery.each(json, function(i, val) {
     var pos = allNodes.indexOf(val.id);
-    if(pos == -1) {
+    if(i < 20) {
+        if(pos == -1) {
       addNewNode(val, sourceNode, nodeLocs[i].x, nodeLocs[i].y);
-  } else {
-      // node already exists, create a link back to it
-      addNewEdge(val, sourceNode);
-      // and make the node big again
-      s.graph.nodes(val.id).size = 5;
-      s.graph.nodes(val.id).color = "#666";
+      } else {
+          // node already exists, create a link back to it
+          addNewEdge(val, sourceNode);
+          // and make the node big again
+          s.graph.nodes(val.id).size = 5;
+          s.graph.nodes(val.id).color = "#666";
+      }
+      s.refresh();
   }
-  s.refresh();
   });
 }
 
