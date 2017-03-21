@@ -143,7 +143,7 @@ function startSigma() {
           cam.goTo({
             x: n.x,
             y: n.y,
-            ratio: 0.77, //zoom ratio
+            ratio: 0.70, //zoom ratio
             angle: 0,
           });
 
@@ -319,7 +319,6 @@ function gameWin() {
 
 // shows the end game screen, the players links and the best path
 function displayEndGame(clicks, response) {
-    alert(response);
     jQuery.each(visitedNodes["nodes"], function(i, val) {
       if(i < clicks) {
           $("#gameoverlay").append(val.label+' <span class="glyphicon glyphicon-triangle-right"></span> ')
