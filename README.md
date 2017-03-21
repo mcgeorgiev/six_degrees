@@ -31,8 +31,10 @@ $ pip install -r requirements.txt
 ---
 If you need to pip install something else do so in the virtual environment:
 
-1. Then Enter: `pip freeze -> requirements.txt`
-  - `pip freeze` shows all the installed things
+```cmd
+$ pip freeze -> requirements.txt
+```
+  - `pip freeze` shows everything currently installed.
   - the whole command pipes the output into the requirements file so it is always up to date
 
 
