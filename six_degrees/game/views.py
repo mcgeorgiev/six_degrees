@@ -35,6 +35,10 @@ def home(request):
     return render(request, 'game/home.html')
 
 @login_required
+def tutorial(request):
+    return render(request, 'game/tutorial.html')
+
+@login_required
 def dashboard(request):
     user = User.objects.get(username=request.user.username)
     score_list = Game.objects.all().filter(user=user).order_by('-score')[:100]

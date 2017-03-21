@@ -350,3 +350,123 @@ function displayEndGame(clicks, response) {
     );
     $("#gameoverlay").fadeIn(400);
 }
+
+//////////////// TUTORIAL GAME /////////////////
+function tutorialGame() {
+    // show details on screen to begin
+    $("#gameoverlay").html(
+        "<p>This tutorial will show you how to play SixDegrees!</p>"+
+        "<h3>Your goal is to link</h3><h1><strong>Scotland</strong></h1>"+
+        " and <h1><strong>University of Glasgow</strong></h1>"+
+        "<h3>Follow the hint box below!</h3>"+
+        '<a href="#" class="btn btn-lrg btn-info" onclick="startTut()">Start!</a>');
+}
+function startTut() {
+    var data = ({
+        "start": {
+            "id":1,
+            "label":"Scotland"
+        },
+        "load1": [
+             {
+                "id":2,
+                "label":"Glasgow"
+            },
+             {
+                "id":3,
+                "label":"Edinburgh"
+            },
+             {
+                "id":4,"label":"Dundee"
+            }
+        ],
+        "load2": [
+            {
+                "id":5,
+                "label":"Strathclyde"
+            },
+            {
+                "id":6,
+                "label":"Partick Thistle F.C."
+            },
+            {
+                "id":7,
+                "label":"University of Glasgow"
+            }
+        ]
+    });
+
+    $("#gameoverlay").fadeOut(400);
+    $("#goal").html("Goal: <strong>University of Glasgow</strong>");
+    $("#tutorial-hint").html("Click the node titled Scotland!");
+    $("#tutorial-hint").css("opacity", 1);
+    $("#goal").css("opacity", 1);
+
+    s = new sigma({
+        container: 'container',
+        settings: {
+            defaultNodeColor: '#666',
+            labelThreshold: 4,
+            singleHover: true,
+            defaultLabelSize: 13,
+            fontStyle: "bold",
+            defaultNodeHoverColor: "#696",
+        }
+    });
+    s.settings({
+        autoResize: false,
+        //autoRescale: false,
+    });
+    cam = s.addCamera();
+
+    // make a node from the "start" node
+    s.graph.addNode({
+      "id": data.start.id,
+      "label": data.start.label,
+      "x": 0,
+      "y": 0,
+      "size": 8,
+      "color": "#ccc",
+    });
+    s.refresh();
+
+    s.bind('clickNode', function(e) {
+        var n = s.graph.nodes(e.data.node.id);
+        if(e.data.node.id === 1) {
+            var nodeLocs = newNodeXY(n, 2);
+            jQuery.each((data.load1), function(i, val) {
+                s.graph.addNode({
+                  "id": val.id,
+                  "label": val.label,
+                  "x": nodeLocs[i].x,
+                  "y": nodeLocs[i].y,
+                  "size": 8,
+                  "color": "#ccc",
+                });
+                addNewEdge(val, n);
+            });
+            $("#tutorial-hint").html("Now, click Glasgow!");
+            s.refresh();
+        } else if(e.data.node.id === 2) {
+            var nodeLocs = newNodeXY(n, 6);
+            jQuery.each((data.load2), function(i, val) {
+                s.graph.addNode({
+                  "id": val.id,
+                  "label": val.label,
+                  "x": nodeLocs[i].x,
+                  "y": nodeLocs[i].y,
+                  "size": 8,
+                  "color": "#ccc",
+                });
+                addNewEdge(val, n);
+            });
+            $("#tutorial-hint").html("Finally, your goal is there! Click it!");
+            s.refresh();
+        } else if(e.data.node.id === 7) {
+            $("#gameoverlay").html("<h1>Well done!</h1><h3>That is the tutorial complete.</h3>"
+            +        '<a class="btn btn-info btn-lg" href="/game/">Play Full Game</a>');
+            $("#gameoverlay").fadeIn(200);
+
+        }
+    });
+}
