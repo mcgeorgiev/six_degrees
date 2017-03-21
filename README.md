@@ -1,6 +1,22 @@
-# Six Degrees 
+# Six Degrees of Wikipediaism
 
 ![hashids](https://github.com/mcgeorgiev/six_degrees/blob/master/read_me_images/heading.jpg)
+
+--- 
+
+# Discription
+
+Six Degrees of Wikipediaism is a game based on the idea of [six degrees of seperation](https://en.wikipedia.org/wiki/Six_degrees_of_separation). The idea is that all things living or not can be connected within six steps.
+
+## How to play
+
+[Click here to play](http://sixdegrees.pythonanywhere.com/game/)
+
+click the links 
+
+
+
+
 
 [Play Six Degrees Game](http://sixdegrees.pythonanywhere.com/game/)
 
@@ -18,8 +34,22 @@ $ pip install -r requirements.txt
 
 1. register account
 2. Leave password as default: ```neo4j```
+3. Run neo4j;
+4. Run the population scrip located in: six_degrees\six_degrees\game\graph_populate.py
 
+```
+$ python graph_populate.py
+```
+<br />
 
+5. Run the program: six_degrees\six_degrees\manage.py
+
+```
+$ python manage.py runserver
+```
+<br />
+
+6. Open local host: [open](http://127.0.0.1:8000)
 ---
 
 
