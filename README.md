@@ -10,7 +10,7 @@ SixDegrees is a game based on the idea of [six degrees of seperation](https://en
 
 ## How to play
 
-[Click here to play](http://sixdegrees.pythonanywhere.com/)
+[How to play](http://sixdegrees.pythonanywhere.com/how-to-play/)
 ![hashids](https://github.com/mcgeorgiev/six_degrees/blob/master/six_degrees/static/img/title.gif)
 * Click on new game.
 * You will be presented with your start and goal articles.
@@ -18,7 +18,7 @@ SixDegrees is a game based on the idea of [six degrees of seperation](https://en
 * Progress through the game, clicking node by node until you get to your goal!
 * You can zoom in and around the graph by using your mouse wheel, or pinching on mac!
 
-[Play Six Degrees Game](http://sixdegrees.pythonanywhere.com/)
+[Click here to play](http://sixdegrees.pythonanywhere.com/)
 
 ## Installation
 
