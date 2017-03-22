@@ -1,7 +1,4 @@
-# Six Degrees of Wikipediaism 
-
-<div style="text-align:center"><img src ="https://github.com/mcgeorgiev/six_degrees/blob/master/six_degrees/static/img/logo.png" /></div>
-
+# Six Degrees of Wikipediaism ![hashids](https://github.com/mcgeorgiev/six_degrees/blob/master/six_degrees/static/img/logo.png)
 
 --- 
 
