@@ -4,9 +4,12 @@
     Scores
 {% endblock %}
     {% block body_block %}
-    <h1 class="text-center">The Top 50 Games!</h1>
-    {% if score_list %}
-        <table class="table table-striped table-bordered table-hover">
+    <blockquote>
+        <h1 class="text-center" onclick="viewGames()">Click to view top 25 games</h1>
+    </blockquote>
+    <div class="hidden-games" id="gametable">
+        {% if score_list %}
+        <table class="table table-striped table-bordered table-hover table-games">
             <thead class="game-t-head">
             <tr>
                 <th>
@@ -47,17 +50,53 @@
                 {% endfor %}
             </tbody>
         </table>
-
     {% else %}
      <p>No scores are available.</p>
     {% endif %}
+    </div>
+    <hr/>
+    <blockquote>
+        <h1 class="text-center" onclick="viewUsers()">Click to view top 10 users</h1>
+    </blockquote>
 
-    <p class="text-center">
-        Scores are calculated as a percentage of the best path. 100% is the best path.
+    <div class="hidden-users" id="usertable">
+        {% if user_list %}
+        <table class="table table-striped table-bordered table-hover table-users">
+            <thead class="game-t-head">
+            <tr>
+                <th>
+                    User
+                </th>
+                <th>
+                    Overall Score
+                </th>
+            </tr>
+            <thead/>
+            <tbody>
+                {% for Game in user_list %}
+                    <tr>
+                        <td>
+                         {{ Game.user }}
+                            </td>
+                        <td>
+                         {{ Game.score }}%
+                            </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+     <p>No scores are available.</p>
+    {% endif %}
+    </div>
+    <hr/>
+    <p>
+        Scores are calculated as a percentage of the best path. 100% is the best score available!
     </p>
 
 </div>
 
 <div>
+    <script src="{% static "js/scores.js" %}"></script>
 
 {% endblock %}

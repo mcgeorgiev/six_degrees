@@ -365,7 +365,6 @@ function displayEndGame(clicks, response) {
 
     $("#gameoverlay").append(
         '<div class="text-center"><div class="btn-group">'+
-        // '<a class="btn btn-info btn-lg" href="#">View Graph</a>'+
         '<a class="btn btn-info btn-lg" href="../game/">Play Again</a>'+
         '<a class="btn btn-info btn-lg" href="../dashboard">Exit</a>'+
         '</div></div>'

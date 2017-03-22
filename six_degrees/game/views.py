@@ -20,10 +20,15 @@ def game(request):
     return render(request, 'game/game.html', context={"a": "B"})
 
 def scores(request):
-    score_list = Game.objects.order_by('-score')[:50]
-    context = {'score_list': score_list,}
+    score_list = Game.objects.order_by('-score')[:25]
+    user_list = UserProfile.objects.order_by('-score')[:10]
     for gme in score_list:
         gme.score = gme.score * 100
+    for game in user_list:
+        game.score = game.score * 100
+
+    context = {'score_list': score_list, 'user_list':user_list}
+
     return render(request, 'game/scores.html', context)
 
 # def scores(request):
