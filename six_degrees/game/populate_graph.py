@@ -16,9 +16,14 @@ def wipe_database():
 
 
 def add_csv_nodes():
+    start_time = time.time()
     with open("small_data.csv", "r") as input:
         for name in csv.reader(input):
             add_API_nodes(name[0])
+    print "--- Total time %s seconds ---" % (time.time() - start_time)
+
+
+
 
 def add_API_nodes(name):
     add_node(name)
@@ -69,7 +74,7 @@ def process(queue, current_node, link):
         try:
             func(link)
         except TypeError:
-            func(current_node, link, "linksTo")
+            func({"name":current_node}, link, "linksTo")
 
 
 def get_top_links(name):
@@ -92,10 +97,9 @@ def get_top_links(name):
 
     file_data.close()
 
-    for i in range(len(filtered_links)):
-        filtered_links[i]["title"].encode('utf-8')
-        chosen_links.append(filtered_links[i])
-
+    for i in range(len(chosen_links)):
+        chosen_links[i]["title"].encode('utf-8')
+        chosen_links.append(chosen_links[i])
 
     return chosen_links
 
