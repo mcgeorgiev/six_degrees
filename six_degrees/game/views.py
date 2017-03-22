@@ -186,7 +186,7 @@ def game_over(request):
         destination = nodes[-1]
         shortest_path = get_shortest_path(source["label"], destination["label"])
 
-        if len(shortest_path) == len(nodes):
+        if len(shortest_path) <= len(nodes):
             shortest_path = [node["label"] for node in nodes]
             print "you got the shortest_path"
 
