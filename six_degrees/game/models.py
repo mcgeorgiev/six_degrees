@@ -27,7 +27,7 @@ class Game(models.Model):
    # gameID = models.IntegerField(unique=True)
    # username = models.CharField(max_length=128)
     user = models.ForeignKey('auth.User')
-    score = models.IntegerField(null=True)
+    score = models.DecimalField(decimal_places=2, max_digits=5, null=True)
     source = models.CharField(max_length=128)
     destination = models.CharField(max_length=128)
     numLinks = models.IntegerField(null=True)
