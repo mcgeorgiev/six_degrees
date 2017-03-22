@@ -98,13 +98,14 @@ def incoming_node(request, title):
 
 
 def remove_some_nodes(nodes, end_name):
-
+    end_node = None
     for i in range(0, len(nodes)):
         if end_name in nodes[i].values():
             end_node = nodes.pop(i)
 
     smaller_nodes = nodes[:15]
-    smaller_nodes.append(end_node)
+    if end_node != None:
+        smaller_nodes.append(end_node)
     return smaller_nodes
 
 
