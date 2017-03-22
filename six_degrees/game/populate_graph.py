@@ -6,7 +6,11 @@ import threading
 from graph import add_node, add_edge, contains_quotes, node_exists
 from Queue import Queue
 
-#"""CREATE INDEX ON :Article(name);"""
+def create_index():
+    gdb = connection()
+    query = """CREATE INDEX ON :Article(name)"""
+    gdb.query(query)
+    print "Creating indexes"
 
 def wipe_database():
     gdb = connection()
@@ -20,9 +24,8 @@ def add_csv_nodes():
     with open("small_data.csv", "r") as input:
         for name in csv.reader(input):
             add_API_nodes(name[0])
+
     print "--- Total time %s seconds ---" % (time.time() - start_time)
-
-
 
 
 def add_API_nodes(name):
@@ -31,6 +34,7 @@ def add_API_nodes(name):
     start_time = time.time()
     all_links = get_top_links(name)
     #print all_links
+
     if all_links is None:
         return None
     #print len(all_links)
@@ -39,7 +43,7 @@ def add_API_nodes(name):
 
     threads = []
     for link in all_links:
-        print link
+        #print link
         q = Queue()
         print link
         try:
@@ -92,10 +96,13 @@ def get_top_links(name):
         csv_data = csv.reader(file_data)
         for item in csv_data:
             if filtered_links[i]["title"] == unicode(item[0]):
-                chosen_links.append(filtered_links[i])
+                if unicode(name) != filtered_links[i]["title"]:
+                    chosen_links.append(filtered_links[i])
 
 
     file_data.close()
+
+
 
     for i in range(len(chosen_links)):
         chosen_links[i]["title"].encode('utf-8')
@@ -143,3 +150,4 @@ def get_page(name, cont=""):
 if __name__ == "__main__":
     wipe_database()
     add_csv_nodes()
+    create_index()

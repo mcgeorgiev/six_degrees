@@ -11,7 +11,7 @@ def connection():
     return GraphDatabase("http://localhost:7474/db/data/", username="neo4j", password="password")
     #return GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
     #return GraphDatabase("http://hobby-ekngppohojekgbkepjibeaol.dbs.graphenedb.com:24789/db/data/", username="testing-user", password = "b.SIxCtcPc51R5.aaW8WZa65LdsjGgZ")
-
+    #return GraphDatabase("http://hobby-pmaccehmoeaggbkehkbfidol.dbs.graphenedb.com:24789/db/data/", username="admin-user", password = "b.JByrrlXaTWie.4ljs0uLwKIhUl21h")
 
 # def get_nodes_from_game(start, game, end):
 #     driver = driver_connection()
@@ -68,7 +68,9 @@ def add_edge(nodeA, nodeB, relationship_name):
     try:
         query = """MATCH (a:Article),(b:Article) WHERE a.name = '{0}' AND b.name = '{1}'
                    CREATE (a)-[r:{2}]->(b)""".format(nodeA["name"], nodeB["name"], relationship_name)
+        #print query
         gdb.query(query)
+        print "added edge"
     except:
         print "Unicode is not added"
 
