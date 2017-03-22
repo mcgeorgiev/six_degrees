@@ -1,6 +1,7 @@
-# Six Degrees of Wikipediaism
+# Six Degrees of Wikipediaism 
 
-![hashids](https://github.com/mcgeorgiev/six_degrees/blob/master/six_degrees/static/img/title.gif)
+<div style="text-align:center"><img src ="https://github.com/mcgeorgiev/six_degrees/blob/master/six_degrees/static/img/logo.png" /></div>
+
 
 --- 
 
@@ -11,7 +12,7 @@ Six Degrees of Wikipediaism is a game based on the idea of [six degrees of seper
 ## How to play
 
 [Click here to play](http://sixdegrees.pythonanywhere.com/game/)
-
+![hashids](https://github.com/mcgeorgiev/six_degrees/blob/master/six_degrees/static/img/title.gif)
 click the links 
 
 
