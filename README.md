@@ -16,7 +16,7 @@ SixDegrees is a game based on the idea of [six degrees of seperation](https://en
 * You will be presented with your start and goal articles.
 * Click on the first node to reveal your next possible choices.
 * Progress through the game, clicking node by node until you get to your goal!
-* You can zoom in and around the graph by using your mouse wheel, or pinching on mac!
+* You can zoom in and around the graph by using your mouse wheel, or pinching on a laptop touch pad!
 
 [Click here to play](http://sixdegrees.pythonanywhere.com/)
 
