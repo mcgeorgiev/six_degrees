@@ -43,9 +43,9 @@ def connection():
 ### Set up neo4j
 
 + register account
-+ Leave password as default: ```neo4j```
++ Change password to: ```password```
 + Run neo4j;
-+ Run the population scrip located in: six_degrees\six_degrees\game\graph_populate.py
++ Run the population script located in: six_degrees\six_degrees\game\graph_populate.py
 
 ```
 $ python graph_populate.py
