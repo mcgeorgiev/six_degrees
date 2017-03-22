@@ -1,9 +1,7 @@
-<p align="center">
-  <img src="https://github.com/mcgeorgiev/six_degrees/blob/master/six_degrees/static/img/logo.png"/>
-</p>
+  <h1 align="center">SixDegrees</h1>
 
 <p align="center">
-  <h1 align="center">SixDegrees</h1>
+  <img src="https://github.com/mcgeorgiev/six_degrees/blob/master/six_degrees/static/img/logo.png"/>
 </p>
 
 # Description
