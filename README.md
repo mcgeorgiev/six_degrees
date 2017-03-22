@@ -24,8 +24,16 @@ SixDegrees is a game based on the idea of [six degrees of seperation](https://en
 
 1. Clone repository. [How to clone a repository](https://help.github.com/articles/cloning-a-repository/)
 2. Enter a virtual environment.
-3. [Install neo4j](https://neo4j.com/download/)
-3. Install the requirements:
+3. If you wish to use eduroam you must [Install neo4j](https://neo4j.com/download/) and change the following lines in the six_degrees/six_degrees/game/graph.py to look like the follwing code:
+
+```
+def connection():
+    #return GraphDatabase("http://localhost:7474/db/data/", username="neo4j", password="password")
+    return GraphDatabase("http://hobby-ekngppohojekgbkepjibeaol.dbs.graphenedb.com:24789/db/data/", username="testing-user", password = "b.SIxCtcPc51R5.aaW8WZa65LdsjGgZ")
+
+```
+
+4. Install the requirements:
   
 ```cmd
 $ pip install -r requirements.txt
