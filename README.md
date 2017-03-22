@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <b>SixDegrees</b>
+  <h1>SixDegrees</h1>
 </p>
 
 # Description
