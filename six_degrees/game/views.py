@@ -87,10 +87,25 @@ def incoming_node(request, title):
             return HttpResponse(json.dumps({"code": 500, "status":"Failed"}))
 
     db_nodes = get_related_nodes(current_node)
+    #print db_nodes
 
     print "Number of all the nodes returned:" + str(len(db_nodes))
 
+    if len(db_nodes) >= 16:
+        db_nodes = remove_some_nodes(db_nodes, end_name)
+
     return HttpResponse(json.dumps(db_nodes))
+
+
+def remove_some_nodes(nodes, end_name):
+
+    for i in range(0, len(nodes)):
+        if end_name in nodes[i].values():
+            end_node = nodes.pop(i)
+
+    smaller_nodes = nodes[:15]
+    smaller_nodes.append(end_node)
+    return smaller_nodes
 
 
 def convert_for_sigma(current_node, all_nodes):
