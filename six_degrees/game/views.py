@@ -152,6 +152,27 @@ def register_profile(request):
     context_dict = {'form':form}
     return render(request, 'game/profile_registration.html', context_dict)
 
+@login_required
+def delete_profile(request):
+    if request.method == 'POST':
+        try:
+            u = User.objects.get(username=request.user.username)
+            u.delete()
+            try:
+                up = UserProfile.objects.get(user=request.user.username)
+                up.delete()
+            except:
+                # userprofile does not exist, don't need to delete
+                pass
+        except:
+            # user does not exist, do nothing
+            pass
+
+        context_dict = {'message':'Account deleted! Sorry to see you leave!'}
+    else:
+        context_dict = {'form':'dispform'}
+    return render(request, 'registration/delete_profile.html', context_dict)
+
 
 #@csrf_exempt
 def game_over(request):

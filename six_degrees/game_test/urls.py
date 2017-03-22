@@ -34,5 +34,6 @@ urlpatterns = [
     url(r'^accounts/register/$',
         MyRegistrationView.as_view(),
             name='registration_register'),
-    url(r'^dashboard/register_profile/$', views.register_profile, name='register_profile')
+    url(r'^dashboard/register_profile/$', views.register_profile, name='register_profile'),
+    url(r'^dashboard/delete_profile/$', views.delete_profile, name='delete_profile')
 ]
