@@ -22,9 +22,9 @@ SixDegrees is a game based on the idea of [six degrees of seperation](https://en
 
 ## Installation
 
-1. Clone repository. [How to clone a repository](https://help.github.com/articles/cloning-a-repository/)
-2. Enter a virtual environment.
-3. If you wish to use eduroam you must [Install neo4j](https://neo4j.com/download/) and change the following lines in the six_degrees/six_degrees/game/graph.py to look like the follwing code:
+#### 1. Clone repository. [How to clone a repository](https://help.github.com/articles/cloning-a-repository/)
+#### 2. Enter a virtual environment.
+#### 3. If you wish to use eduroam you must [Install neo4j](https://neo4j.com/download/) and change the following lines in the six_degrees/six_degrees/game/graph.py to look like the follwing code:
 
 ```
 def connection():
@@ -45,20 +45,20 @@ $ python graph_populate.py
 ```
 <br />
 
-4. Install the requirements:
+#### 4. Install the requirements:
   
 ```cmd
 $ pip install -r requirements.txt
 ```
 
-5. Run the program: six_degrees\six_degrees\manage.py
+#### 5. Run the program: six_degrees\six_degrees\manage.py
 
 ```
 $ python manage.py runserver
 ```
 <br />
 
-6. Open local host: [open](http://127.0.0.1:8000)
+#### 6. Open local host: [open](http://127.0.0.1:8000)
 ---
 
 
