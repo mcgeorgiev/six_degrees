@@ -35,8 +35,8 @@ $ python populate.py
 
 ```
 def connection():
-    #return GraphDatabase("http://localhost:7474/db/data/", username="neo4j", password="password")
-    return GraphDatabase("http://hobby-ekngppohojekgbkepjibeaol.dbs.graphenedb.com:24789/db/data/", username="testing-user", password = "b.SIxCtcPc51R5.aaW8WZa65LdsjGgZ")
+    return GraphDatabase("http://localhost:7474/db/data/", username="neo4j", password="password")
+    #return GraphDatabase("http://hobby-ekngppohojekgbkepjibeaol.dbs.graphenedb.com:24789/db/data/", username="testing-user", password = "b.SIxCtcPc51R5.aaW8WZa65LdsjGgZ")
 
 ```
 
