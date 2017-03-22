@@ -1,6 +1,7 @@
 <p align="center">
   <img src="https://github.com/mcgeorgiev/six_degrees/blob/master/six_degrees/static/img/logo.png"/>
 </p>
+
 # SixDegrees
 
 --- 
