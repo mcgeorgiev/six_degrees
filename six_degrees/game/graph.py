@@ -3,6 +3,9 @@ from Wiki import get_links_for
 import random
 from itertools import count
 from neo4jrestclient.client import GraphDatabase
+from Queue import Queue
+import threading
+import time
 
 def connection():
     return GraphDatabase("http://localhost:7474/db/data/", username="neo4j", password="password")
@@ -211,26 +214,79 @@ def node_exists(node):
         return False
 
 
+# def add_API_nodes(current_node, end_name):
+#     start_time = time.time()
+#
+#     all_links = get_links_for(current_node["name"], end_name)
+#     if all_links is None:
+#         return None
+#
+#     # avoids stupid quotations breaking queries
+#     all_links = [link for link in all_links if not contains_quotes(link["title"])]
+#
+#     # converts the links into nodes format
+#     for link in all_links:
+#         link["name"] = link.pop("title")
+#         link.pop("ns")
+#
+#         if not node_exists(link):
+#             print 'node does not exist - added'
+#             add_node(link)
+#
+#         # otherwise always add relationship
+#         add_edge(current_node, link, "linksTo")
+#     print "--- adding nodes took %s seconds ---" % (time.time() - start_time)
+#
+#     return True
+
+def process(queue, current_node, link):
+    length = queue.qsize()
+    for i in range(0, length):
+        print i
+        func = queue.get()
+        try:
+            func(link)
+        except TypeError:
+            func(current_node, link, "linksTo")
+
+# now with threading
 def add_API_nodes(current_node, end_name):
+    #add_node(current_node["name"])
+
+    start_time = time.time()
     all_links = get_links_for(current_node["name"], end_name)
+    #print all_links
     if all_links is None:
         return None
-
+    #print len(all_links)
     # avoids stupid quotations breaking queries
     all_links = [link for link in all_links if not contains_quotes(link["title"])]
 
-    # converts the links into nodes format
+    threads = []
     for link in all_links:
+        print link
+        q = Queue()
+
         link["name"] = link.pop("title")
         link.pop("ns")
 
         if not node_exists(link):
-            print 'node does not exist - added'
-            add_node(link)
+            print 'node does not exist '
+            add = lambda x: add_node(x)
+            q.put(add)
 
         # otherwise always add relationship
-        add_edge(current_node, link, "linksTo")
+        edge = lambda x,y,z: add_edge(x, y, z)
+        q.put(edge)
+
+        t = threading.Thread(target=process, args=(q, current_node, link))
+        threads.append(t)
+        t.start()
+
+    [thread.join() for thread in threads]
+    print "--- adding nodes took %s seconds ---" % (time.time() - start_time)
     return True
+
 
 
 def contains_quotes(name):
@@ -260,7 +316,7 @@ def get_id():
 def get_shortest_path(source, dest):
     query = """
     MATCH p=shortestPath(
-    (a:Article {{name:"{0}"}})-[*]-(b:Article {{name:"{1}"}}))
+    (a:Article {{name:"{0}"}})-[*]->(b:Article {{name:"{1}"}}))
     RETURN p
     ORDER BY LENGTH(p) ASC
     LIMIT 1

@@ -90,7 +90,7 @@ function startSigma() {
         "<h3>Your goal is to link</h3><h1><strong>"+startData.start.name+"</strong></h1>"+
         " and <h1><strong>"+endNode.name+"</strong></h1>"+
         "<h3> Click the first node when it appears to begin.</h3>");
-    $("#gameoverlay").delay( 7500 ).fadeOut(400);
+    $("#gameoverlay").delay( 5000 ).fadeOut(400);
     $("#gameoverlay").promise().done(function() {
         $("#goal").html("Goal: <strong>"+endNode.name+"</strong>");
         $("#goal").css("opacity", 1);
