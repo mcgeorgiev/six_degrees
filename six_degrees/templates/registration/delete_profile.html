@@ -1,0 +1,18 @@
+{% extends "game/base.html" %}
+{% block title_block %}
+    Delete Profile
+{% endblock %}
+{% block body_block %}
+{% if form %}
+<h1>Delete Profile</h1>
+<p>
+    Are you sure?
+</p>
+    <form method="post" action="." enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="submit" value="Delete profile" class="btn btn-lg btn-danger"/>
+    </form>
+{% else %}
+<h1 class="text-center">{{ message }}</h1>
+{% endif %}
+{% endblock %}

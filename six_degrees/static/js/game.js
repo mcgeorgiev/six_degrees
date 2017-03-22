@@ -89,7 +89,17 @@ function startSigma() {
     $("#gameoverlay").html(
         "<h3>Your goal is to link</h3><h1><strong>"+startData.start.name+"</strong></h1>"+
         " and <h1><strong>"+endNode.name+"</strong></h1>"+
-        "<h3> Click the first node when it appears to begin.</h3>");
+        "<h3> Click the first node when it appears to begin.</h3><div id='count'></div>");
+
+        var counter = 5;
+    var interval = setInterval(function() {
+        counter--;
+        $("#count").html("<small>(This box will disappear in "+counter+" seconds)");
+        // Display 'counter' wherever you want to display it.
+        if (counter == 0) {
+            // Display a login box
+        }
+    }, 1000);
     $("#gameoverlay").delay( 5000 ).fadeOut(400);
     $("#gameoverlay").promise().done(function() {
         $("#goal").html("Goal: <strong>"+endNode.name+"</strong>");
@@ -120,11 +130,11 @@ function startSigma() {
           }
 
           //************************TESTING
-          //************************TESTING
-//           if(clicks == 2) {
-//               isClickable = false;
-//               gameWon();
-//           }
+        //   //************************TESTING
+        //   if(clicks == 2) {
+        //       isClickable = false;
+        //       gameWin();
+        //   }
 
           toKeep = s.graph.neighbors(nodeId);
           toKeep[nodeId] = e.data.node;
@@ -355,7 +365,6 @@ function displayEndGame(clicks, response) {
 
     $("#gameoverlay").append(
         '<div class="text-center"><div class="btn-group">'+
-        // '<a class="btn btn-info btn-lg" href="#">View Graph</a>'+
         '<a class="btn btn-info btn-lg" href="../game/">Play Again</a>'+
         '<a class="btn btn-info btn-lg" href="../dashboard">Exit</a>'+
         '</div></div>'

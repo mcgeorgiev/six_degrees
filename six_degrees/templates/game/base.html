@@ -11,7 +11,7 @@
           <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-        <link rel="shortcut icon" type="image/png" href="{% static "favicon-32x32.png" %}"/>
+        <link rel="shortcut icon" type="image/png" href="{% static "img/favicon-32x32.png" %}"/>
         <title>Six Degrees -
             {% block title_block %}
                 Welcome to Six Degrees of Wikipedia
@@ -22,9 +22,9 @@
           <div class="container">
             <div class="navbar-header">
                 {% if user.is_authenticated %}
-                <a href="{% url 'dashboard' %}" class="navbar-left"><img src="{% static "small_logo.png" %}" alt="Logo" class="img-responsive pull-left" /> SixDegrees</a>
+                <a href="{% url 'dashboard' %}" class="navbar-left"><img src="{% static "img/small_logo.png" %}" alt="Logo" class="img-responsive pull-left" /> SixDegrees</a>
                 {% else %}
-                <a href="{% url 'home' %}" class="navbar-left"><img src="{% static "small_logo.png" %}" alt="Logo" class="img-responsive pull-left" /> SixDegrees</a>
+                <a href="{% url 'home' %}" class="navbar-left"><img src="{% static "img/small_logo.png" %}" alt="Logo" class="img-responsive pull-left" /> SixDegrees</a>
                 {% endif %}
             </div>
             <div id="navbar" class="navbar-collapse collapse navbar-right">
@@ -36,10 +36,10 @@
               {% url 'home' as home_url %}
             <li {% if request.get_full_path == home_url %}class="active"{% endif %}><a href="{% url 'home' %}">Home</a><li>
             {% endif %}
-            {% url 'index' as game_url %}
-            <li {% if request.get_full_path == game_url %}class="active"{% endif %}><a href="{% url 'index' %}">New Game</a><li>
-            {% url 'rules' as rules_url %}
-            <li {% if request.get_full_path == rules_url %}class="active"{% endif %}><a href="{% url 'rules' %}">How to Play</a><li>
+            {% url 'game' as game_url %}
+            <li {% if request.get_full_path == game_url %}class="active"{% endif %}><a href="{% url 'game' %}">New Game</a><li>
+            {% url 'how' as how_url %}
+            <li {% if request.get_full_path == how_url %}class="active"{% endif %}><a href="{% url 'how' %}">How to Play</a><li>
             {% url 'scores' as scores_url %}
             <li {% if request.get_full_path == scores_url %}class="active"{% endif %}><a href="{% url 'scores' %}">Scores</a><li>
               {% if user.is_authenticated %}
