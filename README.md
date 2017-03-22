@@ -24,7 +24,7 @@ SixDegrees is a game based on the idea of [six degrees of seperation](https://en
 
 #### 1. Clone repository. [How to clone a repository](https://help.github.com/articles/cloning-a-repository/)
 #### 2. Enter a virtual environment.
-#### 3. If you wish to play on our rented server goto step 3.1. If you wish to use eduroam goto 3.2. 
+#### 3. If you wish to use eduroam skip step 3.1. If you wish to play on our rented server skip step 3.2.  
 ####    3.1. Run the population scrip located in: six_degrees\six_degrees\game\graph_populate.py
 
 ```
