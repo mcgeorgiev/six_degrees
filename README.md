@@ -35,8 +35,8 @@ $ python populate.py
 
 ```
 def connection():
-    #return GraphDatabase("http://localhost:7474/db/data/", username="neo4j", password="password")
-    return GraphDatabase("http://hobby-ekngppohojekgbkepjibeaol.dbs.graphenedb.com:24789/db/data/", username="testing-user", password = "b.SIxCtcPc51R5.aaW8WZa65LdsjGgZ")
+    return GraphDatabase("http://localhost:7474/db/data/", username="neo4j", password="password")
+    #return GraphDatabase("http://hobby-ekngppohojekgbkepjibeaol.dbs.graphenedb.com:24789/db/data/", username="testing-user", password = "b.SIxCtcPc51R5.aaW8WZa65LdsjGgZ")
 
 ```
 
@@ -82,3 +82,7 @@ $ python manage.py runserver
 |    wheel     |   0.24.0     |
 |    django-registration-redux     |    1.4     |
 |    Pillow     |   4.0.0     |
+
+---
+#### Note:
+For more reliable quality rendering don’t use safari browser, the pixilation does not always render due to sigma.
