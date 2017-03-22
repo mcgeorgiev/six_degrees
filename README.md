@@ -31,7 +31,7 @@ SixDegrees is a game based on the idea of [six degrees of seperation](https://en
 $ python populate.py
 ```
 
-####    3.2. To use eduroam you must [Install neo4j](https://neo4j.com/download/) and change the following lines in the six_degrees/six_degrees/game/graph.py to look like the follwing code:
+####    3.2. To use eduroam you must [Install neo4j](https://neo4j.com/download/) and change lines 7 - 9 in the six_degrees/six_degrees/game/graph.py to look like the follwing code:
 
 ```
 def connection():
@@ -43,9 +43,9 @@ def connection():
 ### Set up neo4j
 
 + register account
-+ Leave password as default: ```neo4j```
++ Change password to: ```password```
 + Run neo4j;
-+ Run the population scrip located in: six_degrees\six_degrees\game\graph_populate.py
++ Run the population script located in: six_degrees\six_degrees\game\graph_populate.py
 
 ```
 $ python graph_populate.py
