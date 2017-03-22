@@ -316,7 +316,7 @@ def get_id():
 def get_shortest_path(source, dest):
     query = """
     MATCH p=shortestPath(
-    (a:Article {{name:"{0}"}})-[*]-(b:Article {{name:"{1}"}}))
+    (a:Article {{name:"{0}"}})-[*]->(b:Article {{name:"{1}"}}))
     RETURN p
     ORDER BY LENGTH(p) ASC
     LIMIT 1
