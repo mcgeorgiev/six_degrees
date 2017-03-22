@@ -1,22 +1,22 @@
-# Six Degrees of Wikipediaism ![hashids](https://github.com/mcgeorgiev/six_degrees/blob/master/six_degrees/static/img/logo.png)
+# SixDegrees![hashids](https://github.com/mcgeorgiev/six_degrees/blob/master/six_degrees/static/img/logo.png)
 
 --- 
 
-# Discription
+# Description
 
-Six Degrees of Wikipediaism is a game based on the idea of [six degrees of seperation](https://en.wikipedia.org/wiki/Six_degrees_of_separation). The idea is that all things living or not can be connected within six steps.
+SixDegrees is a game based on the idea of [six degrees of seperation](https://en.wikipedia.org/wiki/Six_degrees_of_separation). The idea is that all things living or not can be connected within six steps.
 
 ## How to play
 
-[Click here to play](http://sixdegrees.pythonanywhere.com/game/)
+[Click here to play](http://sixdegrees.pythonanywhere.com/)
 ![hashids](https://github.com/mcgeorgiev/six_degrees/blob/master/six_degrees/static/img/title.gif)
-click the links 
+* Click on new game.
+* You will be presented with your start and goal articles.
+* Click on the first node to reveal your next possible choices.
+* Progress through the game, clicking node by node until you get to your goal!
+* You can zoom in and around the graph by using your mouse wheel, or pinching on mac!
 
-
-
-
-
-[Play Six Degrees Game](http://sixdegrees.pythonanywhere.com/game/)
+[Play Six Degrees Game](http://sixdegrees.pythonanywhere.com/)
 
 ## Installation
 
@@ -51,7 +51,7 @@ $ python manage.py runserver
 ---
 
 
-#### Table of requirments:
+#### Table of requirements:
 
 | Software  | Version |
 | ------------- | ------------- |
@@ -64,29 +64,3 @@ $ python manage.py runserver
 |    wheel     |   0.24.0     |
 |    django-registration-redux     |    1.4     |
 |    Pillow     |   4.0.0     |
-
-
----
-If you need to pip install something else do so in the virtual environment:
-
-```cmd
-$ pip freeze -> requirements.txt
-```
-  - `pip freeze` shows everything currently installed.
-  - the whole command pipes the output into the requirements file so it is always up to date
-
-
-#### Web Sockets:
-https://github.com/tamasgal/django-tornado
-https://blog.heroku.com/in_deep_with_django_channels_the_future_of_real_time_apps_in_django
-
-#### Links:
-http://degreesofwikipedia.com/
-
-###### Node/Network Diagram:
-http://visjs.org/network_examples.html
-http://sigmajs.org/
-
-...
-
-
