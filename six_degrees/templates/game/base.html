@@ -21,11 +21,10 @@
         <nav class="navbar navbar-inverse navbar-fixed-top">
           <div class="container">
             <div class="navbar-header">
-                <a href="#" class="navbar-brand"><img src="{% static "small_logo.png" %}" alt="Logo" /></a>
                 {% if user.is_authenticated %}
-                <a class="navbar-brand" href="/"> Six Degrees</a>
+                <a href="{% url 'dashboard' %}" class="navbar-left"><img src="{% static "small_logo.png" %}" alt="Logo" class="img-responsive pull-left" /> SixDegrees</a>
                 {% else %}
-                <a class="navbar-brand" href="/"> Six Degrees</a>
+                <a href="{% url 'home' %}" class="navbar-left"><img src="{% static "small_logo.png" %}" alt="Logo" class="img-responsive pull-left" /> SixDegrees</a>
                 {% endif %}
             </div>
             <div id="navbar" class="navbar-collapse collapse navbar-right">
