@@ -4,7 +4,7 @@
   <img src="https://github.com/mcgeorgiev/six_degrees/blob/master/six_degrees/static/img/logo.png"/>
 </p>
 
-# Description
+## Description
 
 SixDegrees is a game based on the idea of [six degrees of seperation](https://en.wikipedia.org/wiki/Six_degrees_of_separation). The idea is that all things living or not can be connected within six steps.
 
@@ -30,7 +30,7 @@ SixDegrees is a game based on the idea of [six degrees of seperation](https://en
 ```cmd
 $ pip install -r requirements.txt
 ```
-#### Set up neo4j
+### Set up neo4j
 
 1. register account
 2. Leave password as default: ```neo4j```
@@ -53,7 +53,7 @@ $ python manage.py runserver
 ---
 
 
-#### Table of requirements:
+### Table of requirements:
 
 | Software  | Version |
 | ------------- | ------------- |
