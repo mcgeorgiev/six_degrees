@@ -33,22 +33,23 @@ def connection():
 
 ```
 
-4. Install the requirements:
-  
-```cmd
-$ pip install -r requirements.txt
-```
 ### Set up neo4j
 
-1. register account
-2. Leave password as default: ```neo4j```
-3. Run neo4j;
-4. Run the population scrip located in: six_degrees\six_degrees\game\graph_populate.py
++ register account
++ Leave password as default: ```neo4j```
++ Run neo4j;
++ Run the population scrip located in: six_degrees\six_degrees\game\graph_populate.py
 
 ```
 $ python graph_populate.py
 ```
 <br />
+
+4. Install the requirements:
+  
+```cmd
+$ pip install -r requirements.txt
+```
 
 5. Run the program: six_degrees\six_degrees\manage.py
 
