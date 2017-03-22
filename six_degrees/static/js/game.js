@@ -120,11 +120,11 @@ function startSigma() {
           }
 
           //************************TESTING
-          //************************TESTING
-//           if(clicks == 2) {
-//               isClickable = false;
-//               gameWon();
-//           }
+        //   //************************TESTING
+        //   if(clicks == 2) {
+        //       isClickable = false;
+        //       gameWin();
+        //   }
 
           toKeep = s.graph.neighbors(nodeId);
           toKeep[nodeId] = e.data.node;

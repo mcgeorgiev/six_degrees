@@ -99,7 +99,7 @@ def incoming_node(request, title):
 
 def remove_some_nodes(nodes, end_name):
     end_node = None
-    for i in range(0, len(nodes)):
+    for i in range(0, (len(nodes) - 1)):
         if end_name in nodes[i].values():
             end_node = nodes.pop(i)
 
@@ -166,6 +166,8 @@ def game_over(request):
 
         user_score =  (len(shortest_path) - 1) / (len(nodes) - 1)
         print user_score
+        if user_score > 1:
+            user_score = 1
         user = User.objects.get(username=request.user.username)
         Game.objects.create(user=user,
                             score=user_score,
@@ -175,12 +177,14 @@ def game_over(request):
                             bestLinks=len(shortest_path)-1)
 
         # calculate the users new overall score
-        user_overall_sc = Game.objects.filter(user=user).aggregate(Avg('score'))
+        user_overall_sc = Game.objects.filter(user=user).aggregate(score=Avg('score'))['score']
+        print "score"
         print user_overall_sc
 
         userprofile = UserProfile.objects.get_or_create(user=user)[0]
 
         userprofile.score = user_overall_sc
+        print userprofile.score
         userprofile.save()
 
         # gets the last entry for a user and adds it to the graph db
