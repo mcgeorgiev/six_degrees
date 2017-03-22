@@ -9,7 +9,7 @@ class UserProfile(models.Model):
    # password = models.CharField(max_length=128)
     user = models.OneToOneField(User, null=True)
     picture = models.ImageField(upload_to='media', blank=True)
-    score = models.DecimalField(decimal_places=3, max_digits=4, default=0.0, editable=True)
+    score = models.DecimalField(decimal_places=2, max_digits=4, default=0.0, editable=True)
 
     class Meta:
       verbose_name_plural = 'userprofiles'

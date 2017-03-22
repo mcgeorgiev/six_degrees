@@ -89,7 +89,17 @@ function startSigma() {
     $("#gameoverlay").html(
         "<h3>Your goal is to link</h3><h1><strong>"+startData.start.name+"</strong></h1>"+
         " and <h1><strong>"+endNode.name+"</strong></h1>"+
-        "<h3> Click the first node when it appears to begin.</h3>");
+        "<h3> Click the first node when it appears to begin.</h3><div id='count'></div>");
+
+        var counter = 5;
+    var interval = setInterval(function() {
+        counter--;
+        $("#count").html("<small>(This box will disappear in "+counter+" seconds)");
+        // Display 'counter' wherever you want to display it.
+        if (counter == 0) {
+            // Display a login box
+        }
+    }, 1000);
     $("#gameoverlay").delay( 5000 ).fadeOut(400);
     $("#gameoverlay").promise().done(function() {
         $("#goal").html("Goal: <strong>"+endNode.name+"</strong>");

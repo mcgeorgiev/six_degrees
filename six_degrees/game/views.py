@@ -15,9 +15,9 @@ from graph import *
 from django.views.decorators.csrf import csrf_exempt
 
 @login_required
-def index(request):
+def game(request):
     # Returns a starting node, related and end nodes
-    return render(request, 'game/index.html', context={"a": "B"})
+    return render(request, 'game/game.html', context={"a": "B"})
 
 def scores(request):
     score_list = Game.objects.order_by('-score')[:50]
@@ -31,8 +31,8 @@ def scores(request):
 #     context_dict = {'userprofiles': score_list}
 #     return render(request, 'game/scores.html', context_dict)
 
-def rules(request):
-    return render(request, 'game/rules.html')
+def how(request):
+    return render(request, 'game/howto.html')
 
 def home(request):
     return render(request, 'game/home.html')

@@ -6,12 +6,7 @@
 {% endblock %}
 {% block body_block %}
     <div class="col-md-3 profile-col">
-        {% if profile %}
-        <img src="/{{ profile.picture }}" class="img-rounded img-responsive img-profile" alt="User profile img" />
-        {% else %}
-        <img src="{% static "test.jpg" %}" class="img-rounded img-responsive img-profile" alt="User profile img" />
-        {% endif %}
-        <h3>{{ user.username }}</h3>
+        <h2>{{ user.username }}</h2>
         <h4 class="small">Member since {{ user.date_joined }}</h4>
         {% if best_score %}
         <h4 class="small">Overall score: <strong>{{ user_score }}</strong>%</h4>
@@ -30,7 +25,7 @@
         </p>
     </div>
     <div class="col-md-8 col-md-offset-1">
-        <a href="/game/" class="btn btn-info btn-lg btn-block">PLAY GAME</a>
+        <a href="{% url 'game' %}" class="btn btn-info btn-lg btn-block">PLAY GAME</a>
         <hr/>
         <h2>Previous games</h2>
         <table class="table table-striped table-bordered table-hover">
