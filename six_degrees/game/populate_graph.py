@@ -127,7 +127,10 @@ def get_page(name, cont=""):
     if page_id == "-1":
         return None
 
-    raw_links = resp["query"]["pages"]["{0}".format(page_id)]["links"]
+    try:
+        raw_links = resp["query"]["pages"]["{0}".format(page_id)]["links"]
+    except:
+        return
 
     for item in raw_links:
         all_links.append(item)
