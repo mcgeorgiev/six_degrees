@@ -82,3 +82,7 @@ $ python manage.py runserver
 |    wheel     |   0.24.0     |
 |    django-registration-redux     |    1.4     |
 |    Pillow     |   4.0.0     |
+
+---
+#### Note:
+For more reliable quality rendering don’t use safari browser, the pixilation does not always render due to sigma.
