@@ -6,8 +6,8 @@ import time
 
 def connection():
     """Return a connection object."""
-    return GraphDatabase("http://localhost:7474/db/data/", username="neo4j", password="password")
-    #return GraphDatabase("http://hobby-pmaccehmoeaggbkehkbfidol.dbs.graphenedb.com:24789/db/data/", username="admin-user", password = "b.JByrrlXaTWie.4ljs0uLwKIhUl21h")
+    #return GraphDatabase("http://localhost:7474/db/data/", username="neo4j", password="password")
+    return GraphDatabase("http://hobby-pmaccehmoeaggbkehkbfidol.dbs.graphenedb.com:24789/db/data/", username="admin-user", password = "b.JByrrlXaTWie.4ljs0uLwKIhUl21h")
 
 
 def add_node(node):
@@ -89,14 +89,16 @@ def nodes_with_num_relations(min_number):
             WHERE relations > {}
             RETURN start, relatednodes, relations, rand() as r
             ORDER BY r
+            LIMIT 1
             """.format(min_number)
-
+    s = time.time()
     results = gdb.query(query)[0]
     # first element of returned list is the start node
     start = results.pop(0)
     starting_node = {}
     starting_node["name"] = start['data']["name"]
     starting_node["id"] = start["metadata"]["id"]
+    print "--- initial query took %s seconds ---" % (time.time() - s)
 
     # next element are the related nodes
     relatednodes = results[0]
@@ -108,7 +110,9 @@ def nodes_with_num_relations(min_number):
         related_nodes_list.append(related)
 
     # get the end node, so it is not the start or related
+    s = time.time()
     end_node = get_end_node(starting_node["name"], [node["name"] for node in related_nodes_list])
+    print "--- getting end node took %s seconds ---" % (time.time() - s)
 
     output_dict = {}
     output_dict["start"] = starting_node
@@ -122,7 +126,10 @@ def nodes_with_num_relations(min_number):
         print "All good removing starting node from related node list"
 
     # makes sure the there is a connection between the start and end nodes
+    s = time.time()
     path = get_shortest_path(output_dict['start']["name"], output_dict['end']["name"])
+    print "--- getting shortest path took took %s seconds ---" % (time.time() - s)
+
     if len(path) == 0:
         print "Searching again"
         return nodes_with_num_relations(min_number)
@@ -132,7 +139,10 @@ def nodes_with_num_relations(min_number):
 
 def get_start_data():
     """Gets the starting nodes with a min number of relations."""
-    return nodes_with_num_relations(4)
+    start_time = time.time()
+    nodes = nodes_with_num_relations(4)
+    print "--- getting start nodes took %s seconds ---" % (time.time() - start_time)
+    return nodes
 
 
 def get_end_node(starting_name, related_names):
@@ -144,6 +154,7 @@ def get_end_node(starting_name, related_names):
             MATCH (end)-[]->(b)
             RETURN end, rand() as r
             ORDER BY r
+            LIMIT 1
             """
     results = gdb.query(query)
 
