@@ -24,14 +24,8 @@ SixDegrees is a game based on the idea of [six degrees of seperation](https://en
 
 #### 1. Clone repository. [How to clone a repository](https://help.github.com/articles/cloning-a-repository/)
 #### 2. Enter a virtual environment.
-#### 3. If you wish to use eduroam skip step 3.1. If you wish to play on our rented server skip step 3.2.  
-####    3.1. Run the population scrip located in: six_degrees\six_degrees\game\graph_populate.py
-
-```
-$ python populate.py
-```
-
-####    3.2. To use eduroam you must [Install neo4j](https://neo4j.com/download/) and change lines 7 - 9 in the six_degrees/six_degrees/game/graph.py to look like the follwing code:
+#### 3. There are two methods. Using local hosted database or cloud hosted graph database. We recommend using the hosted version. Step 3.1 applies only to eduroam.
+####  3.1. To use eduroam you must [Install neo4j](https://neo4j.com/download/) and change lines 7 - 9 in the six_degrees/six_degrees/game/graph.py to look like the follwing code:
 
 ```
 def connection():
@@ -45,27 +39,34 @@ def connection():
 + register account
 + Change password to: ```password```
 + Run neo4j;
-+ Run the population script located in: six_degrees\six_degrees\game\graph_populate.py
++ Run the population script located in: six_degrees/six_degrees/game/populate_graph.py
 
 ```
-$ python graph_populate.py
+$ python populate_graph.py
+```
+**IMPORTANT: this script may take 40-50 minutes to populate the database!**
+
+####    4. Run the population script located in: six_degrees/six_degrees/population_script.py
+
+```
+$ python population_script.py
 ```
 <br />
 
-#### 4. Install the requirements:
+#### 5. Install the requirements:
   
 ```cmd
 $ pip install -r requirements.txt
 ```
 
-#### 5. Run the program: six_degrees\six_degrees\manage.py
+#### 6. Run the program: six_degrees\six_degrees\manage.py
 
 ```
 $ python manage.py runserver
 ```
 <br />
 
-#### 6. Open local host: [open](http://127.0.0.1:8000)
+#### 7. Open local host: [open](http://127.0.0.1:8000)
 ---
 
 
