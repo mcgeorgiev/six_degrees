@@ -25,7 +25,7 @@ SixDegrees is a game based on the idea of [six degrees of seperation](https://en
 #### 1. Clone repository. [How to clone a repository](https://help.github.com/articles/cloning-a-repository/)
 #### 2. Enter a virtual environment.
 #### 3. There are two methods. Using local hosted database or cloud hosted graph database. We recommend using the hosted version. Step 3.1 applies only to eduroam.
-####    3.1. To use eduroam you must [Install neo4j](https://neo4j.com/download/) and change lines 7 - 9 in the six_degrees/six_degrees/game/graph.py to look like the follwing code:
+####  1. To use eduroam you must [Install neo4j](https://neo4j.com/download/) and change lines 7 - 9 in the six_degrees/six_degrees/game/graph.py to look like the follwing code:
 
 ```
 def connection():
