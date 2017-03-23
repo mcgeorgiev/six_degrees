@@ -7,12 +7,15 @@ from graph import add_node, add_edge, contains_quotes, node_exists
 from Queue import Queue
 
 def create_index():
+    """ Create indexes in the the graphdb"""
+
     gdb = connection()
     query = """CREATE INDEX ON :Article(name)"""
     gdb.query(query)
     print "Creating indexes"
 
 def wipe_database():
+    """ Wipe the database before population."""
     gdb = connection()
     query = "MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r"
     gdb.query(query)
@@ -20,6 +23,8 @@ def wipe_database():
 
 
 def add_csv_nodes():
+    """ For every csv article query the API with the name """
+
     start_time = time.time()
     with open("small_data.csv", "r") as input:
         for name in csv.reader(input):
@@ -29,15 +34,18 @@ def add_csv_nodes():
 
 
 def add_API_nodes(name):
+    """ Queries the API for a list of related nodes from the current_node and
+        their relationships to be added to the database.
+        The process is multithreaded."""
+
     add_node(name)
 
     start_time = time.time()
     all_links = get_top_links(name)
-    #print all_links
 
     if all_links is None:
         return None
-    #print len(all_links)
+
     # avoids stupid quotations breaking queries
     all_links = [link for link in all_links if not contains_quotes(link["title"])]
 
@@ -71,6 +79,7 @@ def add_API_nodes(name):
 
 
 def process(queue, current_node, link):
+    """ Threading process."""
     length = queue.qsize()
     for i in range(0, length):
         print i
@@ -82,6 +91,9 @@ def process(queue, current_node, link):
 
 
 def get_top_links(name):
+    """ Returns a list of all article nodes for a csv article. All returned
+        nodes exist in the csv."""
+
     global all_links
     all_links = []
     get_page(name)
@@ -89,6 +101,7 @@ def get_top_links(name):
     if filtered_links == []:
         return None
 
+    # ensure that chosen links are from the csv
     chosen_links = []
     for i in range(0, len(filtered_links)-1):
         file_data = open('small_data.csv', 'r')
@@ -99,11 +112,9 @@ def get_top_links(name):
                 if unicode(name) != filtered_links[i]["title"]:
                     chosen_links.append(filtered_links[i])
 
-
     file_data.close()
 
-
-
+    # encode the titles
     for i in range(len(chosen_links)):
         chosen_links[i]["title"].encode('utf-8')
         chosen_links.append(chosen_links[i])
@@ -111,13 +122,17 @@ def get_top_links(name):
     return chosen_links
 
 def remove_meta_links(links):
+    """ Remove any meta links from the articles"""
+    
     for item in list(links):
         if item["ns"] != 0:
             links.remove(item)
     return links
 
-# page id to get links currently all links from "broughty ferry" page
+
 def get_page(name, cont=""):
+    """Recursive function which returns all related articles for a given name."""
+
     page_name = name
     link_limit = 500
     if cont != "":
