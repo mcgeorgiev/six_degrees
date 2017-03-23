@@ -99,4 +99,5 @@ http://127.0.0.1:8000
 
 ---
 #### Note:
-For more reliable quality rendering don’t use safari browser, the pixilation does not always render due to sigma.
+- For more reliable quality rendering don’t use safari browser, the pixilation does not always render due to sigma.
+- During periods of inactivity the hosted graph database sleeps. Therefore the first interaction with the graph database is slightly longer than normal usage.
