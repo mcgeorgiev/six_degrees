@@ -63,7 +63,6 @@ $ python populate_graph.py
 ```
 $ python population_script.py
 ```
-<br />
 
 #### 7. Create a superuser account and follow terminal instructions
 
