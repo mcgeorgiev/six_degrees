@@ -72,7 +72,7 @@ $ python manage.py runserver
 
 ### Table of requirements:
 
-| Software  | Version |
+| Package  | Version |
 | ------------- | ------------- |
 | beautifulsoup4  | 4.5.3  |
 | Django  | 1.10.6  |
