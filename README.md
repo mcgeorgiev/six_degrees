@@ -39,14 +39,14 @@ def connection():
 + register account
 + Change password to: ```password```
 + Run neo4j;
-+ Run the population script located in: six_degrees\six_degrees\game\populate_graph.py
++ Run the population script located in: six_degrees/six_degrees/game/populate_graph.py
 
 ```
 $ python populate_graph.py
 ```
 **IMPORTANT: this script may take 40-50 minutes to populate the database!**
 
-####    4. Run the population script located in: six_degrees\six_degrees\game\population_script.py
+####    4. Run the population script located in: six_degrees/six_degrees/population_script.py
 
 ```
 $ python population_script.py
