@@ -31,8 +31,8 @@ $ python manage.py makemigrations
 ```
 $ python manage.py migrate
 ```
-#### 4. There are two methods to install the game: using local hosted database or cloud hosted graph database. We recommend using the hosted version. Step 4.1 applies only to eduroam.
-####  4.1. To use eduroam you must [Install neo4j](https://neo4j.com/download/) and change lines 7 - 9 in the six_degrees/six_degrees/game/graph.py to look like the follwing code:
+#### 4. The following step only applies if you intend to make a local copy of the database. We strongly recommend you use our hosted version.
+####  You must [Install neo4j](https://neo4j.com/download/) and change lines 7 - 9 in the six_degrees/six_degrees/game/graph.py to look like the follwing code:
 
 ```
 def connection():
@@ -41,7 +41,7 @@ def connection():
 
 ```
 
-### Set up neo4j
+##### Then set up neo4j
 
 + register account
 + Change password to: ```password```
