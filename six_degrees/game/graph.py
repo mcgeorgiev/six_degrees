@@ -1,59 +1,18 @@
-from neo4j.v1 import GraphDatabase, basic_auth
 from Wiki import get_links_for
-import random
-from itertools import count
 from neo4jrestclient.client import GraphDatabase
 from Queue import Queue
 import threading
 import time
 
 def connection():
-    return GraphDatabase("http://localhost:7474/db/data/", username="neo4j", password="password")
-    #return GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "password"))
-    #return GraphDatabase("http://hobby-ekngppohojekgbkepjibeaol.dbs.graphenedb.com:24789/db/data/", username="testing-user", password = "b.SIxCtcPc51R5.aaW8WZa65LdsjGgZ")
+    """Return a connection object."""
+    #return GraphDatabase("http://localhost:7474/db/data/", username="neo4j", password="password")
+    return GraphDatabase("http://hobby-pmaccehmoeaggbkehkbfidol.dbs.graphenedb.com:24789/db/data/", username="admin-user", password = "b.JByrrlXaTWie.4ljs0uLwKIhUl21h")
 
 
-# def get_nodes_from_game(start, game, end):
-#     driver = driver_connection()
-#     session = driver.session()
-#
-#     query = "match ({0})-[l:{1}]->({2}) return {0}, type(l), {2}".format(start, game, end)
-#     result = session.run(query)
-#
-#     output = {"game": game,
-#               "nodes": []}
-#
-#     for record in result:
-#         entry = {  "source" : {
-#                     "name": record[start].properties['name'],
-#                     "id": record[start].properties['id']
-#                 },
-#                     "dest" : {
-#                     "name": record[end].properties['name'],
-#                     "id": record[end].properties['id']
-#                 }
-#         }
-#
-#         # if the list is empty add the entry
-#         if len(output["nodes"]) == 0:
-#             output["nodes"].append(entry)
-#         else:
-#             # if the list is not empty determine whether to insert before or after the relevant entries
-#             for i in range(len(output["nodes"])):
-#                 if entry["dest"]["name"] == output["nodes"][i]["source"]["name"]:
-#                     output["nodes"].insert(i, entry)
-#                     break
-#                 elif entry["source"]["name"] == output["nodes"][i]["dest"]["name"]:
-#                     output["nodes"].insert(i+1, entry)
-#                     break
-#     session.close()
-#     print output
-#     return output
-#
-#
 def add_node(node):
+    """Add a given node to the database"""
     gdb = connection()
-    # need to escape the curly braces
     try:
         query = "CREATE (node:Article {{name:'{0}'}})".format(node["name"])
         print query
@@ -63,17 +22,20 @@ def add_node(node):
 
 
 def add_edge(nodeA, nodeB, relationship_name):
+    """Add a given relationship between two nodes"""
     gdb = connection()
 
     try:
         query = """MATCH (a:Article),(b:Article) WHERE a.name = '{0}' AND b.name = '{1}'
                    CREATE (a)-[r:{2}]->(b)""".format(nodeA["name"], nodeB["name"], relationship_name)
         gdb.query(query)
+        print "added edge"
     except:
         print "Unicode is not added"
 
 
 def get_node_from_name(name):
+    """Return a node by its name"""
     gdb = connection()
 
     query = "match (node:Article{{name: '{0}'}}) return node".format(name)
@@ -83,8 +45,9 @@ def get_node_from_name(name):
 
 
 def get_related_nodes(node):
-    gdb = connection()
+    """Returns a list of distinct related nodes for a node."""
 
+    gdb = connection()
     query = "MATCH (Article {{ name: '{0}' }})--(related) return related".format(node["name"])
     results = gdb.query(query)
     all_nodes = []
@@ -98,6 +61,8 @@ def get_related_nodes(node):
 
 
 def has_enough_edges(current_node):
+    """Returns True if the current node has 5 or more distinct relations"""
+
     # if the node has one relationship then that is it's source
     min_relations = 5
     gdb = connection()
@@ -115,6 +80,8 @@ def has_enough_edges(current_node):
 
 
 def nodes_with_num_relations(min_number):
+    """Returns a random starting node and it's relations and a random end node"""
+
     gdb = connection()
     query = """
             MATCH (start)-[]->(b)
@@ -122,14 +89,16 @@ def nodes_with_num_relations(min_number):
             WHERE relations > {}
             RETURN start, relatednodes, relations, rand() as r
             ORDER BY r
+            LIMIT 1
             """.format(min_number)
-
+    s = time.time()
     results = gdb.query(query)[0]
     # first element of returned list is the start node
     start = results.pop(0)
     starting_node = {}
     starting_node["name"] = start['data']["name"]
     starting_node["id"] = start["metadata"]["id"]
+    print "--- initial query took %s seconds ---" % (time.time() - s)
 
     # next element are the related nodes
     relatednodes = results[0]
@@ -141,54 +110,51 @@ def nodes_with_num_relations(min_number):
         related_nodes_list.append(related)
 
     # get the end node, so it is not the start or related
+    s = time.time()
     end_node = get_end_node(starting_node["name"], [node["name"] for node in related_nodes_list])
+    print "--- getting end node took %s seconds ---" % (time.time() - s)
 
     output_dict = {}
     output_dict["start"] = starting_node
     output_dict["related"] = {value['name']:value for value in related_nodes_list}.values()
     output_dict["end"] = end_node
 
-
-
+    # try to remove the starting node if contained in related
     try:
         output_dict["related"].remove(starting_node)
     except ValueError:
         print "All good removing starting node from related node list"
 
-    #print "Start: " + output_dict['start']["name"]
-    #print "End: " + output_dict['end']["name"]
+    # makes sure the there is a connection between the start and end nodes
+    s = time.time()
     path = get_shortest_path(output_dict['start']["name"], output_dict['end']["name"])
-    #print path
+    print "--- getting shortest path took took %s seconds ---" % (time.time() - s)
+
     if len(path) == 0:
         print "Searching again"
         return nodes_with_num_relations(min_number)
     else:
-        print len(output_dict["related"])
         return output_dict
 
 
 def get_start_data():
-    return nodes_with_num_relations(4)
+    """Gets the starting nodes with a min number of relations."""
+    start_time = time.time()
+    nodes = nodes_with_num_relations(4)
+    print "--- getting start nodes took %s seconds ---" % (time.time() - start_time)
+    return nodes
 
-
-def does_connection_exist(start, end):
-    gdb = connection()
-    query = """
-    MATCH (a:Article)-[]->(b:Article)
-    WHERE a.name='{0}' and b.name='{1}'
-    return a, b
-    """.format(start, end)
-    results = gdb.query(query)
-    for result in results:
-        print result
-        print "---"
 
 def get_end_node(starting_name, related_names):
+    """ Recursive function to get a random end node which is not the same as
+        the starting node or is already in the starting relations."""
+
     gdb = connection()
     query = """
             MATCH (end)-[]->(b)
             RETURN end, rand() as r
             ORDER BY r
+            LIMIT 1
             """
     results = gdb.query(query)
 
@@ -203,6 +169,7 @@ def get_end_node(starting_name, related_names):
 
 
 def node_exists(node):
+    """Checks to see if a node has been added to the database already."""
     # make sure duplicates are not added
     gdb = connection()
     query = "MATCH (Article {{ name: '{0}' }}) return Article".format(node["name"].encode('utf-8'))
@@ -214,32 +181,8 @@ def node_exists(node):
         return False
 
 
-# def add_API_nodes(current_node, end_name):
-#     start_time = time.time()
-#
-#     all_links = get_links_for(current_node["name"], end_name)
-#     if all_links is None:
-#         return None
-#
-#     # avoids stupid quotations breaking queries
-#     all_links = [link for link in all_links if not contains_quotes(link["title"])]
-#
-#     # converts the links into nodes format
-#     for link in all_links:
-#         link["name"] = link.pop("title")
-#         link.pop("ns")
-#
-#         if not node_exists(link):
-#             print 'node does not exist - added'
-#             add_node(link)
-#
-#         # otherwise always add relationship
-#         add_edge(current_node, link, "linksTo")
-#     print "--- adding nodes took %s seconds ---" % (time.time() - start_time)
-#
-#     return True
-
 def process(queue, current_node, link):
+    """The thread process to execute lambda functions"""
     length = queue.qsize()
     for i in range(0, length):
         print i
@@ -249,16 +192,17 @@ def process(queue, current_node, link):
         except TypeError:
             func(current_node, link, "linksTo")
 
-# now with threading
+
 def add_API_nodes(current_node, end_name):
+    """ Queries the API for a list of related nodes from the current_node and
+        their relationships to be added to the database.
+        The process is multithreaded."""
     #add_node(current_node["name"])
 
     start_time = time.time()
     all_links = get_links_for(current_node["name"], end_name)
-    #print all_links
     if all_links is None:
         return None
-    #print len(all_links)
     # avoids stupid quotations breaking queries
     all_links = [link for link in all_links if not contains_quotes(link["title"])]
 
@@ -270,6 +214,7 @@ def add_API_nodes(current_node, end_name):
         link["name"] = link.pop("title")
         link.pop("ns")
 
+        # adds anonymous functions to a queue to be executed in the thread process
         if not node_exists(link):
             print 'node does not exist '
             add = lambda x: add_node(x)
@@ -288,32 +233,24 @@ def add_API_nodes(current_node, end_name):
     return True
 
 
-
 def contains_quotes(name):
+    """Returns true if string contains quotations"""
     return True if "'" in name or '"' in name else False
 
 
 def add_game_relationship(nodes, game_id):
-    query_string = ""
+    """Add a relationship for a list of nodes with a user's game id"""
     gdb = connection()
-    print type(nodes)
-    print nodes[0]
-    print "----"
     for i in range(1,len(nodes)):
         source = nodes[i-1]["label"]
         dest = nodes[i]["label"]
         query = "MATCH (a:Article {{name:'{0}'}}), (b:Article {{name:'{1}'}}) CREATE (a)-[:game{2}]->(b)".format(source, dest, game_id)
         gdb.query(query)
 
-def get_id():
-    gdb = connection()
-    query = "match (m:Article {name: 'Australia'})-[r:linksTo]-(p:Article {name: 'Bondi Beach'}) return r"
-    results = gdb.query(query)
-    for r in results:
-        print r
-
 
 def get_shortest_path(source, dest):
+    """Returns the ids of a shortest path between a source and a destination."""
+
     query = """
     MATCH p=shortestPath(
     (a:Article {{name:"{0}"}})-[*]->(b:Article {{name:"{1}"}}))
@@ -329,14 +266,16 @@ def get_shortest_path(source, dest):
     for result in results:
         node_url = result[0]["nodes"]
         for node in node_url:
+            # extract the last part of the url which is the node id
             node_id_list.append(node.split("/")[-1])
         break
     return get_names_from_ids(node_id_list)
 
 
 def get_names_from_ids(id_list):
-    id_list =  str([int(i) for i in id_list])
+    """ Returns a list of the names of Articles from a list of node ids"""
 
+    id_list =  str([int(i) for i in id_list])
     query = """
     MATCH (a:Article)
     WHERE id(a) IN {}
@@ -348,45 +287,20 @@ def get_names_from_ids(id_list):
     return [name[0] for name in results]
 
 
-# * Useful code to find an objects properties names
-# for property, value in vars(related).iteritems():
-#     print property, ": ", value
-
 if __name__ == "__main__":
-    #does_connection_exist("Australia", "Crocodile Dundee")
-    #print get_shortest_path("Bondi Beach", "Crocodile Dundee")
-    nodes = [
-      {
-        "id": 101,
-        "label": "Sydney"
-      },
-      {
-        "id": 67,
-        "label": "Crocodile Dundee"
-      },
-      {
-        "id": 65,
-        "label": "Australia"
-      },
-      {
-        "id": 69,
-        "label": "Bondi Beach"
-      }
-    ]
-    #add_game_relationship(nodes)
+    """Old tests for graph.py """
+    pass
+
+    # does_connection_exist("Australia", "Crocodile Dundee")
+    # print get_shortest_path("Bondi Beach", "Crocodile Dundee")
+    # add_game_relationship(nodes)
     # print node_exists(node)
-    nodes_with_num_relations(4)
-    #print get_related_nodes({"name": "Glasgow"})
+    # nodes_with_num_relations(4)
+    # print get_related_nodes({"name": "Glasgow"})
     # add_API_nodes(get_node_from_name("Kangaroo"))
     # print get_node_from_name("Australia")
     # print get_end_node("Scotland", ["Isle of Arran", "Scottish Parliament", "Thistle", "England", "Glasgow", "Rob Roy", "William Wallace"])
     # print has_enough_edges({"name": "Glasgow"})
-    #add_edge({"name": "England"}, {"name": "Scotland"}, "game3")
-    #add_node("England", 9)
-    #add_node("Anglican Communion", 8)
-
-    # start = "scotland"
-    # game = "game2"
-    # end = "kangaroo"
-    #
-    # get_nodes_from_game(start, game, end)
+    # add_edge({"name": "England"}, {"name": "Scotland"}, "game3")
+    # add_node("England", 9)
+    # add_node("Anglican Communion", 8)

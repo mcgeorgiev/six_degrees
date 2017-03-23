@@ -1,13 +1,15 @@
 import requests
 import json
-from itertools import count
 import sys
 import random
-from bisect import bisect
 
 def get_links_for(name, end):
+    """ Returns a list of randomly chosen related links from the mediawiki API
+        for a given article."""
+
     global all_links
     all_links = []
+    # recursively get all the pages
     get_page(name)
 
     filtered_links = remove_meta_links(all_links)
@@ -21,6 +23,7 @@ def get_links_for(name, end):
             end_node = filtered_links[i]
             break
 
+    # get a random selection of nine or less links from the thousands
     try:
         random_indexes = random.sample(range(0, len(filtered_links)), 9)
     except ValueError:
@@ -38,13 +41,15 @@ def get_links_for(name, end):
 
 
 def remove_meta_links(links):
+    """Ensure all wikipedia meta links are removed"""
     for item in list(links):
         if item["ns"] != 0:
             links.remove(item)
     return links
 
-# page id to get links currently all links from "broughty ferry" page
+
 def get_page(name, cont=""):
+    """Recursive function to add all links for a page to all_links"""
     page_name = name
     link_limit = 500
     if cont != "":
@@ -74,5 +79,3 @@ def get_page(name, cont=""):
 
 if __name__ == '__main__':
     print get_links_for("Glasgow", "Scotland")
-    # wiki = Wikipedia()
-    # print len(wiki.get_links("Australia"))
